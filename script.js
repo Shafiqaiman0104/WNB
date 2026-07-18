@@ -30,9 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let targetFrameIndex = 1;
     let currentFrameIndex = 1;
+    let isAnimating = false;
+    let lastWidth = 0;
+    let lastHeight = 0;
 
     function resizeCanvas() {
         if (!canvas) return;
+        const widthDiff = Math.abs(window.innerWidth - lastWidth);
+        const heightDiff = Math.abs(window.innerHeight - lastHeight);
+        
+        // Skip minor height-only changes (like mobile address bar toggle) to prevent flickering
+        if (widthDiff === 0 && heightDiff < 100 && canvas.width > 0) return;
+        
+        lastWidth = window.innerWidth;
+        lastHeight = window.innerHeight;
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         drawFrame(Math.round(currentFrameIndex));
@@ -69,19 +80,25 @@ document.addEventListener('DOMContentLoaded', () => {
         context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
     }
 
-    // Set first frame drawing on load
+    // Set first frame drawing on load (handles both cached and slow loading cases)
     if (images[0]) {
-        images[0].onload = () => {
-            resizeCanvas();
-        };
+        if (images[0].complete) {
+            drawFrame(1);
+        } else {
+            images[0].onload = () => {
+                drawFrame(1);
+            };
+        }
     }
+    // Size canvas immediately on DOM load to prevent default 300x150 sizing gap
+    resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
         
-        // Toggle header visibility based on scroll position in video track
-        const triggerHeight = window.innerHeight * 1.2;
+        // Toggle header visibility based on scroll position in video track (always visible from start on mobile/tablet)
+        const triggerHeight = window.innerWidth <= 768 ? 0 : window.innerHeight * 1.2;
         const stickyHeight = window.innerHeight * 2.0;
 
         if (scrollY >= triggerHeight) {
@@ -123,6 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Map progress to [1, 101] frame range
                 targetFrameIndex = 1 + progress * (frameCount - 1);
 
+                // Start animation loop if not already running
+                if (!isAnimating) {
+                    isAnimating = true;
+                    requestAnimationFrame(renderCanvasFrame);
+                }
+
                 // Smoothly fade out text overlay
                 if (videoText) {
                     const textOpacity = Math.max(0, 1 - progress * 2.5);
@@ -137,12 +160,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Smooth frame seek loop using animation frames
+    // Dispatch scroll event on load to initialize header visibility
+    window.dispatchEvent(new Event('scroll'));
+
+    // Smooth frame seek loop using animation frames (only runs when active)
     function renderCanvasFrame() {
-        currentFrameIndex += (targetFrameIndex - currentFrameIndex) * 0.12;
-        drawFrame(Math.round(currentFrameIndex));
-        requestAnimationFrame(renderCanvasFrame);
+        const diff = targetFrameIndex - currentFrameIndex;
+        if (Math.abs(diff) > 0.01) {
+            currentFrameIndex += diff * 0.12;
+            drawFrame(Math.round(currentFrameIndex));
+            requestAnimationFrame(renderCanvasFrame);
+            isAnimating = true;
+        } else {
+            currentFrameIndex = targetFrameIndex;
+            drawFrame(Math.round(currentFrameIndex));
+            isAnimating = false;
+        }
     }
+    // Render initial frame
+    isAnimating = true;
     requestAnimationFrame(renderCanvasFrame);
 
     // 2. Scroll Reveal Animations (Intersection Observer)
@@ -173,25 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileNavToggle && navMenu) {
         mobileNavToggle.addEventListener('click', () => {
             navMenu.classList.toggle('open');
-            const spans = mobileNavToggle.querySelectorAll('span');
-            if (navMenu.classList.contains('open')) {
-                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
-            } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
+            mobileNavToggle.classList.toggle('active');
         });
         
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('open');
-                const spans = mobileNavToggle.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+                mobileNavToggle.classList.remove('active');
             });
         });
     }
