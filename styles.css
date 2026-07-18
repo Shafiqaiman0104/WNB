@@ -740,97 +740,447 @@ header.scrolled .mobile-nav-toggle span {
     transform: translateX(4px);
 }
 
-/* Interactive Digital Menu */
-.menu-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 50px;
-    flex-wrap: wrap;
+/* ==========================================================================
+   Artisan Culinary Highlights Carousel
+   ========================================================================== */
+.culinary-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    padding: 30px 0;
+    margin: 0 auto;
 }
 
-.menu-tab-btn {
-    padding: 10px 26px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+.culinary-carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.carousel-track-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.carousel-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Slide Base Style */
+.carousel-slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                z-index 0.8s step-end;
+}
+
+.slide-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.08));
+    transition: transform 0.5s ease;
+}
+
+.plate-base {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: transform 0.5s ease;
+    z-index: 1;
+}
+
+.food-image {
+    position: absolute;
+    top: 6%;
+    left: 6%;
+    width: 88%;
+    height: 88%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: transform 0.5s ease;
+    z-index: 2;
+}
+
+/* Position States */
+.carousel-slide.active {
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.carousel-slide.active .slide-image-wrapper {
+    filter: drop-shadow(0 25px 40px rgba(179, 143, 45, 0.25));
+}
+
+.carousel-slide.prev {
+    opacity: 0.6;
+    z-index: 5;
+    transform: translate(-50%, -50%) translateX(-300px) scale(0.85);
+    filter: blur(0.5px) brightness(0.9);
+}
+
+.carousel-slide.next {
+    opacity: 0.6;
+    z-index: 5;
+    transform: translate(-50%, -50%) translateX(300px) scale(0.85);
+    filter: blur(0.5px) brightness(0.9);
+}
+
+/* Hover Interactivity on Active Item */
+.carousel-slide.active:hover .food-image {
+    transform: scale(1.08) rotate(4deg);
+}
+
+.carousel-slide.active:hover .plate-base {
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* Text Description Box */
+.carousel-info-box {
+    margin-top: 40px;
+    text-align: center;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.info-title {
+    font-family: var(--font-heading);
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--color-text-white);
+    margin-bottom: 12px;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.info-desc {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
     color: var(--color-text-muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-radius: 50px;
-    background: transparent;
+    line-height: 1.65;
+    min-height: 60px;
+}
+
+/* Navigation Buttons */
+.carousel-nav-btn {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--color-bg-card);
+    border: 1px solid rgba(179, 143, 45, 0.3);
+    color: var(--color-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: var(--box-shadow-soft);
+    z-index: 15;
     transition: var(--transition-smooth);
 }
 
-.menu-tab-btn:hover {
-    border-color: var(--color-gold);
-    color: var(--color-gold);
-}
-
-.menu-tab-btn.active {
+.carousel-nav-btn:hover {
     background: var(--gradient-gold);
-    border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 4px 15px rgba(179, 143, 45, 0.2);
+    border-color: transparent;
+    transform: translateY(-50%) translateY(-5px);
+    box-shadow: 0 10px 20px rgba(179, 143, 45, 0.25);
 }
 
-.menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+.carousel-nav-btn.prev-btn {
+    left: 20px;
 }
 
-.menu-item {
-    display: flex;
-    gap: 20px;
-    background: var(--color-bg-card);
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    padding: 20px;
-    border-radius: var(--border-radius-md);
-    box-shadow: var(--box-shadow-soft);
-    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+.carousel-nav-btn.next-btn {
+    right: 20px;
 }
 
-.menu-item:hover {
-    border-color: rgba(179, 143, 45, 0.25);
-    box-shadow: 0 12px 35px rgba(179, 143, 45, 0.08);
-    transform: translateY(-2px);
+/* Entrance Animations triggers */
+.culinary-carousel-container.init-intro .carousel-slide {
+    opacity: 0;
+    pointer-events: none;
 }
 
-.menu-item-img {
-    width: 100px;
-    height: 100px;
-    border-radius: var(--border-radius-sm);
-    object-fit: cover;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+.culinary-carousel-container.animate-intro .carousel-slide.active {
+    animation: activeSlideIntro 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.menu-item-info {
-    flex-grow: 1;
+.culinary-carousel-container.animate-intro .carousel-slide.active .plate-base {
+    animation: plateSpin 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.menu-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
+.culinary-carousel-container.animate-intro .carousel-slide.active .food-image {
+    opacity: 0;
+    animation: foodScaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.1s forwards;
 }
 
-.menu-item-title {
-    font-size: 1.35rem;
-    color: var(--color-text-white);
+.culinary-carousel-container.animate-intro .carousel-slide.prev {
+    opacity: 0;
+    animation: prevSlideReveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
 }
 
-.menu-item-price {
-    font-family: var(--font-body);
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--color-gold);
-    white-space: nowrap;
+.culinary-carousel-container.animate-intro .carousel-slide.next {
+    opacity: 0;
+    animation: nextSlideReveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
 }
 
-.menu-item-desc {
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
+.culinary-carousel-container.animate-intro .carousel-info-box {
+    opacity: 0;
+    animation: textFadeIn 0.8s ease 1.6s forwards;
+}
+
+.culinary-carousel-container.animate-intro .carousel-nav-btn {
+    opacity: 0;
+    animation: btnFadeIn 0.8s ease 1.6s forwards;
+}
+
+/* Animation Keyframes */
+@keyframes activeSlideIntro {
+    0% {
+        transform: translate(-50%, -50%) translateX(100vw) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+}
+
+@keyframes plateSpin {
+    0% {
+        transform: rotate(540deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes foodScaleIn {
+    0% {
+        transform: scale(0) rotate(-120deg);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes prevSlideReveal {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) translateX(-300px) scale(0.85);
+        opacity: 0.6;
+    }
+}
+
+@keyframes nextSlideReveal {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) translateX(300px) scale(0.85);
+        opacity: 0.6;
+    }
+}
+
+@keyframes textFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes btnFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles for Carousel */
+@media (max-width: 1024px) {
+    .carousel-slide {
+        width: 260px;
+        height: 260px;
+    }
+    
+    .carousel-slide.active {
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+    
+    .carousel-slide.prev {
+        transform: translate(-50%, -50%) translateX(-220px) scale(0.8);
+    }
+    
+    .carousel-slide.next {
+        transform: translate(-50%, -50%) translateX(220px) scale(0.8);
+    }
+    
+    @keyframes prevSlideReveal {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        100% { transform: translate(-50%, -50%) translateX(-220px) scale(0.8); opacity: 0.6; }
+    }
+    
+    @keyframes nextSlideReveal {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        100% { transform: translate(-50%, -50%) translateX(220px) scale(0.8); opacity: 0.6; }
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-track-wrapper {
+        height: 320px;
+    }
+    
+    .carousel-slide {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .carousel-slide.active {
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+    
+    .carousel-slide.prev {
+        transform: translate(-50%, -50%) translateX(-140px) scale(0.75);
+        opacity: 0.45;
+    }
+    
+    .carousel-slide.next {
+        transform: translate(-50%, -50%) translateX(140px) scale(0.75);
+        opacity: 0.45;
+    }
+    
+    .carousel-nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 0.95rem;
+    }
+    
+    .carousel-nav-btn.prev-btn {
+        left: 5px;
+    }
+    
+    .carousel-nav-btn.next-btn {
+        right: 5px;
+    }
+    
+    @keyframes prevSlideReveal {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        100% { transform: translate(-50%, -50%) translateX(-140px) scale(0.75); opacity: 0.45; }
+    }
+    
+    @keyframes nextSlideReveal {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        100% { transform: translate(-50%, -50%) translateX(140px) scale(0.75); opacity: 0.45; }
+    }
+    
+    .info-title {
+        font-size: 1.7rem;
+    }
+    
+    .info-desc {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-track-wrapper {
+        height: 260px;
+    }
+    
+    .carousel-slide {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .carousel-slide.active {
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+    
+    .carousel-slide.prev {
+        transform: translate(-50%, -50%) translateX(-105px) scale(0.75);
+        opacity: 0.35;
+    }
+    
+    .carousel-slide.next {
+        transform: translate(-50%, -50%) translateX(105px) scale(0.75);
+        opacity: 0.35;
+    }
+    
+    @keyframes prevSlideReveal {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        100% { transform: translate(-50%, -50%) translateX(-105px) scale(0.75); opacity: 0.35; }
+    }
+    
+    @keyframes nextSlideReveal {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        100% { transform: translate(-50%, -50%) translateX(105px) scale(0.75); opacity: 0.35; }
+    }
+    
+    .carousel-nav-btn {
+        top: auto;
+        bottom: -45px;
+        transform: none;
+    }
+    
+    .carousel-nav-btn:hover {
+        transform: translateY(-3px);
+    }
+    
+    .carousel-nav-btn.prev-btn {
+        left: calc(50% - 60px);
+    }
+    
+    .carousel-nav-btn.next-btn {
+        right: calc(50% - 60px);
+    }
 }
 
 /* Call to Action Reservation Bar */
