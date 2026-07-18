@@ -162,85 +162,47 @@
                 <h2 class="section-title">Artisan Culinary <span class="gold-text">Highlights</span></h2>
                 <p class="section-desc">Savor a curated collection of culinary masterpieces designed to captivate your senses.</p>
             </div>
+                       <div class="culinary-carousel-wrapper scroll-reveal">
+                <div class="culinary-carousel-container">
+                    <div class="carousel-track-wrapper" id="carouselTrackWrapper">
+                        <div class="carousel-track" id="carouselTrack">
+                            <!-- Slide 1 (p1.png) -->
+                            <div class="carousel-slide prev" data-index="0" data-title="Creamy Salted Egg Lobster" data-desc="Live lobster wok-tossed in a golden, creamy salted egg yolk glaze infused with aromatic curry leaves and bird's eye chilies.">
+                                <div class="slide-image-wrapper">
+                                    <img src="plate.png" alt="Plate Base" class="plate-base">
+                                    <img src="p1.png" alt="Creamy Salted Egg Lobster" class="food-image">
+                                </div>
+                            </div>
+                            <!-- Slide 2 (p2.png) - Active by default -->
+                            <div class="carousel-slide active" data-index="1" data-title="Siakap Sambal Petai" data-desc="Charcoal-grilled fresh barramundi (siakap) topped with rich, aromatic spicy chili paste and petai beans.">
+                                <div class="slide-image-wrapper">
+                                    <img src="plate.png" alt="Plate Base" class="plate-base">
+                                    <img src="p2.png" alt="Siakap Sambal Petai" class="food-image">
+                                </div>
+                            </div>
+                            <!-- Slide 3 (p3.png) -->
+                            <div class="carousel-slide next" data-index="2" data-title="Signature Chili Crab" data-desc="Fresh live crab simmered in a sweet, savory, and mildly spicy egg-drop sauce. Served with warm fried mantou buns.">
+                                <div class="slide-image-wrapper">
+                                    <img src="plate.png" alt="Plate Base" class="plate-base">
+                                    <img src="p3.png" alt="Signature Chili Crab" class="food-image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             
-            <div class="menu-tabs scroll-reveal">
-                <button class="menu-tab-btn active" data-filter="all">All Selections</button>
-                <button class="menu-tab-btn" data-filter="masakan">Signature Mains</button>
-                <button class="menu-tab-btn" data-filter="ikan">Grilled Catch</button>
-                <button class="menu-tab-btn" data-filter="minuman">Drinks & Desserts</button>
-            </div>
+                    <!-- Text Description Box below the active slide -->
+                    <div class="carousel-info-box" id="carouselInfoBox">
+                        <h3 class="info-title" id="infoTitle">Siakap Sambal Petai</h3>
+                        <p class="info-desc" id="infoDesc">Charcoal-grilled fresh barramundi (siakap) topped with rich, aromatic spicy chili paste and petai beans.</p>
+                    </div>
             
-            <div class="menu-grid scroll-reveal">
-                <!-- Item 1: Chili Crab -->
-                <div class="menu-item" data-category="masakan">
-                    <img src="https://images.unsplash.com/photo-1551248429-40975aa4de74?auto=format&fit=crop&q=80&w=150" alt="Signature Chili Crab" class="menu-item-img">
-                    <div class="menu-item-info">
-                        <div class="menu-item-header">
-                            <h3 class="menu-item-title">Signature Chili Crab</h3>
-                            <span class="menu-item-price">Market Price</span>
-                        </div>
-                        <p class="menu-item-desc">Fresh live crab simmered in a sweet, savory, and mildly spicy egg-drop sauce. Served with warm fried mantou buns.</p>
-                    </div>
-                </div>
-
-                <!-- Item 2: Creamy Salted Egg Lobster -->
-                <div class="menu-item" data-category="masakan">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoOwFZshs2kLkg2QTrL2lAYaVlLHhSotQ_WY6IK4ZWy5PmrLUkRHHykXA&s=10" alt="Creamy Salted Egg Lobster" class="menu-item-img">
-                    <div class="menu-item-info">
-                        <div class="menu-item-header">
-                            <h3 class="menu-item-title">Creamy Salted Egg Lobster</h3>
-                            <span class="menu-item-price">Market Price</span>
-                        </div>
-                        <p class="menu-item-desc">Live lobster wok-tossed in a golden, creamy salted egg yolk glaze infused with aromatic curry leaves and bird's eye chilies.</p>
-                    </div>
-                </div>
-
-                <!-- Item 3: Siakap Sambal Petai -->
-                <div class="menu-item" data-category="ikan">
-                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=150" alt="Siakap Sambal Petai" class="menu-item-img">
-                    <div class="menu-item-info">
-                        <div class="menu-item-header">
-                            <h3 class="menu-item-title">Siakap Sambal Petai</h3>
-                            <span class="menu-item-price">RM 68.00</span>
-                        </div>
-                        <p class="menu-item-desc">Charcoal-grilled fresh barramundi (siakap) topped with rich, aromatic spicy chili paste and petai beans.</p>
-                    </div>
-                </div>
-
-                <!-- Item 4: Kam Heong Clams (Lala) -->
-                <div class="menu-item" data-category="masakan">
-                    <img src="https://www.ajinomoto.com.my/sites/default/files/content/recipe/image/2023-10/lala%20kam%20heong%202.jpg" alt="Kam Heong Clams" class="menu-item-img">
-                    <div class="menu-item-info">
-                        <div class="menu-item-header">
-                            <h3 class="menu-item-title">Kam Heong Clams (Lala)</h3>
-                            <span class="menu-item-price">RM 32.00</span>
-                        </div>
-                        <p class="menu-item-desc">Fresh local clams stir-fried with fragrant curry powder, garlic, shallots, bird's eye chili, and dried shrimp paste.</p>
-                    </div>
-                </div>
-
-                <!-- Item 5: Sotong Goreng Tepung Crispy -->
-                <div class="menu-item" data-category="masakan">
-                    <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=150" alt="Sotong Goreng Tepung" class="menu-item-img">
-                    <div class="menu-item-info">
-                        <div class="menu-item-header">
-                            <h3 class="menu-item-title">Crispy Fried Calamari</h3>
-                            <span class="menu-item-price">RM 38.00</span>
-                        </div>
-                        <p class="menu-item-desc">Tender fresh squid rings coated in a seasoned batter, fried to golden-brown perfection. Served with spicy dipping sauce.</p>
-                    </div>
-                </div>
-
-                <!-- Item 6: Jus Kedondong Asam Boi -->
-                <div class="menu-item" data-category="minuman">
-                    <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&q=80&w=150" alt="Jus Kedondong Asam Boi" class="menu-item-img">
-                    <div class="menu-item-info">
-                        <div class="menu-item-header">
-                            <h3 class="menu-item-title">Kedondong Juice with Plum</h3>
-                            <span class="menu-item-price">RM 12.00</span>
-                        </div>
-                        <p class="menu-item-desc">Freshly blended native ambarella (kedondong) fruit juice combined with sweet and sour salted dried plums. A refreshing palate cleanser.</p>
-                    </div>
+                    <!-- Navigation Controls -->
+                    <button class="carousel-nav-btn prev-btn" id="prevBtn" aria-label="Previous Slide">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-nav-btn next-btn" id="nextBtn" aria-label="Next Slide">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
             
