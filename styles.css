@@ -55,6 +55,7 @@ html {
     scroll-behavior: smooth;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
 }
 
 body {
@@ -62,7 +63,7 @@ body {
     background-color: var(--color-bg-deep);
     color: var(--color-text-light);
     line-height: 1.65;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 a {
@@ -320,6 +321,7 @@ header.scrolled .mobile-nav-toggle span {
 }
 
 .nav-container {
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: space-between;
@@ -330,6 +332,7 @@ header.scrolled .mobile-nav-toggle span {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0; /* Prevent logo wrapper from shrinking */
 }
 
 .logo img {
@@ -347,6 +350,7 @@ header.scrolled .mobile-nav-toggle span {
     font-weight: 700;
     letter-spacing: 0.5px;
     color: var(--color-text-white);
+    white-space: nowrap; /* Prevent logo text from wrapping */
 }
 
 .nav-menu {
@@ -425,6 +429,7 @@ header.scrolled .mobile-nav-toggle span {
     width: 24px;
     height: 18px;
     z-index: 1100;
+    flex-shrink: 0; /* Prevent toggle from shrinking on small viewports */
 }
 
 .mobile-nav-toggle span {
@@ -433,7 +438,20 @@ header.scrolled .mobile-nav-toggle span {
     width: 100%;
     background-color: var(--color-text-white);
     transition: var(--transition-smooth);
-    transform-origin: left center;
+    transform-origin: center; /* Center transform-origin for perfect X rotation */
+}
+
+/* CSS-based transitions for the Hamburger-to-X animation */
+.mobile-nav-toggle.active span:nth-child(1) {
+    transform: translateY(7.75px) rotate(45deg);
+}
+
+.mobile-nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-nav-toggle.active span:nth-child(3) {
+    transform: translateY(-7.75px) rotate(-45deg);
 }
 
 /* Scroll-Linked Video Section */
@@ -523,6 +541,18 @@ header.scrolled .mobile-nav-toggle span {
     align-items: center;
     gap: 12px;
     margin-top: 20px;
+    animation: scrollDownLoop 2s infinite ease-in-out;
+}
+
+@keyframes scrollDownLoop {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(8px);
+        opacity: 1;
+    }
 }
 
 /* About Section */
@@ -608,7 +638,7 @@ header.scrolled .mobile-nav-toggle span {
 /* Live Aquariums */
 .aquarium-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
     gap: 30px;
 }
 
@@ -868,6 +898,8 @@ header.scrolled .mobile-nav-toggle span {
 }
 
 .booking-form-input {
+    width: 100%;
+    max-width: 100%;
     background: #faf9f6;
     border: 1px solid rgba(0, 0, 0, 0.08);
     padding: 12px 16px;
@@ -888,7 +920,7 @@ header.scrolled .mobile-nav-toggle span {
 /* Gallery Section */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 20px;
 }
 
@@ -1194,6 +1226,10 @@ footer {
     text-decoration: underline;
 }
 
+.mobile-only-cta {
+    display: none;
+}
+
 /* ==========================================================================
    Responsive Media Queries
    ========================================================================== */
@@ -1202,7 +1238,7 @@ footer {
     .section-title {
         font-size: 2.3rem;
     }
-    .hero-title {
+    .video-title {
         font-size: 3.5rem;
     }
     .about-grid, .contact-layout {
@@ -1211,6 +1247,9 @@ footer {
     }
     .about-content {
         padding-right: 0;
+    }
+    .about-image-wrap {
+        margin-bottom: 30px;
     }
     .about-image-overlap {
         bottom: -20px;
@@ -1229,6 +1268,10 @@ footer {
         --nav-height: 70px;
     }
     
+    .section {
+        padding: 60px 0;
+    }
+    
     .mobile-nav-toggle {
         display: flex;
     }
@@ -1236,7 +1279,7 @@ footer {
     .nav-menu {
         position: fixed;
         top: var(--nav-height);
-        left: -100%;
+        left: 0;
         width: 100%;
         height: calc(100vh - var(--nav-height));
         background: var(--color-bg-deep);
@@ -1244,21 +1287,59 @@ footer {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 30px;
+        gap: 24px;
+        transform: translateX(-100%);
         transition: var(--transition-smooth);
         z-index: 1000;
+        padding: 40px 20px;
+        overflow-y: auto;
     }
     
     .nav-menu.open {
-        left: 0;
+        transform: translateX(0);
+    }
+    
+    /* Ensure nav menu links are always readable dark slate on light mobile drawer background */
+    .nav-menu .nav-link {
+        color: var(--color-text-light) !important;
+        font-size: 1.1rem;
+        padding: 10px 0;
+    }
+    
+    .nav-menu .nav-link:hover,
+    .nav-menu .nav-link.active {
+        color: var(--color-gold) !important;
+    }
+    
+    .nav-menu .mobile-only-cta {
+        display: inline-block !important;
+        background: var(--gradient-gold);
+        color: var(--color-text-dark) !important;
+        padding: 12px 34px !important;
+        border-radius: var(--border-radius-sm);
+        font-weight: 700;
+        box-shadow: 0 4px 15px rgba(179, 143, 45, 0.25);
+        margin-top: 15px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+    
+    .nav-menu .mobile-only-cta::after {
+        display: none !important;
     }
     
     .header-cta {
         display: none; /* Hide on mobile to simplify header */
     }
     
-    .hero-title {
+    .video-title {
         font-size: 2.5rem;
+    }
+    
+    .video-desc {
+        font-size: 1rem;
+        margin-bottom: 25px;
     }
     
     .hero-btns {
@@ -1271,12 +1352,21 @@ footer {
         gap: 20px;
     }
     
+    .booking-form-box {
+        padding: 24px;
+    }
+    
     .booking-form-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
     
     .booking-form-group.full-width {
         grid-column: span 1;
+    }
+    
+    .map-container {
+        min-height: 300px;
     }
     
     .footer-grid {
@@ -1300,6 +1390,60 @@ footer {
         width: 50px;
         height: 50px;
         font-size: 26px;
+    }
+}
+
+@media (max-width: 600px) {
+    .menu-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .menu-item-img {
+        width: 100%;
+        height: 180px;
+    }
+    
+    .reserve-banner-title {
+        font-size: 2rem;
+    }
+    
+    .reserve-banner-text {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 16px;
+    }
+    
+    .logo img {
+        height: 40px;
+    }
+    
+    .logo-text {
+        font-size: 1.1rem;
+        white-space: nowrap;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .video-title {
+        font-size: 2.1rem;
+    }
+    
+    /* Prevent booking form and buttons overflow on narrow devices */
+    .booking-form-box {
+        padding: 20px 16px;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-wa {
+        padding: 12px 20px;
+        font-size: 0.85rem;
     }
 }
 
