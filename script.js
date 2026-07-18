@@ -220,36 +220,175 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Menu Category Filter
-    const filterButtons = document.querySelectorAll('.menu-tab-btn');
-    const menuItems = document.querySelectorAll('.menu-item');
-    
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const category = btn.getAttribute('data-filter');
-            
-            menuItems.forEach(item => {
-                // Fade out transition
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(15px) scale(0.98)';
-                
-                setTimeout(() => {
-                    if (category === 'all' || item.getAttribute('data-category') === category) {
-                        item.style.display = 'flex';
+    // 4. Artisan Culinary Highlights Interactive Carousel
+    const carouselContainer = document.querySelector('.culinary-carousel-container');
+    const carouselSlides = Array.from(document.querySelectorAll('.carousel-slide'));
+    const infoTitle = document.getElementById('infoTitle');
+    const infoDesc = document.getElementById('infoDesc');
+    const carouselInfoBox = document.getElementById('carouselInfoBox');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const carouselTrackWrapper = document.getElementById('carouselTrackWrapper');
+
+    if (carouselContainer && carouselSlides.length > 0) {
+        let currentIndex = 1; // Start with the second image (index 1: Siakap Sambal Petai) as active
+        let isTransitioning = false;
+
+        // Set initial state class on load
+        carouselContainer.classList.add('init-intro');
+
+        // Intersection Observer to trigger entrance animation once
+        const menuSection = document.getElementById('menu');
+        if (menuSection) {
+            const menuObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        carouselContainer.classList.remove('init-intro');
+                        carouselContainer.classList.add('animate-intro');
+                        
+                        // Clean up animation class after it completes to allow smooth interactive transitions
                         setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'translateY(0) scale(1)';
-                        }, 50);
-                    } else {
-                        item.style.display = 'none';
+                            carouselContainer.classList.remove('animate-intro');
+                        }, 2600);
+                        
+                        menuObserver.unobserve(entry.target);
                     }
-                }, 300);
+                });
+            }, {
+                root: null,
+                threshold: 0.15
+            });
+            menuObserver.observe(menuSection);
+        }
+
+        // State update function
+        function updateCarousel(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            currentIndex = (index + carouselSlides.length) % carouselSlides.length;
+
+            const activeIndex = currentIndex;
+            const prevIndex = (currentIndex - 1 + carouselSlides.length) % carouselSlides.length;
+            const nextIndex = (currentIndex + 1) % carouselSlides.length;
+
+            // Fade out the info text
+            if (carouselInfoBox) {
+                carouselInfoBox.style.opacity = '0';
+                carouselInfoBox.style.transform = 'translateY(10px)';
+            }
+
+            // Perform slide changes
+            carouselSlides.forEach((slide, i) => {
+                slide.className = 'carousel-slide'; // reset class
+                if (i === activeIndex) {
+                    slide.classList.add('active');
+                } else if (i === prevIndex) {
+                    slide.classList.add('prev');
+                } else if (i === nextIndex) {
+                    slide.classList.add('next');
+                }
+            });
+
+            // Update text after a brief fade-out delay
+            setTimeout(() => {
+                const activeSlide = carouselSlides[activeIndex];
+                if (activeSlide) {
+                    const title = activeSlide.getAttribute('data-title');
+                    const desc = activeSlide.getAttribute('data-desc');
+
+                    if (infoTitle) infoTitle.textContent = title;
+                    if (infoDesc) infoDesc.textContent = desc;
+                }
+
+                // Fade back in
+                if (carouselInfoBox) {
+                    carouselInfoBox.style.opacity = '1';
+                    carouselInfoBox.style.transform = 'translateY(0)';
+                }
+                
+                // Release lock
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 400); // match transition speed
+            }, 250);
+        }
+
+        // Navigation controls click
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                updateCarousel(currentIndex - 1);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                updateCarousel(currentIndex + 1);
+            });
+        }
+
+        // Slide clicks: clicking left or right slide selects it
+        carouselSlides.forEach((slide, i) => {
+            slide.addEventListener('click', () => {
+                if (slide.classList.contains('prev')) {
+                    updateCarousel(currentIndex - 1);
+                } else if (slide.classList.contains('next')) {
+                    updateCarousel(currentIndex + 1);
+                }
             });
         });
-    });
+
+        // Swipe & Drag Gestures
+        let dragStartX = 0;
+        let dragMinDist = 50; // minimum swipe distance to register
+        let isDragging = false;
+
+        function handleDragStart(x) {
+            if (carouselContainer.classList.contains('init-intro')) return;
+            dragStartX = x;
+            isDragging = true;
+        }
+
+        function handleDragEnd(x) {
+            if (!isDragging) return;
+            isDragging = false;
+            const diffX = x - dragStartX;
+
+            if (Math.abs(diffX) >= dragMinDist) {
+                if (diffX > 0) {
+                    // Swipe right -> Prev slide
+                    updateCarousel(currentIndex - 1);
+                } else {
+                    // Swipe left -> Next slide
+                    updateCarousel(currentIndex + 1);
+                }
+            }
+        }
+
+        // Touch event listeners
+        if (carouselTrackWrapper) {
+            carouselTrackWrapper.addEventListener('touchstart', (e) => {
+                handleDragStart(e.touches[0].clientX);
+            }, { passive: true });
+
+            carouselTrackWrapper.addEventListener('touchend', (e) => {
+                handleDragEnd(e.changedTouches[0].clientX);
+            }, { passive: true });
+
+            // Mouse event listeners for desktop drag feel
+            carouselTrackWrapper.addEventListener('mousedown', (e) => {
+                handleDragStart(e.clientX);
+                // Prevent selection dragging on images
+                e.preventDefault();
+            });
+
+            window.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    handleDragEnd(e.clientX);
+                }
+            });
+        }
+    }
 
     // 5. WhatsApp Booking Form Generator (English Default)
     const bookingForm = document.getElementById('seafoodBookingForm');
