@@ -3,7 +3,7 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // 1. Sticky Navigation, Scroll Canvas Track & Image Preloading
     const header = document.querySelector('header');
     const sections = document.querySelectorAll('section[id]');
@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!canvas) return;
         const widthDiff = Math.abs(window.innerWidth - lastWidth);
         const heightDiff = Math.abs(window.innerHeight - lastHeight);
-        
+
         // Skip minor height-only changes (like mobile address bar toggle) to prevent flickering
         if (widthDiff === 0 && heightDiff < 100 && canvas.width > 0) return;
-        
+
         lastWidth = window.innerWidth;
         lastHeight = window.innerHeight;
         canvas.width = window.innerWidth;
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
-        
+
         // Toggle header visibility based on scroll position in video track (always visible from start on mobile/tablet)
         const triggerHeight = window.innerWidth <= 768 ? 0 : window.innerHeight * 1.2;
         const stickyHeight = window.innerHeight * 2.0;
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             header.classList.remove('scrolled');
         }
-        
+
         // Active Navigation Link on scroll
         let currentSectionId = '';
         sections.forEach(section => {
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentSectionId = section.getAttribute('id');
             }
         });
-        
+
         navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${currentSectionId}`) {
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (maxScroll > 0) {
                 let progress = scrollY / maxScroll;
                 progress = Math.max(0, Math.min(1, progress));
-                
+
                 // Map progress to [1, 101] frame range
                 targetFrameIndex = 1 + progress * (frameCount - 1);
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         rootMargin: '0px 0px -50px 0px', // Trigger slightly before element enters viewport
         threshold: 0.15
     };
-    
+
     const scrollRevealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, observerOptions);
-    
+
     const elementsToReveal = document.querySelectorAll('.scroll-reveal');
     elementsToReveal.forEach(element => {
         scrollRevealObserver.observe(element);
@@ -205,13 +205,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Mobile Navigation Toggle
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
-    
+
     if (mobileNavToggle && navMenu) {
         mobileNavToggle.addEventListener('click', () => {
             navMenu.classList.toggle('open');
             mobileNavToggle.classList.toggle('active');
         });
-        
+
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('open');
@@ -245,12 +245,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (entry.isIntersecting) {
                         carouselContainer.classList.remove('init-intro');
                         carouselContainer.classList.add('animate-intro');
-                        
+
                         // Clean up animation class after it completes to allow smooth interactive transitions
                         setTimeout(() => {
                             carouselContainer.classList.remove('animate-intro');
                         }, 2600);
-                        
+
                         menuObserver.unobserve(entry.target);
                     }
                 });
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     carouselInfoBox.style.opacity = '1';
                     carouselInfoBox.style.transform = 'translateY(0)';
                 }
-                
+
                 // Release lock
                 setTimeout(() => {
                     isTransitioning = false;
@@ -392,11 +392,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. WhatsApp Booking Form Generator (English Default)
     const bookingForm = document.getElementById('seafoodBookingForm');
-    
+
     if (bookingForm) {
         bookingForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             // Extract inputs
             const name = document.getElementById('bookName').value.trim();
             const date = document.getElementById('bookDate').value;
@@ -404,12 +404,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const guests = document.getElementById('bookGuests').value;
             const liveCatch = document.getElementById('bookLiveCatch').value;
             const specialRequests = document.getElementById('bookRequests').value.trim();
-            
+
             if (!name || !date || !time || !guests) {
                 alert('Please fill out all required fields (Name, Date, Time, and Guest Count).');
                 return;
             }
-            
+
             // Format dates for friendly reading (YYYY-MM-DD -> DD/MM/YYYY)
             let formattedDate = date;
             try {
@@ -417,8 +417,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (dateParts.length === 3) {
                     formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
                 }
-            } catch (err) {}
-            
+            } catch (err) { }
+
             // Format time for 12h format
             let formattedTime = time;
             try {
@@ -431,30 +431,291 @@ document.addEventListener('DOMContentLoaded', () => {
                     hour = hour ? hour : 12;
                     formattedTime = `${hour}:${minute} ${ampm}`;
                 }
-            } catch (err) {}
-            
+            } catch (err) { }
+
             // Build polite English message
             let messageText = `Hello Bayu Seafood! I would like to reserve a table:\n\n`;
             messageText += `👤 Name: ${name}\n`;
             messageText += `📅 Date: ${formattedDate}\n`;
             messageText += `⏰ Time: ${formattedTime}\n`;
             messageText += `👥 Guests: ${guests} pax\n`;
-            
+
             if (liveCatch && liveCatch !== 'No live catch preference') {
                 messageText += `🦞 Aquarium Pick: ${liveCatch}\n`;
             }
-            
+
             if (specialRequests) {
                 messageText += `✍️ Special Requests: ${specialRequests}\n`;
             }
-            
+
             messageText += `\nPlease confirm the availability of our table. Thank you!`;
-            
+
             const encodedText = encodeURIComponent(messageText);
             const waNumber = '60177347030';
             const waUrl = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodedText}`;
-            
+
             window.open(waUrl, '_blank');
         });
+    }
+
+    // 6. Live Seafood Showcase Slider (Boston Lobster, Alaskan King Crab, Tiger Prawns)
+    const catchesData = [
+        {
+            id: 'crab',
+            title: 'Alaskan King Crab',
+            desc: "The king of crabs. Sweet, succulent, and incredibly meaty. Perfect when wok-tossed in our signature Singapore Chili Sauce or Creamy Salted Egg.",
+            img: 'lc1.png',
+            dropdownVal: 'Live Alaskan King Crab',
+            badge: 'Chef\'s Pick'
+        },
+        {
+            id: 'lobster',
+            title: 'Boston Lobster',
+            desc: 'Cold-water North Atlantic lobsters with plump claws and rich meat. Sublime when garlic-butter baked or topped with herb cheese.',
+            img: 'lc2.png',
+            dropdownVal: 'Live Boston Lobster',
+            badge: 'Premium Selection'
+        },
+        {
+            id: 'prawns',
+            title: 'Tiger Prawns',
+            desc: 'Large-sized local prawns featuring a firm texture and natural sweetness. Best enjoyed cooked Kam Heong style or signature Dry Butter.',
+            img: 'lc3.png',
+            dropdownVal: 'Live Tiger Prawns',
+            badge: 'Fresh Harvest'
+        }
+    ];
+
+    let activeAqIndex = 1; // Boston Lobster is index 1
+    let isAqTransitioning = false;
+
+    const showcaseContainer = document.getElementById('aquariumShowcase');
+    const aqTitleEl = document.getElementById('aqTitle');
+    const aqDescEl = document.getElementById('aqDesc');
+    const aqBadgeTextEl = document.getElementById('aqBadgeText');
+    const aqInfoBoxEl = document.getElementById('aqInfoBox');
+    const aqTopImgEl = document.getElementById('aqTopImg');
+    const aqCenterImgEl = document.getElementById('aqCenterImg');
+    const aqBottomImgEl = document.getElementById('aqBottomImg');
+    const aqTopImgWrap = document.getElementById('aqTopImgWrap');
+    const aqBottomImgWrap = document.getElementById('aqBottomImgWrap');
+    const centerImgWrap = document.getElementById('aqCenterImgWrap');
+
+    const aqPrevBtn = document.getElementById('aqPrevBtn');
+    const aqNextBtn = document.getElementById('aqNextBtn');
+
+    if (showcaseContainer) {
+        // Enable initial hidden states via JS
+        showcaseContainer.classList.add('js-enabled');
+
+        // Coordinate calculations for the cinematic intro
+        const setupIntroCoordinates = () => {
+            if (!centerImgWrap || !showcaseContainer) return;
+
+            // Clear current custom property variables for correct recalculation
+            centerImgWrap.style.removeProperty('--center-x');
+            centerImgWrap.style.removeProperty('--center-y');
+
+            const showcaseRect = showcaseContainer.getBoundingClientRect();
+            const imgRect = centerImgWrap.getBoundingClientRect();
+
+            // Center points
+            const showcaseCenterX = showcaseRect.left + showcaseRect.width / 2;
+            const showcaseCenterY = showcaseRect.top + showcaseRect.height / 2;
+            const imgCenterX = imgRect.left + imgRect.width / 2;
+            const imgCenterY = imgRect.top + imgRect.height / 2;
+
+            // Offset distance
+            const translateX = showcaseCenterX - imgCenterX;
+            const translateY = showcaseCenterY - imgCenterY;
+
+            centerImgWrap.style.setProperty('--center-x', `${translateX}px`);
+            centerImgWrap.style.setProperty('--center-y', `${translateY}px`);
+        };
+
+        // Initialize positions
+        setupIntroCoordinates();
+        window.addEventListener('resize', setupIntroCoordinates);
+
+        // Intersection Observer to trigger scroll-linked start
+        const aqObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setupIntroCoordinates();
+                    showcaseContainer.classList.add('animate-intro');
+                    aqObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px -100px 0px',
+            threshold: 0.15
+        });
+        aqObserver.observe(showcaseContainer);
+
+        // Slider updating function
+        const updateAquariumShowcase = (targetIndex) => {
+            if (isAqTransitioning) return;
+            isAqTransitioning = true;
+
+            activeAqIndex = (targetIndex + catchesData.length) % catchesData.length;
+            const activeData = catchesData[activeAqIndex];
+            const topIndex = (activeAqIndex - 1 + catchesData.length) % catchesData.length;
+            const bottomIndex = (activeAqIndex + 1) % catchesData.length;
+
+            // Step 1: Fade out details
+            if (aqInfoBoxEl) {
+                aqInfoBoxEl.style.opacity = '0';
+                aqInfoBoxEl.style.transform = 'translateX(-20px)'; // Shift left to animate left-to-right on fade-in
+            }
+            if (centerImgWrap) {
+                centerImgWrap.style.transform = 'scale(0.85)';
+                centerImgWrap.style.opacity = '0.3';
+            }
+            if (aqTopImgWrap) {
+                aqTopImgWrap.style.transform = 'scale(0.7)';
+                aqTopImgWrap.style.opacity = '0';
+            }
+            if (aqBottomImgWrap) {
+                aqBottomImgWrap.style.transform = 'scale(0.7)';
+                aqBottomImgWrap.style.opacity = '0';
+            }
+
+            // Step 2: Swap sources and contents after fade out completes
+            setTimeout(() => {
+                if (aqTopImgEl) {
+                    aqTopImgEl.src = catchesData[topIndex].img;
+                    aqTopImgEl.alt = catchesData[topIndex].title;
+                }
+                if (aqCenterImgEl) {
+                    aqCenterImgEl.src = activeData.img;
+                    aqCenterImgEl.alt = activeData.title;
+                }
+                if (aqBottomImgEl) {
+                    aqBottomImgEl.src = catchesData[bottomIndex].img;
+                    aqBottomImgEl.alt = catchesData[bottomIndex].title;
+                }
+
+                if (aqTitleEl) aqTitleEl.textContent = activeData.title;
+                if (aqDescEl) aqDescEl.textContent = activeData.desc;
+                if (aqBadgeTextEl) aqBadgeTextEl.textContent = activeData.badge;
+
+                // Step 3: Fade in elements with new information
+                if (centerImgWrap) {
+                    centerImgWrap.style.transform = '';
+                    centerImgWrap.style.opacity = '';
+                }
+                if (aqTopImgWrap) {
+                    aqTopImgWrap.style.transform = '';
+                    aqTopImgWrap.style.opacity = '';
+                }
+                if (aqBottomImgWrap) {
+                    aqBottomImgWrap.style.transform = '';
+                    aqBottomImgWrap.style.opacity = '';
+                }
+
+                if (aqInfoBoxEl) {
+                    aqInfoBoxEl.style.opacity = '';
+                    aqInfoBoxEl.style.transform = '';
+                }
+
+                setTimeout(() => {
+                    isAqTransitioning = false;
+                }, 500);
+            }, 350);
+        };
+
+        // Navigation button bindings
+        if (aqPrevBtn) {
+            aqPrevBtn.addEventListener('click', () => {
+                updateAquariumShowcase(activeAqIndex - 1);
+            });
+        }
+        if (aqNextBtn) {
+            aqNextBtn.addEventListener('click', () => {
+                updateAquariumShowcase(activeAqIndex + 1);
+            });
+        }
+
+        // Click previews directly to navigate
+        if (aqTopImgWrap) {
+            aqTopImgWrap.addEventListener('click', () => {
+                updateAquariumShowcase(activeAqIndex - 1);
+            });
+        }
+        if (aqBottomImgWrap) {
+            aqBottomImgWrap.addEventListener('click', () => {
+                updateAquariumShowcase(activeAqIndex + 1);
+            });
+        }
+
+        // Swipes / Drag gestures on image column
+        const imagesStack = document.querySelector('.showcase-images-stack');
+        if (imagesStack) {
+            let dragStartY = 0;
+            let dragMinDist = 45;
+            let isDragging = false;
+
+            const handleDragStart = (y) => {
+                if (showcaseContainer.classList.contains('js-enabled') && !showcaseContainer.classList.contains('animate-intro')) return;
+                dragStartY = y;
+                isDragging = true;
+            };
+
+            const handleDragEnd = (y) => {
+                if (!isDragging) return;
+                isDragging = false;
+                const diffY = y - dragStartY;
+
+                if (Math.abs(diffY) >= dragMinDist) {
+                    if (diffY > 0) {
+                        // Swipe down -> show previous catch
+                        updateAquariumShowcase(activeAqIndex - 1);
+                    } else {
+                        // Swipe up -> show next catch
+                        updateAquariumShowcase(activeAqIndex + 1);
+                    }
+                }
+            };
+
+            imagesStack.addEventListener('touchstart', (e) => {
+                handleDragStart(e.touches[0].clientY);
+            }, { passive: true });
+
+            imagesStack.addEventListener('touchend', (e) => {
+                handleDragEnd(e.changedTouches[0].clientY);
+            }, { passive: true });
+
+            imagesStack.addEventListener('mousedown', (e) => {
+                handleDragStart(e.clientY);
+                e.preventDefault(); // prevents image highlight drag
+            });
+
+            window.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    handleDragEnd(e.clientY);
+                }
+            });
+        }
+
+        // WhatsApp Booking Portal auto-selection and scroll integration
+        const aqSelectBtn = document.getElementById('aqSelectBtn');
+        const aqNavTabBtn = document.getElementById('aqNavTabBtn');
+        const bookLiveCatchDropdown = document.getElementById('bookLiveCatch');
+
+        const handleSelectionAndScroll = (e) => {
+            e.preventDefault();
+            const activeData = catchesData[activeAqIndex];
+            if (bookLiveCatchDropdown && activeData) {
+                bookLiveCatchDropdown.value = activeData.dropdownVal;
+            }
+            const targetSec = document.getElementById('reservation');
+            if (targetSec) {
+                targetSec.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        if (aqSelectBtn) aqSelectBtn.addEventListener('click', handleSelectionAndScroll);
+        if (aqNavTabBtn) aqNavTabBtn.addEventListener('click', handleSelectionAndScroll);
     }
 });
