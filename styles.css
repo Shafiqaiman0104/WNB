@@ -653,109 +653,460 @@ header.scrolled .mobile-nav-toggle span {
     transform: translate(-10px, -10px) rotate(5deg);
 }
 
-/* Live Aquariums */
-.aquarium-grid {
+/* Live Seafood Showcase (Redesigned) */
+#aquariums.section {
+    padding: 70px 0;
+}
+
+.aquarium-showcase {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
-    gap: 30px;
-}
-
-.aquarium-card {
-    background: var(--color-bg-card);
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    border-radius: var(--border-radius-md);
-    overflow: hidden;
-    transition: var(--transition-smooth);
-    box-shadow: var(--box-shadow-soft);
-}
-
-.aquarium-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(179, 143, 45, 0.3);
-    box-shadow: 0 20px 40px rgba(179, 143, 45, 0.12);
-}
-
-.aq-img-wrap {
-    height: 250px;
-    overflow: hidden;
+    grid-template-columns: 320px 1fr;
+    gap: 50px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 380px;
     position: relative;
 }
 
-.aq-img {
+.showcase-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    position: relative;
+    user-select: none;
+}
+
+.showcase-images-stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+}
+
+.showcase-arrow {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(179, 143, 45, 0.35);
+    background: var(--color-bg-card);
+    color: var(--color-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: var(--box-shadow-soft);
     transition: var(--transition-smooth);
+    opacity: 1;
+    transform: scale(1);
 }
 
-.aquarium-card:hover .aq-img {
-    transform: scale(1.08);
+.aquarium-showcase.js-enabled .showcase-arrow {
+    opacity: 0;
+    transform: scale(0.7);
 }
 
-.aq-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+.showcase-arrow:hover {
     background: var(--gradient-gold);
     color: #ffffff;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 50px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    border-color: transparent;
+    box-shadow: 0 10px 20px rgba(179, 143, 45, 0.25);
 }
 
-.aq-info {
-    padding: 30px;
+.showcase-arrow.arrow-up:hover {
+    transform: translateY(-4px) scale(1.05);
 }
 
-.aq-title {
-    font-size: 1.8rem;
-    margin-bottom: 12px;
+.showcase-arrow.arrow-down:hover {
+    transform: translateY(4px) scale(1.05);
 }
 
-.aq-desc {
-    color: var(--color-text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 24px;
-    min-height: 70px;
-}
-
-.aq-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    padding-top: 20px;
-}
-
-.aq-price {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-light);
-}
-
-.aq-price span {
-    color: var(--color-gold);
-    font-size: 1.25rem;
-}
-
-.aq-reserve-btn {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--color-gold);
+.showcase-img-wrap {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     transition: var(--transition-smooth);
 }
 
-.aq-reserve-btn:hover {
+.showcase-img-wrap.small {
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.55;
+    transform: scale(0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+
+.aquarium-showcase.js-enabled .showcase-img-wrap.small {
+    opacity: 0;
+    transform: scale(0.7);
+}
+
+.showcase-img-wrap.small:hover {
+    opacity: 0.95;
+    transform: scale(1.06);
+}
+
+.showcase-img-wrap.small .showcase-img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+    transition: var(--transition-smooth);
+}
+
+.showcase-img-wrap.active {
+    width: 220px;
+    height: 220px;
+    z-index: 5;
+    /* Animated via CSS Variable in JS */
+}
+
+.center-img-holder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.showcase-img-wrap.active:hover .center-img-holder {
+    transform: scale(1.04);
+}
+
+.center-img-holder .showcase-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.12));
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.showcase-img-wrap.active:hover .showcase-img {
+    transform: scale(1.06) rotate(3deg);
+    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.18));
+}
+
+.showcase-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding-left: 20px;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.aquarium-showcase.js-enabled .showcase-right {
+    opacity: 0;
+    transform: translateX(-40px);
+    /* Shift left for left-to-right animation */
+}
+
+.showcase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold-light);
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: rgba(179, 143, 45, 0.05);
+    margin-bottom: 20px;
+}
+
+.showcase-title {
+    font-size: 2.8rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
     color: var(--color-text-white);
-    transform: translateX(4px);
+    margin-bottom: 18px;
+    line-height: 1.2;
+}
+
+.showcase-desc {
+    font-size: 1.05rem;
+    font-family: var(--font-body);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 35px;
+    min-height: 80px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.showcase-actions {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.showcase-nav-tab-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    position: relative;
+    padding: 6px 0;
+    display: inline-block;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.showcase-nav-tab-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-gold);
+    transition: var(--transition-smooth);
+}
+
+.showcase-nav-tab-link:hover {
+    color: var(--color-gold);
+}
+
+.showcase-nav-tab-link:hover::after {
+    width: 100%;
+}
+
+/* Intro Animations keyframes & transitions */
+.aquarium-showcase.animate-intro #aqCenterImgWrap {
+    animation: centerToLeft 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.aquarium-showcase.animate-intro .showcase-arrow,
+.aquarium-showcase.animate-intro .showcase-img-wrap.small {
+    opacity: 0.55;
+    transform: scale(0.9);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+    transition-delay: 1.1s;
+}
+
+/* Up/Down buttons transition hover defaults override */
+.aquarium-showcase.animate-intro .showcase-arrow {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.aquarium-showcase.animate-intro .showcase-right {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 1.2s;
+    /* Triggers after active image slides left faster */
+}
+
+.aquarium-showcase.animate-intro .showcase-img-wrap.active .center-img-holder {
+    animation: breath 4s ease-in-out infinite;
+    animation-delay: 1.5s;
+    /* Begins after centerToLeft animation finishes */
+}
+
+@keyframes breath {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+}
+
+@keyframes centerToLeft {
+    0% {
+        transform: translate(var(--center-x, 0), var(--center-y, 0)) scale(0.6);
+        opacity: 0;
+    }
+
+    30% {
+        transform: translate(var(--center-x, 0), var(--center-y, 0)) scale(1.35);
+        opacity: 1;
+    }
+
+    65% {
+        transform: translate(var(--center-x, 0), var(--center-y, 0)) scale(1.35);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Fallback Visibility (in case scroll-reveal triggers without JS) */
+.aquarium-showcase:not(.animate-intro).reveal-visible .showcase-arrow,
+.aquarium-showcase:not(.animate-intro).reveal-visible .showcase-img-wrap.small,
+.aquarium-showcase:not(.animate-intro).reveal-visible .showcase-right,
+.aquarium-showcase:not(.animate-intro).reveal-visible #aqCenterImgWrap {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+}
+
+/* Responsive Styles (Maintaining Split Grid Layout on Mobile and Tablet) */
+@media (max-width: 991px) {
+    .aquarium-showcase {
+        grid-template-columns: 260px 1fr;
+        gap: 35px;
+        min-height: 340px;
+    }
+
+    .showcase-img-wrap.active {
+        width: 180px;
+        height: 180px;
+    }
+
+    .showcase-img-wrap.small {
+        width: 65px;
+        height: 65px;
+    }
+
+    .showcase-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .aquarium-showcase {
+        grid-template-columns: 160px 1fr;
+        gap: 20px;
+        min-height: auto;
+    }
+
+    .showcase-left {
+        gap: 10px;
+    }
+
+    .showcase-images-stack {
+        gap: 12px;
+    }
+
+    .showcase-img-wrap.active {
+        width: 120px;
+        height: 120px;
+    }
+
+    .showcase-img-wrap.small {
+        width: 50px;
+        height: 50px;
+    }
+
+    .showcase-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+
+    .showcase-right {
+        padding-left: 10px;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .showcase-title {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+
+    .showcase-desc {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        min-height: auto;
+    }
+
+    .showcase-badge {
+        margin-bottom: 12px;
+        padding: 4px 10px;
+        font-size: 0.65rem;
+    }
+
+    .showcase-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .showcase-actions .btn-primary {
+        flex-shrink: 0 !important;
+        padding: 8px 14px !important;
+        font-size: 0.7rem !important;
+    }
+
+    .showcase-nav-tab-link {
+        font-size: 0.7rem !important;
+        white-space: normal !important;
+        line-height: 1.2 !important;
+        flex-grow: 1 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .aquarium-showcase {
+        grid-template-columns: 120px 1fr;
+        gap: 15px;
+    }
+
+    .showcase-img-wrap.active {
+        width: 90px;
+        height: 90px;
+    }
+
+    .showcase-img-wrap.small {
+        width: 40px;
+        height: 40px;
+    }
+
+    .showcase-title {
+        font-size: 1.3rem;
+    }
+
+    .showcase-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+    }
+
+    .showcase-actions .btn-primary {
+        padding: 6px 10px !important;
+        font-size: 0.65rem !important;
+    }
+
+    .showcase-nav-tab-link {
+        font-size: 0.65rem !important;
+    }
 }
 
 /* ==========================================================================
