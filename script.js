@@ -465,6 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Alaskan King Crab',
             desc: "The king of crabs. Sweet, succulent, and incredibly meaty. Perfect when wok-tossed in our signature Singapore Chili Sauce or Creamy Salted Egg.",
             img: 'lc1.png',
+            bgImg: 'https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/singaporean-style-chilli-crab/main-header.jpg',
             dropdownVal: 'Live Alaskan King Crab',
             badge: 'Chef\'s Pick'
         },
@@ -473,6 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Boston Lobster',
             desc: 'Cold-water North Atlantic lobsters with plump claws and rich meat. Sublime when garlic-butter baked or topped with herb cheese.',
             img: 'lc2.png',
+            bgImg: 'https://seafooddishrecipes.com/wp-content/uploads/2025/07/garlic-butter-lobster.webp',
             dropdownVal: 'Live Boston Lobster',
             badge: 'Premium Selection'
         },
@@ -481,6 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Tiger Prawns',
             desc: 'Large-sized local prawns featuring a firm texture and natural sweetness. Best enjoyed cooked Kam Heong style or signature Dry Butter.',
             img: 'lc3.png',
+            bgImg: 'https://static.vecteezy.com/system/resources/previews/042/370/075/large_2x/top-view-of-kam-heong-prawns-on-white-plate-delicious-asian-food-concept-photo.jpg',
             dropdownVal: 'Live Tiger Prawns',
             badge: 'Fresh Harvest'
         }
@@ -507,6 +510,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (showcaseContainer) {
         // Enable initial hidden states via JS
         showcaseContainer.classList.add('js-enabled');
+
+        // Set initial background image of the right info box using bgImg property
+        if (aqInfoBoxEl) {
+            aqInfoBoxEl.style.backgroundImage = `url('${catchesData[activeAqIndex].bgImg}')`;
+        }
 
         // Coordinate calculations for the cinematic intro
         const setupIntroCoordinates = () => {
@@ -600,6 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (aqDescEl) aqDescEl.textContent = activeData.desc;
                 if (aqBadgeTextEl) aqBadgeTextEl.textContent = activeData.badge;
 
+                // Set background image of the right info box using bgImg property
+                if (aqInfoBoxEl) {
+                    aqInfoBoxEl.style.backgroundImage = `url('${activeData.bgImg}')`;
+                }
+
                 // Step 3: Fade in elements with new information
                 if (centerImgWrap) {
                     centerImgWrap.style.transform = '';
@@ -649,23 +662,67 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Swipes / Drag gestures on image column
+        // Swipes / Drag gestures on image column (animating center-img-holder only)
         const imagesStack = document.querySelector('.showcase-images-stack');
         if (imagesStack) {
             let dragStartY = 0;
+            let currentDragY = 0;
             let dragMinDist = 45;
             let isDragging = false;
 
             const handleDragStart = (y) => {
-                if (showcaseContainer.classList.contains('js-enabled') && !showcaseContainer.classList.contains('animate-intro')) return;
                 dragStartY = y;
+                currentDragY = y;
                 isDragging = true;
+                if (centerImgWrap) {
+                    const centerHolder = centerImgWrap.querySelector('.center-img-holder');
+                    if (centerHolder) {
+                        centerHolder.style.transition = 'none';
+                        centerHolder.style.animation = 'none'; // Disable breath animation during drag to allow translateY transforms
+                    }
+                }
             };
 
-            const handleDragEnd = (y) => {
+            const handleDragMove = (y, event) => {
+                if (!isDragging) return;
+                currentDragY = y;
+                const diffY = currentDragY - dragStartY;
+
+                if (event && event.cancelable) {
+                    event.preventDefault();
+                }
+
+                // Apply dampened visual translation ONLY to the active center image holder
+                const displacement = diffY * 0.5;
+                if (centerImgWrap) {
+                    const centerHolder = centerImgWrap.querySelector('.center-img-holder');
+                    if (centerHolder) {
+                        centerHolder.style.transform = `translateY(${displacement}px)`;
+                    }
+                }
+            };
+
+            const handleDragEnd = () => {
                 if (!isDragging) return;
                 isDragging = false;
-                const diffY = y - dragStartY;
+                const diffY = currentDragY - dragStartY;
+
+                if (centerImgWrap) {
+                    const centerHolder = centerImgWrap.querySelector('.center-img-holder');
+                    if (centerHolder) {
+                        // Smooth snap back with spring cubic-bezier transition
+                        centerHolder.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        centerHolder.style.transform = '';
+                        
+                        // Clear inline transition after transition completes
+                        setTimeout(() => {
+                            if (!isDragging) {
+                                centerHolder.style.transition = '';
+                                centerHolder.style.animation = ''; // Restore breath animation
+                            }
+                        }, 500);
+                    }
+                }
 
                 if (Math.abs(diffY) >= dragMinDist) {
                     if (diffY > 0) {
@@ -678,22 +735,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
+            // Touch events for mobile swiping
             imagesStack.addEventListener('touchstart', (e) => {
-                handleDragStart(e.touches[0].clientY);
-            }, { passive: true });
+                if (e.touches.length > 0) {
+                    handleDragStart(e.touches[0].clientY);
+                }
+            }, { passive: false });
+
+            imagesStack.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    handleDragMove(e.touches[0].clientY, e);
+                }
+            }, { passive: false }); // Lock page scroll
 
             imagesStack.addEventListener('touchend', (e) => {
-                handleDragEnd(e.changedTouches[0].clientY);
+                handleDragEnd();
             }, { passive: true });
 
+            // Mouse events for desktop dragging
             imagesStack.addEventListener('mousedown', (e) => {
                 handleDragStart(e.clientY);
-                e.preventDefault(); // prevents image highlight drag
+                e.preventDefault(); // Prevents default ghost outline drag
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    handleDragMove(e.clientY);
+                }
             });
 
             window.addEventListener('mouseup', (e) => {
                 if (isDragging) {
-                    handleDragEnd(e.clientY);
+                    handleDragEnd();
                 }
             });
         }
