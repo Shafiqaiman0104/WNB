@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('scroll-canvas');
     const videoWrapper = document.getElementById('home');
     const videoText = document.getElementById('video-text');
+    const text1 = document.getElementById('scroll-text-1');
+    const text2 = document.getElementById('scroll-text-2');
+    const text3 = document.getElementById('scroll-text-3');
 
     let context = null;
     if (canvas) {
@@ -196,12 +199,47 @@ document.addEventListener('DOMContentLoaded', () => {
         if (Math.abs(diff) > 0.01) {
             currentFrameIndex += diff * 0.12;
             drawFrame(Math.round(currentFrameIndex));
+            updateScrollTextOpacity(currentFrameIndex);
             requestAnimationFrame(renderCanvasFrame);
             isAnimating = true;
         } else {
             currentFrameIndex = targetFrameIndex;
             drawFrame(Math.round(currentFrameIndex));
+            updateScrollTextOpacity(currentFrameIndex);
             isAnimating = false;
+        }
+    }
+
+    function getOpacity(frame, startFadeIn, endFadeIn, startFadeOut, endFadeOut) {
+        if (frame < startFadeIn) return 0;
+        if (frame <= endFadeIn) {
+            return (frame - startFadeIn) / (endFadeIn - startFadeIn);
+        }
+        if (frame < startFadeOut) return 1;
+        if (frame <= endFadeOut) {
+            return 1 - (frame - startFadeOut) / (endFadeOut - startFadeOut);
+        }
+        return 0;
+    }
+
+    function updateScrollTextOpacity(frame) {
+        if (!text1 || !text2 || !text3) return;
+
+        const op1 = getOpacity(frame, 30, 36, 48, 54);
+        const op2 = getOpacity(frame, 54, 60, 72, 78);
+        const op3 = getOpacity(frame, 78, 84, 96, 101);
+
+        applyOpacityAndVisibility(text1, op1);
+        applyOpacityAndVisibility(text2, op2);
+        applyOpacityAndVisibility(text3, op3);
+    }
+
+    function applyOpacityAndVisibility(element, opacity) {
+        element.style.opacity = opacity.toFixed(3);
+        if (opacity > 0) {
+            element.classList.add('active');
+        } else {
+            element.classList.remove('active');
         }
     }
     // Render initial frame
@@ -740,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Smooth snap back with spring cubic-bezier transition
                         centerHolder.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                         centerHolder.style.transform = '';
-                        
+
                         // Clear inline transition after transition completes
                         setTimeout(() => {
                             if (!isDragging) {
@@ -817,5 +855,169 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (aqSelectBtn) aqSelectBtn.addEventListener('click', handleSelectionAndScroll);
         if (aqNavTabBtn) aqNavTabBtn.addEventListener('click', handleSelectionAndScroll);
+
+        // 7. Immersive Curved Food Gallery Carousel
+        const galleryContainer = document.getElementById('immersiveCarousel');
+        const gallerySlides = Array.from(document.querySelectorAll('.food-gallery-slide'));
+        const phoneScreenImg = document.getElementById('phone-screen-img');
+        const galleryTitleEl = document.getElementById('gallery-active-title');
+
+        const dishNames = [
+            "Premium Giant Grouper Tank",
+            "North Atlantic Lobster Display",
+            "Live Sri Lankan Mud Crabs",
+            "Live Tiger Prawns Display",
+            "Premium Live Sea Abalone",
+            "Alaskan King Crab Aquarium",
+            "Live Canadian Geoduck Clams"
+        ];
+
+        let activeGalleryIndex = 0;
+        let isGalleryTransitioning = false;
+
+        if (galleryContainer && gallerySlides.length > 0) {
+            
+            function updateImmersiveGallery() {
+                const isMobile = window.innerWidth <= 768;
+                
+                // Config parameters
+                const spacingX = isMobile ? 85 : 145;
+                const spacingY = isMobile ? 8 : 15;
+                const visibleLimit = isMobile ? 1 : 3;
+
+                gallerySlides.forEach((slide, j) => {
+                    let diff = j - activeGalleryIndex;
+                    
+                    // Circular wrap
+                    if (diff < -3) diff += 7;
+                    if (diff > 3) diff -= 7;
+
+                    const absDiff = Math.abs(diff);
+
+                    if (absDiff <= visibleLimit) {
+                        // Position slide
+                        const tx = diff * spacingX;
+                        const ty = absDiff * spacingY;
+                        const scale = 1 - absDiff * (isMobile ? 0.12 : 0.15);
+                        const rotate = diff * -5;
+                        const opacity = diff === 0 ? 0 : (1 - absDiff * (isMobile ? 0.45 : 0.25));
+                        const zIndex = 10 - absDiff;
+
+                        slide.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale}) rotate(${rotate}deg)`;
+                        slide.style.opacity = opacity.toFixed(3);
+                        slide.style.zIndex = zIndex;
+                        slide.style.visibility = 'visible';
+                        slide.classList.add('visible-slide');
+                        
+                        if (diff === 0) {
+                            slide.classList.add('active-slide');
+                        } else {
+                            slide.classList.remove('active-slide');
+                        }
+                    } else {
+                        // Hide slide
+                        slide.style.opacity = '0';
+                        slide.style.visibility = 'hidden';
+                        slide.classList.remove('visible-slide', 'active-slide');
+                    }
+                });
+
+                // Sync phone screen image with cross-fade
+                const activeImg = gallerySlides[activeGalleryIndex].querySelector('img');
+                if (activeImg && phoneScreenImg) {
+                    if (phoneScreenImg.getAttribute('src') !== activeImg.getAttribute('src')) {
+                        phoneScreenImg.style.opacity = '0';
+                        setTimeout(() => {
+                            phoneScreenImg.src = activeImg.src;
+                            phoneScreenImg.style.opacity = '1';
+                        }, 200);
+                    }
+                }
+
+                // Sync active caption
+                if (galleryTitleEl) {
+                    galleryTitleEl.textContent = dishNames[activeGalleryIndex];
+                }
+            }
+
+            function rotateGallery(delta) {
+                if (isGalleryTransitioning) return;
+                isGalleryTransitioning = true;
+
+                activeGalleryIndex = (activeGalleryIndex + delta + 7) % 7;
+                updateImmersiveGallery();
+
+                setTimeout(() => {
+                    isGalleryTransitioning = false;
+                }, 650); // matching CSS transition
+            }
+
+            // Click slides to select
+            gallerySlides.forEach((slide, idx) => {
+                slide.addEventListener('click', () => {
+                    let diff = idx - activeGalleryIndex;
+                    if (diff < -3) diff += 7;
+                    if (diff > 3) diff -= 7;
+
+                    if (diff !== 0) {
+                        rotateGallery(diff);
+                    }
+                });
+            });
+
+
+            // Drag / Swipes support
+            let startGalleryX = 0;
+            let isDraggingGallery = false;
+            const galleryDragThreshold = 45;
+
+            function handleGalleryDragStart(x) {
+                startGalleryX = x;
+                isDraggingGallery = true;
+            }
+
+            function handleGalleryDragEnd(x) {
+                if (!isDraggingGallery) return;
+                isDraggingGallery = false;
+
+                const diffX = x - startGalleryX;
+                if (Math.abs(diffX) >= galleryDragThreshold) {
+                    if (diffX > 0) {
+                        rotateGallery(-1);
+                    } else {
+                        rotateGallery(1);
+                    }
+                }
+            }
+
+            // Mouse events
+            galleryContainer.addEventListener('mousedown', (e) => {
+                handleGalleryDragStart(e.clientX);
+                e.preventDefault();
+            });
+
+            window.addEventListener('mouseup', (e) => {
+                if (isDraggingGallery) {
+                    handleGalleryDragEnd(e.clientX);
+                }
+            });
+
+            // Touch events
+            galleryContainer.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    handleGalleryDragStart(e.touches[0].clientX);
+                }
+            }, { passive: true });
+
+            galleryContainer.addEventListener('touchend', (e) => {
+                if (e.changedTouches.length > 0) {
+                    handleGalleryDragEnd(e.changedTouches[0].clientX);
+                }
+            }, { passive: true });
+
+            // Initial Draw
+            updateImmersiveGallery();
+            window.addEventListener('resize', updateImmersiveGallery);
+        }
     }
 });
