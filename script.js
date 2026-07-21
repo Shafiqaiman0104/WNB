@@ -18,15 +18,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const frameCount = 101;
-    const currentFramePath = index => `scrollImage/ezgif-frame-${index.toString().padStart(3, '0')}.jpg`;
+    const currentFramePath = index => `scrollImage/frame-${index.toString().padStart(3, '0')}.webp`;
     const images = [];
 
-    // Preload all 101 images
+    // Precreate all image objects first
     for (let i = 1; i <= frameCount; i++) {
-        const img = new Image();
-        img.src = currentFramePath(i);
-        images.push(img);
+        images.push(new Image());
     }
+
+    const initialLoadCount = 40;
+    let loadedInitialCount = 0;
+    let backgroundLoadStarted = false;
+
+    function startBackgroundLoad() {
+        if (backgroundLoadStarted) return;
+        backgroundLoadStarted = true;
+        for (let i = initialLoadCount + 1; i <= frameCount; i++) {
+            images[i - 1].src = currentFramePath(i);
+        }
+    }
+
+    // Load initial 40 images
+    for (let i = 1; i <= initialLoadCount; i++) {
+        images[i - 1].onload = () => {
+            loadedInitialCount++;
+            if (i === 1) {
+                drawFrame(1);
+            }
+            if (loadedInitialCount >= initialLoadCount) {
+                startBackgroundLoad();
+            }
+        };
+        images[i - 1].onerror = () => {
+            loadedInitialCount++;
+            if (loadedInitialCount >= initialLoadCount) {
+                startBackgroundLoad();
+            }
+        };
+        images[i - 1].src = currentFramePath(i);
+    }
+
+    // Backup to ensure background images start loading even if some initial images fail/hang
+    setTimeout(startBackgroundLoad, 3000);
 
     let targetFrameIndex = 1;
     let currentFrameIndex = 1;
@@ -81,14 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Set first frame drawing on load (handles both cached and slow loading cases)
-    if (images[0]) {
-        if (images[0].complete) {
-            drawFrame(1);
-        } else {
-            images[0].onload = () => {
-                drawFrame(1);
-            };
-        }
+    if (images[0] && images[0].complete) {
+        drawFrame(1);
     }
     // Size canvas immediately on DOM load to prevent default 300x150 sizing gap
     resizeCanvas();
