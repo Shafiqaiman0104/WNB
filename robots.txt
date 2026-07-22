@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap Location
-Sitemap: https://bayuseafood.com/sitemap.xml
+Sitemap: https://bayuseafooddemo.venturerushtech.com/sitemap.xml
