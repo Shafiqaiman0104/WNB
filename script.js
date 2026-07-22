@@ -856,168 +856,143 @@ document.addEventListener('DOMContentLoaded', () => {
         if (aqSelectBtn) aqSelectBtn.addEventListener('click', handleSelectionAndScroll);
         if (aqNavTabBtn) aqNavTabBtn.addEventListener('click', handleSelectionAndScroll);
 
-        // 7. Immersive Curved Food Gallery Carousel
-        const galleryContainer = document.getElementById('immersiveCarousel');
-        const gallerySlides = Array.from(document.querySelectorAll('.food-gallery-slide'));
-        const phoneScreenImg = document.getElementById('phone-screen-img');
-        const galleryTitleEl = document.getElementById('gallery-active-title');
+        // 7. Executive Chef Orbital Certificates & Lightbox Modal Popup System
+        const certOrbitSystem = document.getElementById('certOrbitSystem');
+        const certCards = document.querySelectorAll('.cert-card-orbit');
+        const certModal = document.getElementById('certModal');
+        const certModalImg = document.getElementById('certModalImg');
+        const certModalTitle = document.getElementById('certModalTitle');
+        const certModalClose = document.getElementById('certModalClose');
 
-        const dishNames = [
-            "Premium Giant Grouper Tank",
-            "North Atlantic Lobster Display",
-            "Live Sri Lankan Mud Crabs",
-            "Live Tiger Prawns Display",
-            "Premium Live Sea Abalone",
-            "Alaskan King Crab Aquarium",
-            "Live Canadian Geoduck Clams"
-        ];
+        if (certOrbitSystem && certCards.length > 0) {
+            let currentAngle = 0;
+            let isHoveringOrbit = false;
+            const orbitSpeed = 0.007; // Smooth continuous flying speed
 
-        let activeGalleryIndex = 0;
-        let isGalleryTransitioning = false;
+            // Pause orbit animation on mouse hover over any certificate
+            certCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    isHoveringOrbit = true;
+                });
+                card.addEventListener('mouseleave', () => {
+                    isHoveringOrbit = false;
+                });
 
-        if (galleryContainer && gallerySlides.length > 0) {
-            
-            function updateImmersiveGallery() {
+                // Click certificate to open Lightbox Modal
+                card.addEventListener('click', () => {
+                    const certUrl = card.getAttribute('data-cert-url');
+                    const certTitle = card.getAttribute('data-cert-title') || 'Official Certification';
+
+                    if (certModal && certModalImg) {
+                        certModalImg.src = certUrl;
+                        if (certModalTitle) certModalTitle.textContent = certTitle;
+                        certModal.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // Lock scroll when modal is active
+                    }
+                });
+            });
+
+            // Achievement Modal System
+            const achievementBtn = document.getElementById('achievementBtn');
+            const achievementModal = document.getElementById('achievementModal');
+            const achievementModalClose = document.getElementById('achievementModalClose');
+
+            if (achievementBtn && achievementModal) {
+                achievementBtn.addEventListener('click', () => {
+                    achievementModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            function closeAchievementModal() {
+                if (achievementModal) {
+                    achievementModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (achievementModalClose) {
+                achievementModalClose.addEventListener('click', closeAchievementModal);
+            }
+
+            if (achievementModal) {
+                achievementModal.addEventListener('click', (e) => {
+                    if (e.target === achievementModal) {
+                        closeAchievementModal();
+                    }
+                });
+            }
+
+            // Modal Close Triggers
+            function closeCertModal() {
+                if (certModal) {
+                    certModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (certModalClose) {
+                certModalClose.addEventListener('click', closeCertModal);
+            }
+
+            if (certModal) {
+                certModal.addEventListener('click', (e) => {
+                    if (e.target === certModal) {
+                        closeCertModal();
+                    }
+                });
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (certModal && certModal.classList.contains('active')) {
+                        closeCertModal();
+                    }
+                    if (achievementModal && achievementModal.classList.contains('active')) {
+                        closeAchievementModal();
+                    }
+                }
+            });
+
+            // Continuous 3D Elliptical Orbit Loop
+            function animateCertOrbit() {
+                if (!isHoveringOrbit) {
+                    currentAngle += orbitSpeed;
+                }
+
                 const isMobile = window.innerWidth <= 768;
-                
-                // Config parameters
-                const spacingX = isMobile ? 85 : 145;
-                const spacingY = isMobile ? 8 : 15;
-                const visibleLimit = isMobile ? 1 : 3;
+                // Responsive orbit radii
+                const rx = isMobile ? 120 : 220; // Horizontal radius
+                const ry = isMobile ? 40 : 65;    // Vertical 3D perspective tilt
 
-                gallerySlides.forEach((slide, j) => {
-                    let diff = j - activeGalleryIndex;
+                const totalCards = certCards.length;
+                certCards.forEach((card, idx) => {
+                    // Angular offset for each certificate
+                    const angleOffset = (idx * (2 * Math.PI / totalCards));
+                    const angle = currentAngle + angleOffset;
+
+                    const x = Math.cos(angle) * rx;
+                    const y = Math.sin(angle) * ry;
+
+                    // Depth & scale physics (sin value ranges from -1 to 1)
+                    const sinVal = Math.sin(angle);
                     
-                    // Circular wrap
-                    if (diff < -3) diff += 7;
-                    if (diff > 3) diff -= 7;
+                    // In front (sinVal > 0): larger, z-index 20 (in front of chef)
+                    // Behind (sinVal <= 0): z-index 2 (occluded behind chef.png)
+                    const scale = isMobile ? (0.7 + 0.3 * (sinVal + 1) / 2) : (0.75 + 0.35 * (sinVal + 1) / 2);
+                    const opacity = sinVal > 0 ? 1 : 0.85;
+                    const zIndex = sinVal > 0 ? 20 : 2;
 
-                    const absDiff = Math.abs(diff);
-
-                    if (absDiff <= visibleLimit) {
-                        // Position slide
-                        const tx = diff * spacingX;
-                        const ty = absDiff * spacingY;
-                        const scale = 1 - absDiff * (isMobile ? 0.12 : 0.15);
-                        const rotate = diff * -5;
-                        const opacity = diff === 0 ? 0 : (1 - absDiff * (isMobile ? 0.45 : 0.25));
-                        const zIndex = 10 - absDiff;
-
-                        slide.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale}) rotate(${rotate}deg)`;
-                        slide.style.opacity = opacity.toFixed(3);
-                        slide.style.zIndex = zIndex;
-                        slide.style.visibility = 'visible';
-                        slide.classList.add('visible-slide');
-                        
-                        if (diff === 0) {
-                            slide.classList.add('active-slide');
-                        } else {
-                            slide.classList.remove('active-slide');
-                        }
-                    } else {
-                        // Hide slide
-                        slide.style.opacity = '0';
-                        slide.style.visibility = 'hidden';
-                        slide.classList.remove('visible-slide', 'active-slide');
-                    }
+                    card.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+                    card.style.opacity = opacity.toFixed(3);
+                    card.style.zIndex = zIndex;
                 });
 
-                // Sync phone screen image with cross-fade
-                const activeImg = gallerySlides[activeGalleryIndex].querySelector('img');
-                if (activeImg && phoneScreenImg) {
-                    if (phoneScreenImg.getAttribute('src') !== activeImg.getAttribute('src')) {
-                        phoneScreenImg.style.opacity = '0';
-                        setTimeout(() => {
-                            phoneScreenImg.src = activeImg.src;
-                            phoneScreenImg.style.opacity = '1';
-                        }, 200);
-                    }
-                }
-
-                // Sync active caption
-                if (galleryTitleEl) {
-                    galleryTitleEl.textContent = dishNames[activeGalleryIndex];
-                }
+                requestAnimationFrame(animateCertOrbit);
             }
 
-            function rotateGallery(delta) {
-                if (isGalleryTransitioning) return;
-                isGalleryTransitioning = true;
-
-                activeGalleryIndex = (activeGalleryIndex + delta + 7) % 7;
-                updateImmersiveGallery();
-
-                setTimeout(() => {
-                    isGalleryTransitioning = false;
-                }, 650); // matching CSS transition
-            }
-
-            // Click slides to select
-            gallerySlides.forEach((slide, idx) => {
-                slide.addEventListener('click', () => {
-                    let diff = idx - activeGalleryIndex;
-                    if (diff < -3) diff += 7;
-                    if (diff > 3) diff -= 7;
-
-                    if (diff !== 0) {
-                        rotateGallery(diff);
-                    }
-                });
-            });
-
-
-            // Drag / Swipes support
-            let startGalleryX = 0;
-            let isDraggingGallery = false;
-            const galleryDragThreshold = 45;
-
-            function handleGalleryDragStart(x) {
-                startGalleryX = x;
-                isDraggingGallery = true;
-            }
-
-            function handleGalleryDragEnd(x) {
-                if (!isDraggingGallery) return;
-                isDraggingGallery = false;
-
-                const diffX = x - startGalleryX;
-                if (Math.abs(diffX) >= galleryDragThreshold) {
-                    if (diffX > 0) {
-                        rotateGallery(-1);
-                    } else {
-                        rotateGallery(1);
-                    }
-                }
-            }
-
-            // Mouse events
-            galleryContainer.addEventListener('mousedown', (e) => {
-                handleGalleryDragStart(e.clientX);
-                e.preventDefault();
-            });
-
-            window.addEventListener('mouseup', (e) => {
-                if (isDraggingGallery) {
-                    handleGalleryDragEnd(e.clientX);
-                }
-            });
-
-            // Touch events
-            galleryContainer.addEventListener('touchstart', (e) => {
-                if (e.touches.length > 0) {
-                    handleGalleryDragStart(e.touches[0].clientX);
-                }
-            }, { passive: true });
-
-            galleryContainer.addEventListener('touchend', (e) => {
-                if (e.changedTouches.length > 0) {
-                    handleGalleryDragEnd(e.changedTouches[0].clientX);
-                }
-            }, { passive: true });
-
-            // Initial Draw
-            updateImmersiveGallery();
-            window.addEventListener('resize', updateImmersiveGallery);
+            // Launch orbit loop
+            requestAnimationFrame(animateCertOrbit);
         }
     }
 });
