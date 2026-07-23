@@ -962,8 +962,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const isMobile = window.innerWidth <= 768;
                 // Responsive orbit radii
-                const rx = isMobile ? 120 : 220; // Horizontal radius
-                const ry = isMobile ? 40 : 65;    // Vertical 3D perspective tilt
+                const rx = isMobile ? 120 : 250; // Horizontal radius
+                const ry = isMobile ? 40 : 75;    // Vertical 3D perspective tilt
 
                 const totalCards = certCards.length;
                 certCards.forEach((card, idx) => {
@@ -976,7 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Depth & scale physics (sin value ranges from -1 to 1)
                     const sinVal = Math.sin(angle);
-                    
+
                     // In front (sinVal > 0): larger, z-index 20 (in front of chef)
                     // Behind (sinVal <= 0): z-index 2 (occluded behind chef.png)
                     const scale = isMobile ? (0.7 + 0.3 * (sinVal + 1) / 2) : (0.75 + 0.35 * (sinVal + 1) / 2);
@@ -1128,7 +1128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const currentWidth = stage.offsetWidth;
                 const isMobile = window.innerWidth <= 600;
                 const refWidth = isMobile ? 520 : 950;
-                
+
                 let scale = currentWidth / refWidth;
                 scale = Math.min(1.0, Math.max(0.42, scale));
                 overlay.style.setProperty('--flipbook-scale', scale.toFixed(3));
@@ -1285,5 +1285,265 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fallback: Delay loading by 2.5s so hero image sequence loads first without competition
         setTimeout(triggerFlipbookInit, 2500);
     }
+
+    // ==========================================================================
+    // 3D Curved Panorama Arch Gallery (Auto-Moving Infinite & Clickable Lightbox)
+    // ==========================================================================
+    function initPanoramaGallery() {
+        const wrapper = document.getElementById('panoramaWrapper');
+        const track = document.getElementById('panoramaTrack');
+
+        // Modal Elements
+        const modal = document.getElementById('galleryModal');
+        const modalImg = document.getElementById('galleryModalImg');
+        const modalCounter = document.getElementById('galleryModalCounter');
+        const modalClose = document.getElementById('galleryModalClose');
+        const modalPrev = document.getElementById('galleryModalPrev');
+        const modalNext = document.getElementById('galleryModalNext');
+
+        if (!wrapper || !track) return;
+
+        const galleryData = [
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkL5B8pFaXACIElitVZeU5PvxDqopfILrH6y8Io-ZMAjXq-6FXquW6TmV3xO4mTUDj_xdhX1nq83wLRVyvZ6lyy6olqvQeKqcTLSnFIOpTEbsU6r8OSsX-1PesNdddKSTM-l_j_eUAU4ww=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm4N3JkhY6e6vzJUcq3S5Hxll5kiIQDoEEfRpfRifoRhWBv2fZZG5uL8HqYCQonFsCbRS5ulcg_XAUGxtlp_FjG7wwJODeWK_us3JxSN65yP-7Wh-Ysktnk2EX0yoXbZIakPuwq1ad29ARX=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnuGWG7dsPuiHVgSJm92p4rop1wYBOJJOh0Hv326jraVb0JegddiY6Dr_Mpw4deZcE3OnjEQwkl5lyUi4gNpYzsdBcbOz8G4Xsb8YTO4otrApUCOob2tc-dWygjNAsZNfTwRloRIQYPpPE=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnBaJ-aH2YtkxeKOdR_KxES4T76hGfxM3pPXMxQUWFWGD72K144QpYYlj1tk61egfLD6SYI0R8etcNn5uCPZSZm4kiHFxPKqETreU9Z3_wf0--y7erJy4XkHFY1YFf20zWewHhdmmV0yZ5A=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnKju6v9qLbYoaGHcFIjS3N3IQvwQBxfpiaCcgzknAG0EINwopC0FTtJGXkRLH9vGwY7ScfAjhCh4MOCjuBuazymIQmM081VDN2haUaZXVyJTyu24xvHgSipY64r8Qzs__unNB9ncsNHVwX=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnoYKZ98XqGIJzWPN0DczFVZw3e_pfbmQehjMIhaCAt52AwbQWSiPGIUO0p5x9YBwu3jXBpEmtdEjQAsW_SBTb5oyMzhOqGe6gtXYSq7nx23OF-lm7dDXmtPXffx6c4bnFr5346KT7lrrPm=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn9AnMu3oAEjVMTUWSZcQz7X5tvkVM6-Av_dzqYmm5kCLNiwbXeCCe5EbcRDFbiybl4k5ZaUGEbw64-ShpC47CocSRIwlPEsaG9g_fFvIKs6tLM6QloxMbOfeJ35levRzWWL1yBLvAtTXE=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkGL3OKUXpSOQ8vd3YwxsI8Io2E_XskKZB_syrYd5QgFNIz5bj9fqguU3QyxdBkCv-7H-dHnNFa2j9Y0ZiJx_VU4X9W7ZPshUQUYT3rceBk8BBmEd-ruQqBwTGLy4AfQs-Y0Ic9yCvUCGFi=s1360-w1360-h1020-rw" },
+            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWklCGaHNG4xX2Vtn4yzz1FoSzjdVEhey96UH_dDsly1U3qpm3m5L17NAqwGRXjIi_bLahQX0e3LXIBXAbNrW0OauxkdqCE3GO64RPAN4WdiTtio8VZGuE-YuwZBa5fjLrw3P14sDa9Qnw0=s1360-w1360-h1020-rw" }
+        ];
+
+        let items = [];
+        let itemWidths = [];
+        let totalWidth = 0;
+        let singleSetWidth = 0;
+        let currentTranslateX = 0;
+        let targetTranslateX = 0;
+
+        let autoSpeed = 0.8; // Slow infinite horizontal movement speed
+        let isHovered = false;
+        let isModalActive = false;
+        let currentModalIndex = 0;
+
+        const loops = 3;
+        let rafId = null;
+
+        function buildGallery() {
+            track.innerHTML = '';
+            items = [];
+            itemWidths = [];
+            totalWidth = 0;
+            singleSetWidth = 0;
+
+            for (let l = 0; l < loops; l++) {
+                galleryData.forEach((item, dataIdx) => {
+                    const div = document.createElement('div');
+                    div.className = 'panorama-item';
+                    div.dataset.index = dataIdx;
+
+                    const img = document.createElement('img');
+                    img.src = item.url;
+                    img.draggable = false;
+                    img.alt = item.title;
+
+                    div.appendChild(img);
+                    track.appendChild(div);
+                    items.push(div);
+
+                    // Click image to open Lightbox Modal
+                    div.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openGalleryModal(dataIdx);
+                    });
+                });
+            }
+
+            const updateMeasurements = () => {
+                itemWidths = [];
+                totalWidth = 0;
+                singleSetWidth = 0;
+                items.forEach((item, i) => {
+                    const rect = item.getBoundingClientRect();
+                    const width = rect.width || item.offsetWidth || 300;
+                    const margin = 30; // 15px left + 15px right
+                    const fullWidth = width + margin;
+                    itemWidths.push(fullWidth);
+                    totalWidth += fullWidth;
+                    if (i < galleryData.length) {
+                        singleSetWidth += fullWidth;
+                    }
+                });
+
+                if (singleSetWidth > 0 && (currentTranslateX === 0 || isNaN(currentTranslateX))) {
+                    currentTranslateX = -singleSetWidth;
+                    targetTranslateX = currentTranslateX;
+                    track.style.transform = `translate3d(${currentTranslateX}px, 0, 0)`;
+                    updatePerspective();
+                }
+            };
+
+            requestAnimationFrame(updateMeasurements);
+
+            let loadedCount = 0;
+            const allImgs = track.querySelectorAll('img');
+            allImgs.forEach(img => {
+                if (img.complete) {
+                    loadedCount++;
+                } else {
+                    img.addEventListener('load', () => {
+                        loadedCount++;
+                        if (loadedCount >= Math.min(6, galleryData.length)) {
+                            updateMeasurements();
+                        }
+                    });
+                }
+            });
+        }
+
+        function updatePerspective() {
+            if (items.length === 0) return;
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const wrapperCenterX = wrapperRect.left + wrapperRect.width / 2;
+
+            items.forEach((item) => {
+                const rect = item.getBoundingClientRect();
+                const itemCenterX = rect.left + rect.width / 2;
+
+                let distFromCenter = (itemCenterX - wrapperCenterX) / (wrapperRect.width / 2);
+                distFromCenter = Math.max(-1, Math.min(1, distFromCenter));
+
+                const scale = 0.88 + (Math.abs(distFromCenter) * 0.18);
+                const rotateY = distFromCenter * -4;
+                const translateZ = (1 - Math.abs(distFromCenter)) * -35;
+
+                item.style.transform = `scale(${scale}) rotateY(${rotateY}deg) translateZ(${translateZ}px)`;
+            });
+        }
+
+        function animate() {
+            // Auto move infinitely slowly if not hovered and modal is closed
+            if (!isHovered && !isModalActive) {
+                targetTranslateX -= autoSpeed;
+            }
+
+            // Smooth spring dampening towards targetTranslateX
+            currentTranslateX += (targetTranslateX - currentTranslateX) * 0.12;
+
+            // Infinite loop wrapping checks (Set 1 visible from -singleSetWidth to -2*singleSetWidth)
+            if (singleSetWidth > 0) {
+                const maxScroll = -(singleSetWidth * 2);
+                const minScroll = 0;
+
+                if (currentTranslateX < maxScroll) {
+                    currentTranslateX += singleSetWidth;
+                    targetTranslateX += singleSetWidth;
+                } else if (currentTranslateX > minScroll) {
+                    currentTranslateX -= singleSetWidth;
+                    targetTranslateX -= singleSetWidth;
+                }
+            }
+
+            track.style.transform = `translate3d(${currentTranslateX}px, 0, 0)`;
+            updatePerspective();
+
+            rafId = requestAnimationFrame(animate);
+        }
+
+        // Hover events to pause slow auto-scroll for easy clicking
+        wrapper.addEventListener('mouseenter', () => { isHovered = true; });
+        wrapper.addEventListener('mouseleave', () => { isHovered = false; });
+
+        // ==========================================
+        // Lightbox Modal Functions & Events
+        // ==========================================
+        function openGalleryModal(index) {
+            if (!modal || !modalImg) return;
+            currentModalIndex = (index + galleryData.length) % galleryData.length;
+            updateModalContent();
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent main page scroll
+            isModalActive = true;
+        }
+
+        function closeGalleryModal() {
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            isModalActive = false;
+        }
+
+        function updateModalContent() {
+            const data = galleryData[currentModalIndex];
+            if (!data) return;
+            modalImg.src = data.url;
+            if (modalCounter) modalCounter.textContent = `${currentModalIndex + 1} / ${galleryData.length}`;
+        }
+
+        if (modalClose) modalClose.addEventListener('click', closeGalleryModal);
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeGalleryModal();
+            });
+        }
+
+        if (modalPrev) {
+            modalPrev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentModalIndex = (currentModalIndex - 1 + galleryData.length) % galleryData.length;
+                updateModalContent();
+            });
+        }
+
+        if (modalNext) {
+            modalNext.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentModalIndex = (currentModalIndex + 1) % galleryData.length;
+                updateModalContent();
+            });
+        }
+
+        // Global Keydown Listeners for ESC and Arrow Keys inside Modal
+        window.addEventListener('keydown', (e) => {
+            if (!isModalActive) return;
+            if (e.key === 'Escape') {
+                closeGalleryModal();
+            } else if (e.key === 'ArrowLeft') {
+                currentModalIndex = (currentModalIndex - 1 + galleryData.length) % galleryData.length;
+                updateModalContent();
+            } else if (e.key === 'ArrowRight') {
+                currentModalIndex = (currentModalIndex + 1) % galleryData.length;
+                updateModalContent();
+            }
+        });
+
+        // Window Resize Handler
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                itemWidths = [];
+                totalWidth = 0;
+                singleSetWidth = 0;
+                items.forEach((item, i) => {
+                    const width = item.offsetWidth || 300;
+                    itemWidths.push(width);
+                    totalWidth += width;
+                    if (i < galleryData.length) singleSetWidth += width;
+                });
+                currentTranslateX = -singleSetWidth;
+                targetTranslateX = currentTranslateX;
+                updatePerspective();
+            }, 200);
+        });
+
+        buildGallery();
+        animate();
+    }
+
+    initPanoramaGallery();
 });
+
 
