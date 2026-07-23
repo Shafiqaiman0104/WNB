@@ -995,4 +995,295 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(animateCertOrbit);
         }
     }
+
+    // ==========================================================================
+    // Standalone Interactive PDF Menu Flipbook on Wood Table (table.png)
+    // ==========================================================================
+    async function initStandaloneMenuFlipbook() {
+        const flipContainer = document.getElementById('menuFlipbook');
+        if (!flipContainer) return;
+
+        if (typeof pdfjsLib === 'undefined' || typeof St === 'undefined') {
+            console.error('PDF.js or StPageFlip library not loaded');
+            return;
+        }
+
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        try {
+            const loadingTask = pdfjsLib.getDocument('bayu-menu.pdf');
+            const pdf = await loadingTask.promise;
+            const totalPages = pdf.numPages;
+
+            // Clear loading spinner
+            flipContainer.innerHTML = '';
+
+            const pageItems = [];
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'flipbook-page-item';
+                if (i === 1 || i === totalPages) {
+                    pageDiv.setAttribute('data-density', 'hard');
+                } else {
+                    pageDiv.setAttribute('data-density', 'soft');
+                }
+
+                const canvas = document.createElement('canvas');
+                pageDiv.appendChild(canvas);
+                flipContainer.appendChild(pageDiv);
+
+                pageItems.push({
+                    div: pageDiv,
+                    canvas: canvas,
+                    pageNum: i
+                });
+            }
+
+            const getDimensions = () => {
+                const w = window.innerWidth;
+                if (w <= 400) {
+                    // Mobile narrow: 2-page spread ~230px wide total
+                    return { width: 115, height: 158, minW: 90, maxW: 130, minH: 120, maxH: 180 };
+                } else if (w <= 600) {
+                    // Mobile medium: 2-page spread ~260px wide total
+                    return { width: 130, height: 178, minW: 100, maxW: 150, minH: 140, maxH: 210 };
+                } else if (w <= 900) {
+                    // Tablet: 2-page spread ~360px wide total
+                    return { width: 180, height: 245, minW: 140, maxW: 210, minH: 190, maxH: 290 };
+                } else {
+                    // Desktop: 2-page spread ~440px wide total (compact POV on 1000px table.png)
+                    return { width: 220, height: 300, minW: 180, maxW: 260, minH: 240, maxH: 360 };
+                }
+            };
+
+            const dims = getDimensions();
+
+            const pageFlip = new St.PageFlip(flipContainer, {
+                width: dims.width,
+                height: dims.height,
+                size: "stretch",
+                minWidth: dims.minW,
+                maxWidth: dims.maxW,
+                minHeight: dims.minH,
+                maxHeight: dims.maxH,
+                drawShadow: true,
+                showCover: true,
+                usePortrait: false, // Force 2-page spread (left & right) on ALL devices including mobile
+                autoCenter: true,
+                maxShadowOpacity: 0.7,
+                mobileScrollSupport: false,
+                clickEventForward: true
+            });
+
+            pageFlip.loadFromHTML(flipContainer.querySelectorAll('.flipbook-page-item'));
+
+            // Smooth cover-centering position update & unopened breathing loop
+            function updateCoverPosition(pageIndex) {
+                if (pageIndex === 0) {
+                    // Closed front cover (page 1): shift stage left by 25% to center front cover
+                    flipContainer.style.setProperty('--cover-x', '-25%');
+                    flipContainer.style.transform = 'translateX(-25%)';
+                    flipContainer.classList.add('is-breathing');
+                } else if (pageIndex >= totalPages - 1) {
+                    // Closed back cover (last page): shift stage right by 25% to center back cover
+                    flipContainer.style.setProperty('--cover-x', '25%');
+                    flipContainer.style.transform = 'translateX(25%)';
+                    flipContainer.classList.add('is-breathing');
+                } else {
+                    // Open 2-page spread: center spread & pause breathing animation for reading
+                    flipContainer.style.setProperty('--cover-x', '0');
+                    flipContainer.style.transform = 'translateX(0)';
+                    flipContainer.classList.remove('is-breathing');
+                }
+            }
+
+            // Set initial position & breathing for closed cover
+            updateCoverPosition(0);
+
+            // Scroll reveal observer: Table slides up from bottom to top, Menu slides down from top to bottom
+            const tableStage = document.querySelector('.table-stage');
+            if (tableStage && typeof IntersectionObserver !== 'undefined') {
+                const revealObs = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            tableStage.classList.add('in-view');
+                            revealObs.unobserve(tableStage);
+                        }
+                    });
+                }, { threshold: 0.15 });
+                revealObs.observe(tableStage);
+            } else if (tableStage) {
+                tableStage.classList.add('in-view');
+            }
+
+            // Dynamically scale flipbook and table action buttons as table.png resizes on mobile
+            function updateFlipbookScale() {
+                const stage = document.querySelector('.table-stage');
+                const overlay = document.querySelector('.flipbook-overlay');
+                const actionsBar = document.querySelector('.table-actions-bar');
+                if (!stage || !overlay) return;
+
+                const currentWidth = stage.offsetWidth;
+                const isMobile = window.innerWidth <= 600;
+                const refWidth = isMobile ? 520 : 950;
+                
+                let scale = currentWidth / refWidth;
+                scale = Math.min(1.0, Math.max(0.42, scale));
+                overlay.style.setProperty('--flipbook-scale', scale.toFixed(3));
+
+                if (actionsBar) {
+                    let btnScale = isMobile ? Math.min(1.0, Math.max(0.70, currentWidth / 480)) : Math.min(1.0, Math.max(0.80, currentWidth / 850));
+                    actionsBar.style.setProperty('--table-btn-scale', btnScale.toFixed(3));
+                }
+            }
+
+            updateFlipbookScale();
+            window.addEventListener('resize', updateFlipbookScale);
+            if (typeof ResizeObserver !== 'undefined') {
+                const ro = new ResizeObserver(() => updateFlipbookScale());
+                if (tableStage) ro.observe(tableStage);
+            }
+
+            // Share PDF Button Interaction
+            const shareBtn = document.getElementById('shareMenuBtn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', async () => {
+                    const shareData = {
+                        title: 'Bayu Seafood Menu',
+                        text: 'Explore our exquisite live seafood menu at Bayu Seafood Restaurant!',
+                        url: 'https://whitenblack.my/flipbook/wnb-bayu/'
+                    };
+
+                    if (navigator.share) {
+                        try {
+                            await navigator.share(shareData);
+                        } catch (err) {
+                            if (err.name !== 'AbortError') {
+                                copyMenuLink();
+                            }
+                        }
+                    } else {
+                        copyMenuLink();
+                    }
+                });
+            }
+
+            function copyMenuLink() {
+                const url = 'https://whitenblack.my/flipbook/wnb-bayu/';
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        showToast('Menu link copied to clipboard!');
+                    }).catch(() => {
+                        showToast('Menu Link: ' + url);
+                    });
+                } else {
+                    showToast('Menu Link: ' + url);
+                }
+            }
+
+            function showToast(msg) {
+                let toast = document.getElementById('tableToast');
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'tableToast';
+                    toast.style.cssText = `
+                        position: fixed;
+                        bottom: 30px;
+                        left: 50%;
+                        transform: translateX(-50%) translateY(10px);
+                        background: #d4af37;
+                        color: #0d1727;
+                        padding: 12px 24px;
+                        border-radius: 30px;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+                        z-index: 10000;
+                        transition: opacity 0.4s ease, transform 0.4s ease;
+                        opacity: 0;
+                    `;
+                    document.body.appendChild(toast);
+                }
+                toast.textContent = msg;
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(-50%) translateY(10px)';
+                }, 2500);
+            }
+
+            const renderedPages = new Set();
+
+            async function renderPageCanvas(pageNum) {
+                if (renderedPages.has(pageNum) || pageNum < 1 || pageNum > totalPages) return;
+                renderedPages.add(pageNum);
+
+                const item = pageItems[pageNum - 1];
+                if (!item) return;
+
+                try {
+                    const page = await pdf.getPage(pageNum);
+                    // Scale 1.6 provides crisp typography while optimizing memory and rendering performance
+                    const viewport = page.getViewport({ scale: 1.6 });
+                    const canvas = item.canvas;
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true }) || canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    await page.render({
+                        canvasContext: ctx,
+                        viewport: viewport
+                    }).promise;
+                } catch (err) {
+                    console.error('Error rendering page ' + pageNum, err);
+                }
+            }
+
+            // Render initial visible cover and first spread
+            for (let p = 1; p <= Math.min(4, totalPages); p++) {
+                await renderPageCanvas(p);
+            }
+
+            // On-demand rendering: Render surrounding pages when user turns a page
+            pageFlip.on('flip', (e) => {
+                const activeIndex = e.data; // 0-indexed page
+                updateCoverPosition(activeIndex);
+
+                const activePage = activeIndex + 1; // 1-indexed page
+                for (let p = Math.max(1, activePage - 2); p <= Math.min(totalPages, activePage + 3); p++) {
+                    renderPageCanvas(p);
+                }
+            });
+
+        } catch (err) {
+            console.error('Failed to initialize PDF menu flipbook:', err);
+            flipContainer.innerHTML = '<div class="flipbook-loading-state"><p>Unable to load menu PDF.</p></div>';
+        }
+    }
+
+    // Lazy load the PDF flipbook ONLY when user scrolls near the menu section
+    let pdfFlipbookInitialized = false;
+    function triggerFlipbookInit() {
+        if (pdfFlipbookInitialized) return;
+        pdfFlipbookInitialized = true;
+        initStandaloneMenuFlipbook();
+    }
+
+    const menuElement = document.getElementById('menu') || document.querySelector('.menu-flipbook-wrapper');
+    if (menuElement && typeof IntersectionObserver !== 'undefined') {
+        const initObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                triggerFlipbookInit();
+                initObserver.disconnect();
+            }
+        }, { rootMargin: '350px' });
+        initObserver.observe(menuElement);
+    } else {
+        // Fallback: Delay loading by 2.5s so hero image sequence loads first without competition
+        setTimeout(triggerFlipbookInit, 2500);
+    }
 });
+
