@@ -56,24 +56,6 @@
     padding: 0;
 }
 
-.skip-to-content {
-    position: absolute;
-    top: -100px;
-    left: 20px;
-    background: var(--color-gold);
-    color: #ffffff;
-    padding: 12px 24px;
-    z-index: 9999;
-    border-radius: var(--border-radius-sm);
-    text-decoration: none;
-    font-weight: 600;
-    transition: top 0.3s ease;
-}
-
-.skip-to-content:focus {
-    top: 20px;
-}
-
 html {
     scroll-behavior: smooth;
     font-size: 16px;
