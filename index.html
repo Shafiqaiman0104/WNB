@@ -625,9 +625,42 @@
                 </div>
             </div>
 
-            <div class="text-center scroll-reveal" style="margin-top: 50px;">
-                <a href="https://whitenblack.my/flipbook/wnb-bayu/" target="_blank" class="btn-primary">View Full Menu
-                    (Flipbook) <i class="fa-solid fa-book-open" style="margin-left: 8px;"></i></a>
+            <!-- Section Header for Interactive Menu -->
+            <div class="section-header scroll-reveal" style="margin-top: 70px; margin-bottom: 35px;">
+                <span class="section-subtitle">Complete Catalog</span>
+                <h2 class="section-title">Our <span class="gold-text">Menu</span></h2>
+                <p class="section-desc">Explore our complete physical menu book directly on the table. Click or drag to turn pages.</p>
+            </div>
+
+            <!-- Interactive Standalone Flipbook Menu Section on table.png -->
+            <div class="menu-flipbook-wrapper scroll-reveal">
+                <div class="table-stage">
+                    <img src="table.png" alt="Wood Table Surface" class="table-surface-img">
+                    <div class="flipbook-overlay">
+                        <div id="menuFlipbook" class="stpageflip-container">
+                            <div class="flipbook-loading-state">
+                                <i class="fa-solid fa-book-open fa-spin-pulse"></i>
+                                <p>Opening Menu Book...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons Resting on Table Surface -->
+                    <div class="table-actions-bar">
+                        <a href="bayu-menu.pdf" download="Bayu-Seafood-Menu.pdf" class="table-btn table-btn-download" title="Download PDF Menu">
+                            <i class="fa-solid fa-file-arrow-down"></i>
+                            <span>Download PDF</span>
+                        </a>
+                        <a href="https://whitenblack.my/flipbook/wnb-bayu/" target="_blank" class="table-btn table-btn-view" title="Open Fullscreen Flipbook">
+                            <i class="fa-solid fa-expand"></i>
+                            <span>View Full PDF</span>
+                        </a>
+                        <button type="button" class="table-btn table-btn-share" id="shareMenuBtn" title="Share Menu">
+                            <i class="fa-solid fa-share-nodes"></i>
+                            <span>Share PDF</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -880,6 +913,9 @@
         <span class="whatsapp-float-tooltip">Book via WhatsApp</span>
     </a>
 
+    <!-- PDF.js and StPageFlip Libraries for Standalone Interactive Menu Flipbook -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
     <!-- Custom Client Interactions Script -->
     <script src="script.js"></script>
 </body>
