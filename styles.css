@@ -3206,3 +3206,222 @@ footer {
         font-size: 0.85rem;
     }
 }
+
+/* ==========================================================================
+   Standalone Menu Flipbook on Wood Table (table.png) - POV View
+   ========================================================================== */
+
+.menu-flipbook-wrapper {
+    margin-top: 20px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.table-stage {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: transparent !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 1. Entrance animation: Table surface slides in from Bottom to Top */
+.table-stage .table-surface-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+    background: transparent !important;
+    opacity: 0;
+    transform: translateY(70px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.table-stage.in-view .table-surface-img {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 2. Entrance animation: Flipbook overlay slides in from Top to Bottom AFTER table appears */
+.flipbook-overlay {
+    position: absolute;
+    top: 30%; /* Shifted higher up on table surface for desktop & mobile */
+    left: 50%;
+    transform: translate(-50%, -85%) scale(var(--flipbook-scale, 1));
+    transform-origin: center center;
+    z-index: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    /* 0.85s delay ensures table completes its bottom-to-top animation first */
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.85s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.85s;
+}
+
+.table-stage.in-view .flipbook-overlay {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(var(--flipbook-scale, 1));
+}
+
+/* Standalone PageFlip container */
+.stpageflip-container {
+    position: relative;
+    margin: 0 auto;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Realistic 3D drop shadow onto table surface */
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.75));
+}
+
+/* 3. Unopened Front & Back Cover Breathing Loop Animation */
+@keyframes menuBreathingLoop {
+    0%, 100% {
+        transform: translateX(var(--cover-x, -25%)) translateY(0);
+        filter: drop-shadow(0 18px 25px rgba(0, 0, 0, 0.75));
+    }
+    50% {
+        transform: translateX(var(--cover-x, -25%)) translateY(-10px);
+        filter: drop-shadow(0 30px 35px rgba(0, 0, 0, 0.5));
+    }
+}
+
+.stpageflip-container.is-breathing {
+    animation: menuBreathingLoop 3.6s ease-in-out infinite !important;
+}
+
+.flipbook-loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--color-gold, #d4af37);
+    font-size: 1rem;
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    min-height: 200px;
+}
+
+.flipbook-loading-state i {
+    font-size: 2.2rem;
+    color: var(--color-gold, #d4af37);
+}
+
+/* PageFlip page item element styling */
+.flipbook-page-item {
+    background-color: #fdfbf7;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.08);
+}
+
+.flipbook-page-item canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    display: block;
+}
+
+/* Page corner flip cursor hint */
+.flipbook-page-item:hover {
+    cursor: grab;
+}
+
+.flipbook-page-item:active {
+    cursor: grabbing;
+}
+
+/* ==========================================================================
+   Table Action Buttons (Download, View PDF, Share PDF)
+   ========================================================================== */
+
+.table-actions-bar {
+    position: absolute;
+    bottom: 7%;
+    left: 50%;
+    transform: translateX(-50%) perspective(600px) rotateX(12deg) scale(var(--table-btn-scale, 1));
+    transform-origin: bottom center;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: auto;
+    max-width: 92%;
+    opacity: 0;
+    transition: opacity 0.8s ease 1.15s, transform 0.8s ease 1.15s;
+}
+
+.table-stage.in-view .table-actions-bar {
+    opacity: 1;
+}
+
+.table-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(13, 23, 39, 0.88);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    border-radius: 30px;
+    color: #ffffff;
+    font-family: var(--font-body, 'Outfit', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.55),
+        0 2px 5px rgba(212, 175, 55, 0.25);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.table-btn i {
+    color: var(--color-gold, #d4af37);
+    font-size: 0.95rem;
+    transition: transform 0.3s ease;
+}
+
+.table-btn:hover {
+    background: var(--color-gold, #d4af37);
+    color: #0d1727;
+    border-color: #ffffff;
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 
+        0 15px 25px rgba(0, 0, 0, 0.65),
+        0 0 15px rgba(212, 175, 55, 0.7);
+}
+
+.table-btn:hover i {
+    color: #0d1727;
+    transform: scale(1.15);
+}
+
+.table-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+@media (max-width: 600px) {
+    .table-actions-bar {
+        bottom: 5.5%;
+        gap: 6px;
+    }
+
+    .table-btn {
+        padding: 7px 11px;
+        font-size: 0.74rem;
+        gap: 5px;
+        border-radius: 20px;
+    }
+
+    .table-btn i {
+        font-size: 0.82rem;
+    }
+}
