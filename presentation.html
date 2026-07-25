@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Platform Presentation | Bayu Seafood - MFJ Group & VentureRush Tech</title>
+    <title>Digital Platform Presentation | VentureRush Tech & Bayu Seafood</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,9 +21,11 @@
             --bg-card: #f1f5f9;
             --bg-card-gold: #fefce8;
             --bg-card-blue: #eff6ff;
+            --bg-card-dark: #0f172a;
             --accent-gold: #b8860b;
             --accent-gold-dark: #8b6508;
             --accent-blue: #1d4ed8;
+            --accent-purple: #6d28d9;
             --text-dark: #0f172a;
             --text-muted: #475569;
             --text-light: #64748b;
@@ -55,18 +57,20 @@
             justify-content: space-between;
         }
 
-        /* Top Presentation Header Bar with 3 Logos */
+        /* Top Presentation Header Bar */
         .pres-header {
-            padding: 12px 36px;
+            padding: 10px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #ffffff;
             border-bottom: 1px solid var(--border-color);
             z-index: 10;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .header-left-logos {
+        .header-left-group {
             display: flex;
             align-items: center;
             gap: 16px;
@@ -79,27 +83,79 @@
         }
 
         .logo-img-circle {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: 2px solid var(--accent-gold);
             object-fit: cover;
         }
 
         .logo-img-rect {
-            height: 34px;
+            height: 32px;
             object-fit: contain;
         }
 
         .brand-title {
             font-family: var(--font-title);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text-dark);
         }
 
         .gold-text {
             color: var(--accent-gold);
+        }
+
+        .blue-text {
+            color: var(--accent-blue);
+        }
+
+        /* Main Mode / Deck Switcher Switcher Header Pills */
+        .deck-switcher-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            gap: 4px;
+        }
+
+        .deck-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 7px 18px;
+            border-radius: 24px;
+            font-family: var(--font-title);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .deck-tab-btn i {
+            font-size: 0.9rem;
+        }
+
+        .deck-tab-btn:hover {
+            color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .deck-tab-btn.active-vr {
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+        }
+
+        .deck-tab-btn.active-bayu {
+            background: linear-gradient(135deg, #b8860b 0%, #d4af37 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.25);
         }
 
         .header-right-logo {
@@ -112,7 +168,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding-left: 16px;
+            padding-left: 14px;
             border-left: 1px solid var(--border-color);
         }
 
@@ -124,7 +180,7 @@
         }
 
         .dev-logo-img {
-            height: 32px;
+            height: 30px;
             object-fit: contain;
         }
 
@@ -132,15 +188,15 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-dark);
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 20px;
             font-family: var(--font-title);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.3s;
         }
 
@@ -156,13 +212,25 @@
             border-color: var(--accent-gold);
         }
 
+        .nav-btn-action.vr-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        .nav-btn-action.vr-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
         /* Presentation Horizontal Slide Container */
         .slide-viewport-wrapper {
             flex-grow: 1;
             width: 100%;
             display: flex;
             gap: 20px;
-            padding: 16px 36px;
+            padding: 16px 28px;
             position: relative;
             overflow: hidden;
             transition: all 0.4s ease;
@@ -196,6 +264,10 @@
             position: relative;
         }
 
+        .demo-iframe-container.vr-split-border {
+            border-color: var(--accent-blue);
+        }
+
         .slide-viewport-wrapper.split-demo-active .demo-iframe-container {
             display: flex;
             flex-direction: column;
@@ -217,7 +289,8 @@
         .demo-controls-toolbar {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
         .demo-tool-btn {
@@ -241,10 +314,22 @@
             border-color: var(--accent-gold);
         }
 
+        .demo-tool-btn.vr-tool:hover {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
+        }
+
         .demo-tool-btn.active {
             background: var(--accent-gold);
             color: #080e15;
             border-color: var(--accent-gold);
+        }
+
+        .demo-tool-btn.active-vr {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
         }
 
         .demo-iframe-stage {
@@ -255,6 +340,90 @@
             justify-content: center;
             background: #080e15;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Portfolio 3 Choice Screen Styling inside Split Container */
+        .portfolio-choice-menu {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: radial-gradient(circle at center, #0f172a 0%, #080e15 100%);
+            color: #ffffff;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .choice-heading {
+            font-family: var(--font-title);
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .choice-sub {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 22px;
+            max-width: 320px;
+        }
+
+        .choice-buttons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .portfolio-select-card {
+            background: #0e1824;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 14px;
+            padding: 12px 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+
+        .portfolio-select-card:hover {
+            background: #1e293b;
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(29, 78, 216, 0.35);
+        }
+
+        .portfolio-select-card .card-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .portfolio-select-card .card-name {
+            font-family: var(--font-title);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .portfolio-select-card .card-link {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .demo-iframe {
@@ -288,7 +457,7 @@
             border-radius: 20px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-slide);
-            padding: 36px 44px;
+            padding: 32px 40px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -300,7 +469,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .slide-category {
@@ -312,17 +481,25 @@
             color: var(--accent-gold);
         }
 
+        .slide-category.vr-cat {
+            color: var(--accent-blue);
+        }
+
         .slide-heading {
             font-family: var(--font-title);
-            font-size: 1.9rem;
+            font-size: 1.85rem;
             font-weight: 800;
             color: var(--text-dark);
             line-height: 1.25;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .slide-heading span {
             color: var(--accent-gold);
+        }
+
+        .slide-heading.vr-heading span {
+            color: var(--accent-blue);
         }
 
         .slide-content-area {
@@ -336,13 +513,13 @@
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+            gap: 16px;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 14px;
         }
 
         .grid-4 {
@@ -364,7 +541,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: var(--shadow-card);
             transition: transform 0.3s, border-color 0.3s;
         }
@@ -372,6 +549,18 @@
         .card:hover {
             transform: translateY(-2px);
             border-color: var(--accent-gold);
+        }
+
+        .card-vr:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .card-clickable {
+            cursor: pointer;
+        }
+
+        .card-clickable:hover {
+            box-shadow: 0 8px 20px rgba(29, 78, 216, 0.15);
         }
 
         .card-gold {
@@ -385,21 +574,26 @@
         }
 
         .card-icon {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 12px;
             background: rgba(184, 134, 11, 0.12);
             color: var(--accent-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             margin-bottom: 10px;
+        }
+
+        .card-icon.blue-icon {
+            background: rgba(29, 78, 216, 0.12);
+            color: var(--accent-blue);
         }
 
         .card-title {
             font-family: var(--font-title);
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 6px;
@@ -409,6 +603,20 @@
             color: var(--text-muted);
             font-size: 0.86rem;
             line-height: 1.5;
+        }
+
+        /* Portfolio Project Badge */
+        .project-tag {
+            display: inline-block;
+            background: rgba(29, 78, 216, 0.1);
+            color: var(--accent-blue);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
 
         /* Bullet lists */
@@ -433,7 +641,11 @@
             font-size: 0.85rem;
         }
 
-        /* Slide 1 Cover Specifics */
+        .bullet-list.vr-list li i {
+            color: var(--accent-blue);
+        }
+
+        /* Cover Slide Styling */
         .cover-slide {
             text-align: center;
             align-items: center;
@@ -443,48 +655,98 @@
 
         .cover-title {
             font-family: var(--font-title);
-            font-size: 2.8rem;
+            font-size: 2.6rem;
             font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 10px;
+            line-height: 1.2;
         }
 
         .cover-subtitle {
             font-family: var(--font-title);
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+        }
+
+        .cover-subtitle.gold {
             color: var(--accent-gold);
-            margin-bottom: 18px;
         }
 
         .cover-logos-hero {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 18px;
+            margin-bottom: 18px;
             background: var(--bg-card);
-            padding: 12px 26px;
+            padding: 10px 24px;
             border-radius: 40px;
             border: 1px solid var(--border-color);
         }
 
         .cover-logos-hero img {
-            height: 36px;
+            height: 34px;
             object-fit: contain;
         }
 
         .cover-desc {
             color: var(--text-muted);
             max-width: 680px;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             line-height: 1.6;
-            margin: 0 auto;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Founder Card Specific Styling */
+        .founder-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            border: 1px solid var(--border-blue);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .founder-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+        }
+
+        .founder-info h3 {
+            font-family: var(--font-title);
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .founder-info p {
+            font-size: 0.86rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .founder-info span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
         }
 
         /* Bottom Controls Footer Bar */
         .pres-footer {
-            padding: 12px 36px;
+            padding: 10px 28px;
             background: #ffffff;
             border-top: 1px solid var(--border-color);
             display: flex;
@@ -494,37 +756,42 @@
         }
 
         .footer-info {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-light);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .nav-controls {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
         }
 
         .nav-arrow-btn {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-dark);
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s;
         }
 
         .nav-arrow-btn:hover:not(:disabled) {
-            background: var(--accent-gold);
+            background: var(--accent-blue);
             color: #ffffff;
+            border-color: var(--accent-blue);
+        }
+
+        .nav-arrow-btn.bayu-mode:hover:not(:disabled) {
+            background: var(--accent-gold);
             border-color: var(--accent-gold);
         }
 
@@ -548,6 +815,12 @@
         }
 
         .dot.active {
+            background: var(--accent-blue);
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        .dot.active-bayu {
             background: var(--accent-gold);
             width: 24px;
             border-radius: 10px;
@@ -555,8 +828,12 @@
 
         .slide-indicator {
             font-family: var(--font-title);
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .slide-indicator.gold {
             color: var(--accent-gold);
         }
     </style>
@@ -564,14 +841,24 @@
 
 <body>
 
-    <!-- Top Presentation Header Bar with 3 Logos & Fullscreen Button -->
+    <!-- Top Presentation Header Bar: Bayu & MFJ logos on Left, VentureRush logo on Right -->
     <header class="pres-header">
-        <div class="header-left-logos">
+        <div class="header-left-group">
             <div class="client-logo-group">
                 <img src="bayu-logo.jpg" alt="Bayu Seafood Logo" class="logo-img-circle">
                 <img src="https://mfjgroup.my/wp-content/uploads/2026/03/Logo-MFJ.png" alt="MFJ Group Logo" class="logo-img-rect">
             </div>
-            <span class="brand-title">Bayu Seafood &bull; <span class="gold-text">MFJ Group</span></span>
+            <span class="brand-title" id="headerBrandTitle">Bayu Seafood &bull; <span class="gold-text">MFJ Group</span></span>
+        </div>
+
+        <!-- Mode Switcher Buttons: About VentureRush Tech | About Bayu Seafood Website -->
+        <div class="deck-switcher-bar">
+            <button type="button" class="deck-tab-btn active-vr" id="btnTabVr" onclick="switchDeck('vr')">
+                About VentureRush Tech
+            </button>
+            <button type="button" class="deck-tab-btn" id="btnTabBayu" onclick="switchDeck('bayu')">
+                About Bayu Seafood Website
+            </button>
         </div>
 
         <div class="header-right-logo">
@@ -590,9 +877,216 @@
         
         <!-- Left Side (50% or 100%): Presentation Slide Track Container -->
         <div class="slide-track-container">
-            <div class="slide-track" id="slideTrack">
+            
+            <!-- ======================================================== -->
+            <!-- DECK 1: VENTURERUSH TECH PRESENTATION (5 SLIDES)          -->
+            <!-- ======================================================== -->
+            <div class="slide-track" id="slideTrackVR">
 
-                <!-- SLIDE 1: COVER -->
+                <!-- VR SLIDE 1: COVER -->
+                <div class="slide cover-slide">
+                    <div>
+                        <h1 class="cover-title">About <span class="blue-text">VentureRush Tech</span></h1>
+                        <p class="cover-subtitle">Founded in 2025 &bull; Johor Bahru, Malaysia</p>
+                        <p class="cover-desc">
+                            Welcome! VentureRush Tech is a fast-growing digital technology and web development company. We build high-performance websites, automated reservation engines, AI integrations, and custom business portals tailored for ambitious Malaysian brands.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- VR SLIDE 2: COMPANY STORY & CLIENT COMMITMENT -->
+                <div class="slide">
+                    <div class="slide-top-bar">
+                        <span class="slide-category vr-cat">1. COMPANY BACKGROUND & PHILOSOPHY</span>
+                        <span class="slide-indicator" id="vrInd2">Slide 2 of 5</span>
+                    </div>
+                    <div class="slide-content-area">
+                        <h2 class="slide-heading vr-heading">Our Story & <span>Client Happiness Commitment</span></h2>
+                        
+                        <div class="grid-2" style="margin-bottom: 16px;">
+                            <div class="card card-vr card-blue">
+                                <div class="card-icon blue-icon"><i class="fa-solid fa-bullseye"></i></div>
+                                <h3 class="card-title">Founded in 2025</h3>
+                                <p class="card-desc">
+                                    Founded in 2025, VentureRush Tech has grown from a passionate technology startup in Johor Bahru into a trusted digital partner for businesses across Malaysia.
+                                </p>
+                            </div>
+                            <div class="card card-vr card-gold">
+                                <div class="card-icon"><i class="fa-solid fa-heart-circle-check"></i></div>
+                                <h3 class="card-title" style="color: var(--accent-gold-dark);">100% Client Satisfaction</h3>
+                                <p class="card-desc">
+                                    We make sure every client is delighted with the result. We work hand-in-hand with you to refine designs, perfect workflows, and ensure long-term success.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid-3">
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-bolt"></i> High-Performance Tech</h3>
+                                <p class="card-desc">Fast, responsive, and SEO-optimized web applications built for seamless customer experience.</p>
+                            </div>
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-wand-magic-sparkles"></i> Free Working Demo</h3>
+                                <p class="card-desc">We build live interactive prototypes free of charge to prove value before any contract commitments.</p>
+                            </div>
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-headset"></i> Continuous Support</h3>
+                                <p class="card-desc">Full managed hosting, domain renewals, monthly backups, and ongoing technical maintenance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VR SLIDE 3: FOUNDER PROFILE -->
+                <div class="slide">
+                    <div class="slide-top-bar">
+                        <span class="slide-category vr-cat">2. FOUNDER & LEADERSHIP</span>
+                        <span class="slide-indicator" id="vrInd3">Slide 3 of 5</span>
+                    </div>
+                    <div class="slide-content-area">
+                        <h2 class="slide-heading vr-heading">Meet Our Founder <span>Shafiq Aiman</span></h2>
+                        
+                        <div class="founder-box" style="margin-bottom: 16px;">
+                            <div class="founder-avatar">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div class="founder-info">
+                                <h3>Shafiq Aiman</h3>
+                                <p><i class="fa-solid fa-location-dot"></i> Founder & Lead Tech Engineer &bull; Johor Bahru, Johor</p>
+                                <span>Graduate in <strong>SIJIL TEKNOLOGI MAKLUMAT</strong> from <strong>KOLEJ KOMUNITI GELANG PATAH</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-graduation-cap"></i> Academic & Technical Foundation</h3>
+                                <p class="card-desc">
+                                    Studied Information Technology (Sijil Teknologi Maklumat) at Kolej Komuniti Gelang Patah, building strong foundations in software architecture, networking, database management, and web programming.
+                                </p>
+                            </div>
+
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-fire"></i> Passion for IT Innovation</h3>
+                                <p class="card-desc">
+                                    Deeply passionate about modern software development, automated customer booking portals, interactive web animations, AI chatbots, and solving complex business challenges for Malaysian enterprises.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VR SLIDE 4: PORTFOLIO SHOWCASE (Interactive Live Preview Cards) -->
+                <div class="slide">
+                    <div class="slide-top-bar">
+                        <span class="slide-category vr-cat">3. PROVEN TRACK RECORD</span>
+                        <span class="slide-indicator" id="vrInd4">Slide 4 of 5</span>
+                    </div>
+                    <div class="slide-content-area">
+                        <h2 class="slide-heading vr-heading">Our Featured <span>Project Portfolio</span></h2>
+                        <p style="color: var(--text-muted); margin-bottom: 10px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-hand-pointer" style="color: var(--accent-blue);"></i> Click any project card below to open its live website in the 50% split preview!
+                        </p>
+                        
+                        <div class="grid-2" style="margin-bottom: 12px;">
+                            <!-- Project 1 -->
+                            <div class="card card-vr card-clickable" onclick="loadPortfolioUrl('https://mkrimbacamp-vr.com/', 'MK RIMBA CAMP PARK', 'rimba', true)">
+                                <span class="project-tag">Resort & Hospitality &bull; Click to Preview</span>
+                                <h3 class="card-title"><i class="fa-solid fa-campground" style="color: var(--accent-blue);"></i> MK RIMBA CAMP PARK (PONTIAN)</h3>
+                                <ul class="bullet-list vr-list">
+                                    <li><i class="fa-solid fa-check"></i> Resort / Campsite Online Booking System</li>
+                                    <li><i class="fa-solid fa-check"></i> AI Chatbot Customer Assistant</li>
+                                    <li><i class="fa-solid fa-check"></i> Official Brand Website Development</li>
+                                </ul>
+                            </div>
+
+                            <!-- Project 2 -->
+                            <div class="card card-vr">
+                                <span class="project-tag">Fine Dining & F&B</span>
+                                <h3 class="card-title"><i class="fa-solid fa-utensils" style="color: var(--accent-blue);"></i> ATTIC BY RAW</h3>
+                                <ul class="bullet-list vr-list">
+                                    <li><i class="fa-solid fa-check"></i> Restaurant Reservation & Table System</li>
+                                    <li><i class="fa-solid fa-check"></i> Live Menu & Guest Booking Manager</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="grid-3">
+                            <!-- Project 3 -->
+                            <div class="card card-vr card-clickable" onclick="loadPortfolioUrl('https://q13dynamic-vr.com/', 'Q13DYNAMIC', 'q13', true)">
+                                <span class="project-tag">E-Commerce &bull; Preview</span>
+                                <h3 class="card-title" style="font-size: 0.95rem;"><i class="fa-solid fa-store" style="color: var(--accent-blue);"></i> Q13DYNAMIC</h3>
+                                <ul class="bullet-list vr-list" style="font-size: 0.8rem;">
+                                    <li><i class="fa-solid fa-check"></i> E-Commerce Website</li>
+                                    <li><i class="fa-solid fa-check"></i> Fireworks Business Platform</li>
+                                    <li><i class="fa-solid fa-check"></i> Agent Management Portal</li>
+                                </ul>
+                            </div>
+
+                            <!-- Project 4 -->
+                            <div class="card card-vr card-clickable" onclick="loadPortfolioUrl('https://southwavejb.com/', 'SOUTH WAVE', 'south', true)">
+                                <span class="project-tag">Watersports &bull; Preview</span>
+                                <h3 class="card-title" style="font-size: 0.95rem;"><i class="fa-solid fa-water" style="color: var(--accent-blue);"></i> SOUTH WAVE WATERSPORT</h3>
+                                <ul class="bullet-list vr-list" style="font-size: 0.8rem;">
+                                    <li><i class="fa-solid fa-check"></i> Watersport Booking Website</li>
+                                    <li><i class="fa-solid fa-check"></i> Activity Management System</li>
+                                    <li><i class="fa-solid fa-check"></i> Customer Order Hub</li>
+                                </ul>
+                            </div>
+
+                            <!-- Project 5 -->
+                            <div class="card card-vr card-gold card-clickable" onclick="switchDeck('bayu')">
+                                <span class="project-tag" style="background: rgba(184, 134, 11, 0.15); color: var(--accent-gold-dark);">Live Seafood &bull; View Deck</span>
+                                <h3 class="card-title" style="font-size: 0.95rem;"><i class="fa-solid fa-fish" style="color: var(--accent-gold);"></i> BAYU SEAFOOD</h3>
+                                <ul class="bullet-list" style="font-size: 0.8rem;">
+                                    <li><i class="fa-solid fa-check"></i> Halal Live Seafood Website</li>
+                                    <li><i class="fa-solid fa-check"></i> 101-Frame HD Canvas Animation</li>
+                                    <li><i class="fa-solid fa-check"></i> 1-Tap WhatsApp Booking Portal</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VR SLIDE 5: WHY PARTNER WITH US & CTA -->
+                <div class="slide">
+                    <div class="slide-top-bar">
+                        <span class="slide-category vr-cat">4. VALUE PROPOSITION</span>
+                        <span class="slide-indicator" id="vrInd5">Slide 5 of 5</span>
+                    </div>
+                    <div class="slide-content-area">
+                        <h2 class="slide-heading vr-heading">Why Choose <span>VentureRush Tech</span></h2>
+                        
+                        <div class="grid-2" style="margin-bottom: 16px;">
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-laptop-code"></i> Tailor-Made Custom Engineering</h3>
+                                <p class="card-desc">No generic off-the-shelf templates. Every line of code and user interface is custom crafted to fit your brand identity and business goals perfectly.</p>
+                            </div>
+                            <div class="card card-vr">
+                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-shield-halved"></i> Peace of Mind Technical Care</h3>
+                                <p class="card-desc">We handle domain registration, NVMe high-speed cloud hosting, SSL encryption, security patches, and monthly backups so you can focus 100% on running your business.</p>
+                            </div>
+                        </div>
+
+                        <div class="card card-gold" style="text-align: center; padding: 22px;">
+                            <h3 class="card-title" style="font-size: 1.15rem; color: var(--accent-gold-dark);">Ready to Review the Bayu Seafood Proposal?</h3>
+                            <p class="card-desc" style="max-width: 600px; margin: 6px auto 14px auto;">
+                                Click below to jump straight into the full 7-slide web proposal & live interactive demo presentation created for Bayu Seafood & MFJ Group!
+                            </p>
+                            <button type="button" class="nav-btn-action" style="background: var(--accent-gold); color: #ffffff; padding: 10px 24px; border-radius: 24px; font-weight: 700;" onclick="switchDeck('bayu')">
+                                Open Bayu Seafood Proposal Deck <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ======================================================== -->
+            <!-- DECK 2: BAYU SEAFOOD PROPOSAL PRESENTATION (7 SLIDES)     -->
+            <!-- ======================================================== -->
+            <div class="slide-track" id="slideTrackBayu" style="display: none;">
+
+                <!-- BAYU SLIDE 1: COVER -->
                 <div class="slide cover-slide">
                     <div>
                         <div class="cover-logos-hero">
@@ -602,22 +1096,22 @@
                             <img src="https://venturerushtech.com/vrLogo.png" alt="VentureRush Tech Logo">
                         </div>
                         <h1 class="cover-title">Bayu <span class="gold-text">Seafood</span> Website Proposal</h1>
-                        <p class="cover-subtitle">Presented by VentureRush Tech to MFJ Group Sdn Bhd</p>
+                        <p class="cover-subtitle gold">Presented by VentureRush Tech to MFJ Group Sdn Bhd</p>
                         <p class="cover-desc">
                             Welcome! As your web development team at VentureRush Tech, we are excited to present this custom digital platform built for Bayu Seafood. This presentation walks you through how the website functions, how it drives direct table bookings, the interactive features built for your brand, required digital assets, payment terms, and our customization workflow.
                         </p>
                     </div>
                 </div>
 
-                <!-- SLIDE 2: PURPOSE & REVENUE GENERATION -->
+                <!-- BAYU SLIDE 2: PURPOSE & REVENUE GENERATION -->
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">1. BUSINESS GOALS & REVENUE</span>
-                        <span class="slide-indicator">Slide 2 of 7</span>
+                        <span class="slide-indicator gold">Slide 2 of 7</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Website Purpose & <span>Income Generation</span></h2>
-                        <div class="grid-2" style="margin-bottom: 16px;">
+                        <div class="grid-2" style="margin-bottom: 14px;">
                             <div class="card card-gold">
                                 <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
                                 <h3 class="card-title">Primary Business Purpose</h3>
@@ -651,18 +1145,18 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 3: LUXURY DESIGN & USER INTERACTIVITY (BUILT DEMO) -->
+                <!-- BAYU SLIDE 3: LUXURY DESIGN & USER INTERACTIVITY (BUILT DEMO) -->
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">2. BUILT DEMO & USER INTERACTIVITY</span>
-                        <span class="slide-indicator">Slide 3 of 7</span>
+                        <span class="slide-indicator gold">Slide 3 of 7</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Built Free Demo <span>& User Interactivity</span></h2>
-                        <p style="color: var(--text-muted); margin-bottom: 14px; font-size: 0.88rem;">
+                        <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.86rem;">
                             Before this meeting, <strong>we have already built a working live demo website for you 100% free of charge!</strong> We will use this live demo as our starting foundation, gathering your requirements to enhance and build the exact final website you want:
                         </p>
-                        <div class="grid-3" style="margin-bottom: 14px;">
+                        <div class="grid-3" style="margin-bottom: 12px;">
                             <div class="card">
                                 <div class="card-icon"><i class="fa-solid fa-film"></i></div>
                                 <h3 class="card-title">Interactive Canvas Storytelling</h3>
@@ -703,11 +1197,11 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 4: DEMO FEATURES & FUNCTIONS -->
+                <!-- BAYU SLIDE 4: DEMO FEATURES & FUNCTIONS -->
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">3. DEMO WEBSITE FEATURES</span>
-                        <span class="slide-indicator">Slide 4 of 7</span>
+                        <span class="slide-indicator gold">Slide 4 of 7</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Built Interactive <span>Features & Functions</span></h2>
@@ -757,15 +1251,15 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 5: CLIENT REQUIREMENTS & DIGITAL ASSETS CHECKLIST -->
+                <!-- BAYU SLIDE 5: CLIENT REQUIREMENTS & DIGITAL ASSETS CHECKLIST -->
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">4. CLIENT REQUIREMENTS & ASSETS</span>
-                        <span class="slide-indicator">Slide 5 of 7</span>
+                        <span class="slide-indicator gold">Slide 5 of 7</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">What We Need From You <span>Before Customizing Demo</span></h2>
-                        <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.88rem;">
+                        <p style="color: var(--text-muted); margin-bottom: 14px; font-size: 0.86rem;">
                             Before we begin customizing the built demo website, please provide us with your requested changes and digital assets:
                         </p>
                         <div class="grid-2">
@@ -790,11 +1284,11 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 6: FINANCIAL & MAINTENANCE ARRANGEMENT -->
+                <!-- BAYU SLIDE 6: FINANCIAL & MAINTENANCE ARRANGEMENT -->
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">5. FINANCIAL & MAINTENANCE STRUCTURE</span>
-                        <span class="slide-indicator">Slide 6 of 7</span>
+                        <span class="slide-indicator gold">Slide 6 of 7</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Financial Arrangement <span>& Managed Care</span></h2>
@@ -829,15 +1323,15 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 7: WEBSITE ADJUSTMENTS & CUSTOMIZATION SCOPE -->
+                <!-- BAYU SLIDE 7: WEBSITE ADJUSTMENTS & CUSTOMIZATION SCOPE -->
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">6. WEBSITE ADJUSTMENTS SCOPE</span>
-                        <span class="slide-indicator">Slide 7 of 7</span>
+                        <span class="slide-indicator gold">Slide 7 of 7</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Website Customization Scope <span>(Minor vs Major)</span></h2>
-                        <div class="grid-2" style="margin-bottom: 14px;">
+                        <div class="grid-2" style="margin-bottom: 12px;">
                             <div class="card card-gold">
                                 <h3 class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-check-double"></i> Included Minor Adjustments:</h3>
                                 <ul class="bullet-list" style="margin-top: 8px;">
@@ -868,27 +1362,40 @@
             </div>
         </div>
 
-        <!-- Right Side (50%): Embedded Live Website Demo Stage -->
+        <!-- Right Side (50%): Embedded Live Website & Portfolio Stage -->
         <div class="demo-iframe-container" id="demoIframeContainer">
-            <div class="demo-iframe-header">
-                <span class="demo-title-tag"><i class="fa-solid fa-desktop" style="color: var(--accent-gold);"></i> Live Demo Preview (index.html)</span>
-                
-                <!-- Interactive Embed Toolbar Controls -->
-                <div class="demo-controls-toolbar">
-                    <button type="button" class="demo-tool-btn" id="refreshDemoIframe" title="Refresh Live Demo">
-                        <i class="fa-solid fa-rotate-right"></i> Refresh Demo
-                    </button>
-                    <button type="button" class="demo-tool-btn" id="mobileViewBtn" title="Switch to Mobile View (375px)">
-                        <i class="fa-solid fa-mobile-screen-button"></i> Mobile Mode
-                    </button>
-                    <button type="button" class="demo-tool-btn active" id="pcViewBtn" title="Launch Fullscreen Web Demo">
-                        <i class="fa-solid fa-laptop"></i> PC Mode (Fullscreen Web)
-                    </button>
-                </div>
+            <div class="demo-iframe-header" id="splitHeaderContainer">
+                <!-- Dynamically rendered based on active deck and selected state -->
             </div>
             
             <div class="demo-iframe-stage" id="demoIframeStage">
-                <iframe src="index.html" class="demo-iframe" id="demoIframe" title="Bayu Seafood Live Website Demo"></iframe>
+                <!-- Initial 3 Portfolio Choice Buttons Screen inside Split Container -->
+                <div class="portfolio-choice-menu" id="portfolioChoiceMenu" style="display: flex;">
+                    <h3 class="choice-heading"><i class="fa-solid fa-globe" style="color: var(--accent-blue);"></i> Select Portfolio Website</h3>
+                    <p class="choice-sub">Click a project below to launch its live preview inside this 50% split view:</p>
+                    <div class="choice-buttons-grid">
+                        <button type="button" class="portfolio-select-card" onclick="loadPortfolioUrl('https://mkrimbacamp-vr.com/', 'MK RIMBA CAMP PARK', 'rimba')">
+                            <div class="card-badge">Resort & Hospitality</div>
+                            <div class="card-name"><i class="fa-solid fa-campground"></i> MK RIMBA CAMP PARK</div>
+                            <span class="card-link">mkrimbacamp-vr.com <i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+
+                        <button type="button" class="portfolio-select-card" onclick="loadPortfolioUrl('https://q13dynamic-vr.com/', 'Q13DYNAMIC', 'q13')">
+                            <div class="card-badge">E-Commerce & Platform</div>
+                            <div class="card-name"><i class="fa-solid fa-store"></i> Q13DYNAMIC</div>
+                            <span class="card-link">q13dynamic-vr.com <i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+
+                        <button type="button" class="portfolio-select-card" onclick="loadPortfolioUrl('https://southwavejb.com/', 'SOUTH WAVE', 'south')">
+                            <div class="card-badge">Watersports & Management</div>
+                            <div class="card-name"><i class="fa-solid fa-water"></i> SOUTH WAVE</div>
+                            <span class="card-link">southwavejb.com <i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Preview Iframe -->
+                <iframe src="about:blank" class="demo-iframe" id="demoIframe" title="Live Preview Stage" style="display: none;"></iframe>
             </div>
         </div>
 
@@ -897,10 +1404,13 @@
     <!-- Bottom Controls Footer Bar -->
     <footer class="pres-footer">
         <div class="footer-info">
-            <button class="nav-btn-action" id="toggleDemoBtn">
+            <button class="nav-btn-action" id="toggleDemoBtn" onclick="toggleSplitDemo()">
                 <i class="fa-solid fa-columns"></i> Toggle Live Demo Split (50%)
             </button>
-            <span>Bayu Seafood &bull; MFJ Group &bull; VentureRush Tech</span>
+            <button class="nav-btn-action vr-btn" id="toggleVrPortfolioBtn" onclick="toggleVrPortfolioSplit()" style="display: none;">
+                <i class="fa-solid fa-globe"></i> Toggle Portfolio Split (50%)
+            </button>
+            <span id="footerText">Bayu Seafood &bull; MFJ Group &bull; VentureRush Tech</span>
         </div>
         <div class="nav-controls">
             <button class="nav-arrow-btn" id="prevBtn" aria-label="Previous Slide">
@@ -915,62 +1425,293 @@
 
     <!-- Presentation Interactive Logic Script -->
     <script>
-        const slideTrack = document.getElementById('slideTrack');
-        const slides = document.querySelectorAll('.slide');
+        // State variables
+        let currentDeck = 'vr'; // 'vr' or 'bayu'
+        let currentSlide = 0;
+        let isPortfolioSelected = false;
+        let activePortfolioUrl = '';
+        let activePortfolioTitle = '';
+        let activePortfolioKey = '';
+
+        const portfolioUrls = {
+            rimba: { url: 'https://mkrimbacamp-vr.com/', title: 'MK RIMBA CAMP PARK' },
+            q13: { url: 'https://q13dynamic-vr.com/', title: 'Q13DYNAMIC' },
+            south: { url: 'https://southwavejb.com/', title: 'SOUTH WAVE' }
+        };
+
+        // Elements
+        const trackVR = document.getElementById('slideTrackVR');
+        const trackBayu = document.getElementById('slideTrackBayu');
+        const btnTabVr = document.getElementById('btnTabVr');
+        const btnTabBayu = document.getElementById('btnTabBayu');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const dotsWrapper = document.getElementById('dotsWrapper');
+        const toggleDemoBtn = document.getElementById('toggleDemoBtn');
+        const toggleVrPortfolioBtn = document.getElementById('toggleVrPortfolioBtn');
+        const footerText = document.getElementById('footerText');
+        const headerBrandTitle = document.getElementById('headerBrandTitle');
+        const viewportWrapper = document.getElementById('viewportWrapper');
+        const demoIframeContainer = document.getElementById('demoIframeContainer');
+        const splitHeaderContainer = document.getElementById('splitHeaderContainer');
+        const portfolioChoiceMenu = document.getElementById('portfolioChoiceMenu');
+        const demoIframe = document.getElementById('demoIframe');
+        const demoIframeStage = document.getElementById('demoIframeStage');
 
-        let currentSlide = 0;
-        const totalSlides = slides.length;
+        const slidesVR = trackVR.querySelectorAll('.slide');
+        const slidesBayu = trackBayu.querySelectorAll('.slide');
 
-        // Create pagination dots
-        slides.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(index));
-            dotsWrapper.appendChild(dot);
-        });
+        function getCurrentTrack() {
+            return currentDeck === 'vr' ? trackVR : trackBayu;
+        }
 
-        const dots = document.querySelectorAll('.dot');
+        function getTotalSlides() {
+            return currentDeck === 'vr' ? slidesVR.length : slidesBayu.length;
+        }
+
+        function renderDots() {
+            dotsWrapper.innerHTML = '';
+            const count = getTotalSlides();
+            for (let i = 0; i < count; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === currentSlide) {
+                    dot.classList.add(currentDeck === 'vr' ? 'active' : 'active-bayu');
+                }
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsWrapper.appendChild(dot);
+            }
+        }
 
         function updateSlidePosition() {
-            slideTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Update dots
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
+            const track = getCurrentTrack();
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-            // Update arrow button states
             prevBtn.disabled = currentSlide === 0;
-            nextBtn.disabled = currentSlide === totalSlides - 1;
+            nextBtn.disabled = currentSlide === getTotalSlides() - 1;
+
+            if (currentDeck === 'bayu') {
+                prevBtn.classList.add('bayu-mode');
+                nextBtn.classList.add('bayu-mode');
+            } else {
+                prevBtn.classList.remove('bayu-mode');
+                nextBtn.classList.remove('bayu-mode');
+            }
+
+            renderDots();
         }
 
         function goToSlide(index) {
-            currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+            currentSlide = Math.max(0, Math.min(index, getTotalSlides() - 1));
             updateSlidePosition();
         }
 
-        prevBtn.addEventListener('click', () => {
-            if (currentSlide > 0) goToSlide(currentSlide - 1);
-        });
+        function nextSlide() {
+            if (currentSlide < getTotalSlides() - 1) {
+                goToSlide(currentSlide + 1);
+            }
+        }
 
-        nextBtn.addEventListener('click', () => {
-            if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
-        });
+        function prevSlide() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        function renderSplitHeader() {
+            if (currentDeck === 'vr') {
+                demoIframeContainer.classList.add('vr-split-border');
+                if (!isPortfolioSelected) {
+                    // Stage 1: Choice Menu Mode
+                    splitHeaderContainer.innerHTML = `
+                        <span class="demo-title-tag"><i class="fa-solid fa-globe" style="color: var(--accent-blue);"></i> Select Portfolio Website</span>
+                        <div class="demo-controls-toolbar">
+                            <span style="font-size: 0.78rem; color: #94a3b8;">Choose a site below</span>
+                        </div>
+                    `;
+                } else {
+                    // Stage 2: Loaded Website Mode with Back | Refresh Website | Mobile Mode | PC Mode
+                    splitHeaderContainer.innerHTML = `
+                        <span class="demo-title-tag"><i class="fa-solid fa-laptop-code" style="color: var(--accent-blue);"></i> ${activePortfolioTitle}</span>
+                        <div class="demo-controls-toolbar">
+                            <button type="button" class="demo-tool-btn vr-tool" onclick="backToPortfolioChoice()">
+                                <i class="fa-solid fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="demo-tool-btn vr-tool" onclick="refreshCurrentPortfolio()">
+                                <i class="fa-solid fa-rotate-right"></i> Refresh Website
+                            </button>
+                            <button type="button" class="demo-tool-btn vr-tool ${demoIframeStage.classList.contains('mobile-mode') ? 'active-vr' : ''}" onclick="toggleVrMobileMode()">
+                                <i class="fa-solid fa-mobile-screen-button"></i> Mobile Mode
+                            </button>
+                            <button type="button" class="demo-tool-btn vr-tool" onclick="openPortfolioPcMode()">
+                                <i class="fa-solid fa-laptop"></i> PC Mode
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                // Bayu Seafood Deck Split Header
+                demoIframeContainer.classList.remove('vr-split-border');
+                splitHeaderContainer.innerHTML = `
+                    <span class="demo-title-tag"><i class="fa-solid fa-desktop" style="color: var(--accent-gold);"></i> Live Demo Preview (index.html)</span>
+                    <div class="demo-controls-toolbar">
+                        <button type="button" class="demo-tool-btn" onclick="demoIframe.src = 'index.html'">
+                            <i class="fa-solid fa-rotate-right"></i> Refresh Demo
+                        </button>
+                        <button type="button" class="demo-tool-btn ${demoIframeStage.classList.contains('mobile-mode') ? 'active' : ''}" onclick="toggleBayuMobileMode()">
+                            <i class="fa-solid fa-mobile-screen-button"></i> Mobile Mode
+                        </button>
+                        <button type="button" class="demo-tool-btn active" onclick="window.open('index.html', '_blank')">
+                            <i class="fa-solid fa-laptop"></i> PC Mode (Fullscreen Web)
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function loadPortfolioUrl(url, title, key, autoOpenSplit = false) {
+            isPortfolioSelected = true;
+            activePortfolioUrl = url;
+            activePortfolioTitle = title;
+            activePortfolioKey = key;
+
+            portfolioChoiceMenu.style.display = 'none';
+            demoIframe.style.display = 'block';
+            demoIframe.src = url;
+
+            if (autoOpenSplit && !viewportWrapper.classList.contains('split-demo-active')) {
+                viewportWrapper.classList.add('split-demo-active');
+                if (toggleVrPortfolioBtn) toggleVrPortfolioBtn.classList.add('active');
+            }
+
+            renderSplitHeader();
+        }
+
+        function backToPortfolioChoice() {
+            isPortfolioSelected = false;
+            activePortfolioUrl = '';
+            activePortfolioTitle = '';
+            activePortfolioKey = '';
+
+            demoIframeStage.classList.remove('mobile-mode');
+            demoIframe.src = 'about:blank';
+            demoIframe.style.display = 'none';
+            portfolioChoiceMenu.style.display = 'flex';
+
+            renderSplitHeader();
+        }
+
+        function refreshCurrentPortfolio() {
+            if (activePortfolioUrl) {
+                demoIframe.src = activePortfolioUrl;
+            }
+        }
+
+        function toggleVrMobileMode() {
+            demoIframeStage.classList.toggle('mobile-mode');
+            renderSplitHeader();
+        }
+
+        function toggleBayuMobileMode() {
+            demoIframeStage.classList.toggle('mobile-mode');
+            renderSplitHeader();
+        }
+
+        function openPortfolioPcMode() {
+            if (activePortfolioUrl) {
+                window.open(activePortfolioUrl, '_blank');
+            }
+        }
+
+        function toggleVrPortfolioSplit() {
+            if (currentDeck !== 'vr') {
+                switchDeck('vr');
+            }
+            viewportWrapper.classList.toggle('split-demo-active');
+            const isSplit = viewportWrapper.classList.contains('split-demo-active');
+            if (isSplit) {
+                toggleVrPortfolioBtn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Portfolio Split`;
+                toggleVrPortfolioBtn.classList.add('active');
+            } else {
+                toggleVrPortfolioBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Toggle Portfolio Split (50%)`;
+                toggleVrPortfolioBtn.classList.remove('active');
+            }
+        }
+
+        function toggleSplitDemo() {
+            if (currentDeck !== 'bayu') {
+                switchDeck('bayu');
+            }
+            viewportWrapper.classList.toggle('split-demo-active');
+            const isSplit = viewportWrapper.classList.contains('split-demo-active');
+            if (isSplit) {
+                toggleDemoBtn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Demo Split`;
+                toggleDemoBtn.classList.add('active');
+                portfolioChoiceMenu.style.display = 'none';
+                demoIframe.style.display = 'block';
+                demoIframe.src = 'index.html';
+            } else {
+                toggleDemoBtn.innerHTML = `<i class="fa-solid fa-columns"></i> Toggle Live Demo Split (50%)`;
+                toggleDemoBtn.classList.remove('active');
+            }
+        }
+
+        function switchDeck(deck) {
+            currentDeck = deck;
+            currentSlide = 0;
+
+            if (deck === 'vr') {
+                trackVR.style.display = 'flex';
+                trackBayu.style.display = 'none';
+
+                btnTabVr.className = 'deck-tab-btn active-vr';
+                btnTabBayu.className = 'deck-tab-btn';
+
+                headerBrandTitle.innerHTML = `VentureRush Tech &bull; <span class="blue-text">Company Overview</span>`;
+                footerText.innerHTML = `VentureRush Tech &bull; Digital Platform Presentation`;
+                toggleDemoBtn.style.display = 'none';
+                toggleVrPortfolioBtn.style.display = 'inline-flex';
+
+                if (!isPortfolioSelected) {
+                    demoIframe.style.display = 'none';
+                    portfolioChoiceMenu.style.display = 'flex';
+                }
+                renderSplitHeader();
+            } else {
+                trackVR.style.display = 'none';
+                trackBayu.style.display = 'flex';
+
+                btnTabVr.className = 'deck-tab-btn';
+                btnTabBayu.className = 'deck-tab-btn active-bayu';
+
+                headerBrandTitle.innerHTML = `Bayu Seafood &bull; <span class="gold-text">MFJ Group</span>`;
+                footerText.innerHTML = `Bayu Seafood &bull; MFJ Group &bull; VentureRush Tech`;
+                toggleDemoBtn.style.display = 'inline-flex';
+                toggleVrPortfolioBtn.style.display = 'none';
+
+                portfolioChoiceMenu.style.display = 'none';
+                demoIframe.style.display = 'block';
+                demoIframe.src = 'index.html';
+
+                renderSplitHeader();
+            }
+
+            updateSlidePosition();
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
 
         // Keyboard arrow navigation
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-                if (currentSlide > 0) goToSlide(currentSlide - 1);
+                prevSlide();
             } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-                if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
+                nextSlide();
             }
         });
 
-        // Mobile touch swipe gesture navigation
+        // Touch swipe gestures
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -980,19 +1721,15 @@
 
         window.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-
-        function handleSwipe() {
             const swipeDistance = touchStartX - touchEndX;
             if (Math.abs(swipeDistance) > 50) {
-                if (swipeDistance > 0 && currentSlide < totalSlides - 1) {
-                    goToSlide(currentSlide + 1); // Swipe left -> Next slide
-                } else if (swipeDistance < 0 && currentSlide > 0) {
-                    goToSlide(currentSlide - 1); // Swipe right -> Prev slide
+                if (swipeDistance > 0) {
+                    nextSlide();
+                } else if (swipeDistance < 0) {
+                    prevSlide();
                 }
             }
-        }
+        });
 
         // FULLSCREEN TOGGLE LOGIC
         const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -1014,59 +1751,8 @@
             });
         }
 
-        // TOGGLE LIVE DEMO EMBED SPLIT LOGIC (50% Slide / 50% Live Demo)
-        const toggleDemoBtn = document.getElementById('toggleDemoBtn');
-        const viewportWrapper = document.getElementById('viewportWrapper');
-
-        if (toggleDemoBtn && viewportWrapper) {
-            toggleDemoBtn.addEventListener('click', () => {
-                viewportWrapper.classList.toggle('split-demo-active');
-                const isSplit = viewportWrapper.classList.contains('split-demo-active');
-                if (isSplit) {
-                    toggleDemoBtn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Demo Split`;
-                    toggleDemoBtn.classList.add('active');
-                } else {
-                    toggleDemoBtn.innerHTML = `<i class="fa-solid fa-columns"></i> Toggle Live Demo Split (50%)`;
-                    toggleDemoBtn.classList.remove('active');
-                }
-            });
-        }
-
-        // DEMO TOOLBAR INTERACTIVE CONTROLS
-        const refreshDemoBtn = document.getElementById('refreshDemoIframe');
-        const mobileViewBtn = document.getElementById('mobileViewBtn');
-        const pcViewBtn = document.getElementById('pcViewBtn');
-        const demoIframeStage = document.getElementById('demoIframeStage');
-        const demoIframe = document.getElementById('demoIframe');
-
-        if (refreshDemoBtn) {
-            refreshDemoBtn.addEventListener('click', () => {
-                demoIframe.src = demoIframe.src;
-            });
-        }
-
-        if (mobileViewBtn && demoIframeStage) {
-            mobileViewBtn.addEventListener('click', () => {
-                demoIframeStage.classList.add('mobile-mode');
-                mobileViewBtn.classList.add('active');
-                pcViewBtn.classList.remove('active');
-            });
-        }
-
-        if (pcViewBtn && demoIframeStage) {
-            pcViewBtn.addEventListener('click', () => {
-                // Return iframe stage to full width inside split or open full window
-                demoIframeStage.classList.remove('mobile-mode');
-                pcViewBtn.classList.add('active');
-                mobileViewBtn.classList.remove('active');
-
-                // Launch full window / full screen website view for client
-                window.open('index.html', '_blank');
-            });
-        }
-
         // Initialize state
-        updateSlidePosition();
+        switchDeck('vr');
     </script>
 </body>
 
