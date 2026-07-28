@@ -16,7 +16,7 @@
 
     <style>
         :root {
-            --bg-page: #f8fafc;
+            --bg-page: #bababa;
             --bg-slide: #ffffff;
             --bg-card: #f1f5f9;
             --bg-card-gold: #fefce8;
@@ -46,7 +46,7 @@
         }
 
         body {
-            background-color: var(--bg-page);
+            background-color: #bababa;
             color: var(--text-dark);
             font-family: var(--font-body);
             height: 100vh;
@@ -722,6 +722,14 @@
             font-size: 2rem;
             flex-shrink: 0;
             box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+            overflow: hidden;
+            border: 2px solid var(--accent-blue);
+        }
+
+        .founder-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .founder-info h3 {
@@ -836,6 +844,326 @@
         .slide-indicator.gold {
             color: var(--accent-gold);
         }
+
+        /* Case Study Modal Overlay */
+        .cs-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: csFadeIn 0.3s ease;
+        }
+
+        @keyframes csFadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .cs-modal-overlay.active {
+            display: flex;
+        }
+
+        .cs-modal-box {
+            background: #0f172a;
+            color: #f8fafc;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cs-modal-header {
+            padding: 16px 24px;
+            background: #1e293b;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cs-modal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cs-modal-badge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cs-modal-title {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .cs-modal-close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #94a3b8;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .cs-modal-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .cs-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cs-section-card {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 18px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cs-section-title {
+            font-family: var(--font-title);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cs-text-p {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .cs-section-card .bullet-list li {
+            color: #f1f5f9;
+        }
+
+        .cs-section-card .bullet-list li strong {
+            color: #ffffff;
+        }
+
+        .cs-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .cs-stat-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        .cs-stat-val {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+
+        .cs-stat-lbl {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .cs-image-box {
+            margin-top: 14px;
+            background: #090d16;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .cs-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 420px;
+            object-fit: contain;
+            border-radius: 8px;
+            cursor: zoom-in;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cs-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+        }
+
+        .cs-img-caption {
+            font-size: 0.84rem;
+            color: #cbd5e1;
+            margin-top: 10px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .cs-img-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        /* Image Popup Zoom Modal */
+        .cs-lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100050;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: csFadeIn 0.25s ease;
+        }
+
+        .cs-lightbox-overlay.active {
+            display: flex;
+        }
+
+        .cs-lightbox-card {
+            background: #0f172a;
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+            max-width: 92vw;
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cs-lightbox-header {
+            background: #1e293b;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cs-lightbox-title {
+            font-family: var(--font-title);
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cs-lightbox-close-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: none;
+            color: #cbd5e1;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .cs-lightbox-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .cs-lightbox-body {
+            padding: 18px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #080d16;
+        }
+
+        .cs-lightbox-img {
+            max-width: 86vw;
+            max-height: 72vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .cs-lightbox-caption {
+            color: #cbd5e1;
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-top: 12px;
+            text-align: center;
+            line-height: 1.4;
+        }
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.2s ease;
+        }
+
+        .cs-lightbox-close:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
     </style>
 </head>
 
@@ -888,170 +1216,150 @@
                     <div>
                         <h1 class="cover-title">About <span class="blue-text">VentureRush Tech</span></h1>
                         <p class="cover-subtitle">Founded in 2025 &bull; Johor Bahru, Malaysia</p>
-                        <p class="cover-desc">
-                            Welcome! VentureRush Tech is a fast-growing digital technology and web development company. We build high-performance websites, automated reservation engines, AI integrations, and custom business portals tailored for ambitious Malaysian brands.
-                        </p>
                     </div>
                 </div>
 
-                <!-- VR SLIDE 2: COMPANY STORY & CLIENT COMMITMENT -->
+                <!-- VR SLIDE 2: COMPANY BACKGROUND & SERVICES (COMBINED) -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category vr-cat">1. COMPANY BACKGROUND & PHILOSOPHY</span>
-                        <span class="slide-indicator" id="vrInd2">Slide 2 of 5</span>
+                        <span class="slide-category vr-cat">1. COMPANY BACKGROUND & SERVICES</span>
+                        <span class="slide-indicator" id="vrInd2">Slide 2 of 4</span>
                     </div>
                     <div class="slide-content-area">
-                        <h2 class="slide-heading vr-heading">Our Story & <span>Client Happiness Commitment</span></h2>
+                        <h2 class="slide-heading vr-heading">Our Story, Leadership & <span>Services</span></h2>
                         
-                        <div class="grid-2" style="margin-bottom: 16px;">
-                            <div class="card card-vr card-blue">
-                                <div class="card-icon blue-icon"><i class="fa-solid fa-bullseye"></i></div>
-                                <h3 class="card-title">Founded in 2025</h3>
-                                <p class="card-desc">
-                                    Founded in 2025, VentureRush Tech has grown from a passionate technology startup in Johor Bahru into a trusted digital partner for businesses across Malaysia.
+                        <div class="founder-box" style="margin-bottom: 12px; padding: 12px 18px;">
+                            <div class="founder-avatar" style="width: 52px; height: 52px;">
+                                <img src="https://venturerushtech.com/tm1.png" alt="Shafiq Aiman - Founder">
+                            </div>
+                            <div class="founder-info">
+                                <h3 style="font-size: 1.02rem;">Shafiq Aiman &bull; <span style="font-size: 0.85rem; color: var(--accent-blue);">Founder</span></h3>
+                                <span>Graduate in <strong>SIJIL TEKNOLOGI MAKLUMAT</strong> from <strong>KOLEJ KOMUNITI GELANG PATAH</strong></span>
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; font-weight: 400;">
+                                    Founded VentureRush Tech in 2025 in Johor Bahru to deliver high-performance websites and business systems for Malaysian brands.
                                 </p>
                             </div>
-                            <div class="card card-vr card-gold">
-                                <div class="card-icon"><i class="fa-solid fa-heart-circle-check"></i></div>
-                                <h3 class="card-title" style="color: var(--accent-gold-dark);">100% Client Satisfaction</h3>
-                                <p class="card-desc">
-                                    We make sure every client is delighted with the result. We work hand-in-hand with you to refine designs, perfect workflows, and ensure long-term success.
-                                </p>
+                        </div>
+
+                        <!-- OUR CORE SERVICES -->
+                        <div style="margin-bottom: 12px;">
+                            <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; font-family: var(--font-title); display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-gears" style="color: var(--accent-blue);"></i> Our Services:
+                            </h3>
+                            <div class="grid-3">
+                                <div class="card card-vr card-blue" style="padding: 12px 14px;">
+                                    <h3 class="card-title" style="font-size: 0.92rem; color: var(--accent-blue); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                        <i class="fa-solid fa-globe"></i> Custom Website Development
+                                    </h3>
+                                    <p class="card-desc" style="font-size: 0.78rem;">
+                                        Luxury bespoke web applications, interactive 2D canvas storytelling, e-commerce portals, local SEO, and full PC & mobile optimization.
+                                    </p>
+                                </div>
+                                <div class="card card-vr card-blue" style="padding: 12px 14px;">
+                                    <h3 class="card-title" style="font-size: 0.92rem; color: var(--accent-blue); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                        <i class="fa-solid fa-server"></i> Custom System Development
+                                    </h3>
+                                    <p class="card-desc" style="font-size: 0.78rem;">
+                                        Tailored Admin & Staff Portals, booking engines, inventory sync, commission tracking, role-based access, and real-time reporting.
+                                    </p>
+                                </div>
+                                <div class="card card-vr card-gold" style="padding: 12px 14px;">
+                                    <h3 class="card-title" style="font-size: 0.92rem; color: var(--accent-gold-dark); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                        <i class="fa-solid fa-robot" style="color: var(--accent-gold);"></i> Custom AI Chatbot
+                                    </h3>
+                                    <p class="card-desc" style="font-size: 0.78rem;">
+                                        24/7 intelligent customer inquiry handler, automated package recommendation assistant, and seamless online booking integration.
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
                         <div class="grid-3">
-                            <div class="card card-vr">
-                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-bolt"></i> High-Performance Tech</h3>
-                                <p class="card-desc">Fast, responsive, and SEO-optimized web applications built for seamless customer experience.</p>
+                            <div class="card card-vr" style="padding: 10px 14px;">
+                                <h3 class="card-title" style="color: var(--accent-blue); font-size: 0.86rem;"><i class="fa-solid fa-heart-circle-check"></i> 100% Client Satisfaction</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">Working hand-in-hand to refine designs and perfect workflows until you are delighted.</p>
                             </div>
-                            <div class="card card-vr">
-                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-wand-magic-sparkles"></i> Free Working Demo</h3>
-                                <p class="card-desc">We build live interactive prototypes free of charge to prove value before any contract commitments.</p>
+                            <div class="card card-vr" style="padding: 10px 14px;">
+                                <h3 class="card-title" style="color: var(--accent-blue); font-size: 0.86rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Free Working Demo</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">Interactive live prototypes built free of charge to prove value before any contract.</p>
                             </div>
-                            <div class="card card-vr">
-                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-headset"></i> Continuous Support</h3>
-                                <p class="card-desc">Full managed hosting, domain renewals, monthly backups, and ongoing technical maintenance.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VR SLIDE 3: FOUNDER PROFILE -->
-                <div class="slide">
-                    <div class="slide-top-bar">
-                        <span class="slide-category vr-cat">2. FOUNDER & LEADERSHIP</span>
-                        <span class="slide-indicator" id="vrInd3">Slide 3 of 5</span>
-                    </div>
-                    <div class="slide-content-area">
-                        <h2 class="slide-heading vr-heading">Meet Our Founder <span>Shafiq Aiman</span></h2>
-                        
-                        <div class="founder-box" style="margin-bottom: 16px;">
-                            <div class="founder-avatar">
-                                <i class="fa-solid fa-user-tie"></i>
-                            </div>
-                            <div class="founder-info">
-                                <h3>Shafiq Aiman</h3>
-                                <p><i class="fa-solid fa-location-dot"></i> Founder & Lead Tech Engineer &bull; Johor Bahru, Johor</p>
-                                <span>Graduate in <strong>SIJIL TEKNOLOGI MAKLUMAT</strong> from <strong>KOLEJ KOMUNITI GELANG PATAH</strong></span>
-                            </div>
-                        </div>
-
-                        <div class="grid-2">
-                            <div class="card card-vr">
-                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-graduation-cap"></i> Academic & Technical Foundation</h3>
-                                <p class="card-desc">
-                                    Studied Information Technology (Sijil Teknologi Maklumat) at Kolej Komuniti Gelang Patah, building strong foundations in software architecture, networking, database management, and web programming.
-                                </p>
-                            </div>
-
-                            <div class="card card-vr">
-                                <h3 class="card-title" style="color: var(--accent-blue);"><i class="fa-solid fa-fire"></i> Passion for IT Innovation</h3>
-                                <p class="card-desc">
-                                    Deeply passionate about modern software development, automated customer booking portals, interactive web animations, AI chatbots, and solving complex business challenges for Malaysian enterprises.
-                                </p>
+                            <div class="card card-vr" style="padding: 10px 14px;">
+                                <h3 class="card-title" style="color: var(--accent-blue); font-size: 0.86rem;"><i class="fa-solid fa-headset"></i> Continuous Support</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">Full managed hosting, domain renewals, backups, and ongoing maintenance care.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- VR SLIDE 4: PORTFOLIO SHOWCASE (Interactive Live Preview Cards) -->
+                <!-- VR SLIDE 3: PORTFOLIO SHOWCASE (Interactive Live Preview Cards) -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category vr-cat">3. PROVEN TRACK RECORD</span>
-                        <span class="slide-indicator" id="vrInd4">Slide 4 of 5</span>
+                        <span class="slide-category vr-cat">2. PROVEN TRACK RECORD</span>
+                        <span class="slide-indicator" id="vrInd3">Slide 3 of 4</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading vr-heading">Our Featured <span>Project Portfolio</span></h2>
-                        <p style="color: var(--text-muted); margin-bottom: 10px; font-size: 0.85rem;">
-                            <i class="fa-solid fa-hand-pointer" style="color: var(--accent-blue);"></i> Click any project card below to open its live website in the 50% split preview!
+                        <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-folder-open" style="color: var(--accent-blue);"></i> Click any project card below to view its full Case Study, Problem & Solution breakdown, and Verified Analytics!
                         </p>
                         
-                        <div class="grid-2" style="margin-bottom: 12px;">
-                            <!-- Project 1 -->
-                            <div class="card card-vr card-clickable" onclick="loadPortfolioUrl('https://mkrimbacamp-vr.com/', 'MK RIMBA CAMP PARK', 'rimba', true)">
-                                <span class="project-tag">Resort & Hospitality &bull; Click to Preview</span>
-                                <h3 class="card-title"><i class="fa-solid fa-campground" style="color: var(--accent-blue);"></i> MK RIMBA CAMP PARK (PONTIAN)</h3>
-                                <ul class="bullet-list vr-list">
-                                    <li><i class="fa-solid fa-check"></i> Resort / Campsite Online Booking System</li>
-                                    <li><i class="fa-solid fa-check"></i> AI Chatbot Customer Assistant</li>
-                                    <li><i class="fa-solid fa-check"></i> Official Brand Website Development</li>
-                                </ul>
-                            </div>
-
-                            <!-- Project 2 -->
-                            <div class="card card-vr">
-                                <span class="project-tag">Fine Dining & F&B</span>
-                                <h3 class="card-title"><i class="fa-solid fa-utensils" style="color: var(--accent-blue);"></i> ATTIC BY RAW</h3>
-                                <ul class="bullet-list vr-list">
-                                    <li><i class="fa-solid fa-check"></i> Restaurant Reservation & Table System</li>
-                                    <li><i class="fa-solid fa-check"></i> Live Menu & Guest Booking Manager</li>
-                                </ul>
-                            </div>
-                        </div>
-
                         <div class="grid-3">
-                            <!-- Project 3 -->
-                            <div class="card card-vr card-clickable" onclick="loadPortfolioUrl('https://q13dynamic-vr.com/', 'Q13DYNAMIC', 'q13', true)">
-                                <span class="project-tag">E-Commerce &bull; Preview</span>
-                                <h3 class="card-title" style="font-size: 0.95rem;"><i class="fa-solid fa-store" style="color: var(--accent-blue);"></i> Q13DYNAMIC</h3>
-                                <ul class="bullet-list vr-list" style="font-size: 0.8rem;">
-                                    <li><i class="fa-solid fa-check"></i> E-Commerce Website</li>
-                                    <li><i class="fa-solid fa-check"></i> Fireworks Business Platform</li>
-                                    <li><i class="fa-solid fa-check"></i> Agent Management Portal</li>
+                            <!-- Project 1: MK RIMBA CAMP PARK -->
+                            <div class="card card-vr card-clickable" onclick="openCaseStudy('rimba')">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                    <img src="https://mkrimbacamp-vr.com/mklogo.jpg" alt="MK Rimba Camp Logo" style="width: 42px; height: 42px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border-blue); flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                    <div style="flex-grow: 1;">
+                                        <span class="project-tag" style="margin-bottom: 2px;">Resort & Hospitality</span>
+                                        <h3 class="card-title" style="margin-bottom: 0; font-size: 0.96rem;">MK RIMBA CAMP PARK</h3>
+                                    </div>
+                                </div>
+                                <ul class="bullet-list vr-list">
+                                    <li><i class="fa-solid fa-check"></i> 24/7 AI Chatbot & Online Booking System</li>
+                                    <li><i class="fa-solid fa-check"></i> Admin & Staff System (Bookings, Check-In/Out, Commissions & Reports)</li>
+                                    <li><i class="fa-solid fa-check"></i> <strong style="color: var(--accent-blue);">Click to view Chatbot & Web Analytics</strong></li>
                                 </ul>
                             </div>
 
-                            <!-- Project 4 -->
-                            <div class="card card-vr card-clickable" onclick="loadPortfolioUrl('https://southwavejb.com/', 'SOUTH WAVE', 'south', true)">
-                                <span class="project-tag">Watersports &bull; Preview</span>
-                                <h3 class="card-title" style="font-size: 0.95rem;"><i class="fa-solid fa-water" style="color: var(--accent-blue);"></i> SOUTH WAVE WATERSPORT</h3>
-                                <ul class="bullet-list vr-list" style="font-size: 0.8rem;">
-                                    <li><i class="fa-solid fa-check"></i> Watersport Booking Website</li>
-                                    <li><i class="fa-solid fa-check"></i> Activity Management System</li>
-                                    <li><i class="fa-solid fa-check"></i> Customer Order Hub</li>
+                            <!-- Project 2: Q13DYNAMIC -->
+                            <div class="card card-vr card-clickable" onclick="openCaseStudy('q13')">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                    <img src="https://q13dynamic-vr.com/Q13LOGO.png" alt="Q13Dynamic Logo" style="width: 42px; height: 42px; border-radius: 10px; object-fit: contain; background: #ffffff; padding: 3px; border: 1px solid var(--border-blue); flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                    <div style="flex-grow: 1;">
+                                        <span class="project-tag" style="margin-bottom: 2px;">E-Commerce & Platform</span>
+                                        <h3 class="card-title" style="margin-bottom: 0; font-size: 0.96rem;">Q13DYNAMIC</h3>
+                                    </div>
+                                </div>
+                                <ul class="bullet-list vr-list">
+                                    <li><i class="fa-solid fa-check"></i> National Agent Network & E-Commerce Admin Portal</li>
+                                    <li><i class="fa-solid fa-check"></i> Sales, Direct/Override Commission & Live Stock Sync System</li>
+                                    <li><i class="fa-solid fa-check"></i> <strong style="color: var(--accent-blue);">Click to view Agent Registration Analytics</strong></li>
                                 </ul>
                             </div>
 
-                            <!-- Project 5 -->
-                            <div class="card card-vr card-gold card-clickable" onclick="switchDeck('bayu')">
-                                <span class="project-tag" style="background: rgba(184, 134, 11, 0.15); color: var(--accent-gold-dark);">Live Seafood &bull; View Deck</span>
-                                <h3 class="card-title" style="font-size: 0.95rem;"><i class="fa-solid fa-fish" style="color: var(--accent-gold);"></i> BAYU SEAFOOD</h3>
-                                <ul class="bullet-list" style="font-size: 0.8rem;">
-                                    <li><i class="fa-solid fa-check"></i> Halal Live Seafood Website</li>
-                                    <li><i class="fa-solid fa-check"></i> 101-Frame HD Canvas Animation</li>
-                                    <li><i class="fa-solid fa-check"></i> 1-Tap WhatsApp Booking Portal</li>
+                            <!-- Project 3: SOUTH WAVE WATERSPORT -->
+                            <div class="card card-vr card-clickable" onclick="openCaseStudy('south')">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                    <img src="https://southwavejb.com/img/logoBlue.png" alt="South Wave Logo" style="width: 42px; height: 42px; border-radius: 10px; object-fit: contain; background: #ffffff; padding: 3px; border: 1px solid var(--border-blue); flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                    <div style="flex-grow: 1;">
+                                        <span class="project-tag" style="margin-bottom: 2px;">Watersports & Reputation</span>
+                                        <h3 class="card-title" style="margin-bottom: 0; font-size: 0.96rem;">SOUTH WAVE WATERSPORT</h3>
+                                    </div>
+                                </div>
+                                <ul class="bullet-list vr-list">
+                                    <li><i class="fa-solid fa-check"></i> Role-Based System (Admin/Crew, QR Verify, Live Timer & Order Hub)</li>
+                                    <li><i class="fa-solid fa-check"></i> <strong>600% Google Review Growth in 1 Month (1.0★ to 4.8★)</strong></li>
+                                    <li><i class="fa-solid fa-check"></i> <strong style="color: var(--accent-blue);">Click to view Google Reviews & Search Console Data</strong></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- VR SLIDE 5: WHY PARTNER WITH US & CTA -->
+                <!-- VR SLIDE 4: WHY PARTNER WITH US & CTA -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category vr-cat">4. VALUE PROPOSITION</span>
-                        <span class="slide-indicator" id="vrInd5">Slide 5 of 5</span>
+                        <span class="slide-category vr-cat">3. VALUE PROPOSITION</span>
+                        <span class="slide-indicator" id="vrInd4">Slide 4 of 4</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading vr-heading">Why Choose <span>VentureRush Tech</span></h2>
@@ -1067,15 +1375,6 @@
                             </div>
                         </div>
 
-                        <div class="card card-gold" style="text-align: center; padding: 22px;">
-                            <h3 class="card-title" style="font-size: 1.15rem; color: var(--accent-gold-dark);">Ready to Review the Bayu Seafood Proposal?</h3>
-                            <p class="card-desc" style="max-width: 600px; margin: 6px auto 14px auto;">
-                                Click below to jump straight into the full 7-slide web proposal & live interactive demo presentation created for Bayu Seafood & MFJ Group!
-                            </p>
-                            <button type="button" class="nav-btn-action" style="background: var(--accent-gold); color: #ffffff; padding: 10px 24px; border-radius: 24px; font-weight: 700;" onclick="switchDeck('bayu')">
-                                Open Bayu Seafood Proposal Deck <i class="fa-solid fa-arrow-right"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -1097,9 +1396,6 @@
                         </div>
                         <h1 class="cover-title">Bayu <span class="gold-text">Seafood</span> Website Proposal</h1>
                         <p class="cover-subtitle gold">Presented by VentureRush Tech to MFJ Group Sdn Bhd</p>
-                        <p class="cover-desc">
-                            Welcome! As your web development team at VentureRush Tech, we are excited to present this custom digital platform built for Bayu Seafood. This presentation walks you through how the website functions, how it drives direct table bookings, the interactive features built for your brand, required digital assets, payment terms, and our customization workflow.
-                        </p>
                     </div>
                 </div>
 
@@ -1107,7 +1403,7 @@
                 <div class="slide">
                     <div class="slide-top-bar">
                         <span class="slide-category">1. BUSINESS GOALS & REVENUE</span>
-                        <span class="slide-indicator gold">Slide 2 of 7</span>
+                        <span class="slide-indicator gold">Slide 2 of 6</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Website Purpose & <span>Income Generation</span></h2>
@@ -1145,117 +1441,70 @@
                     </div>
                 </div>
 
-                <!-- BAYU SLIDE 3: LUXURY DESIGN & USER INTERACTIVITY (BUILT DEMO) -->
+                <!-- BAYU SLIDE 3: BUILT DEMO & INTERACTIVE FEATURES (COMBINED) -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category">2. BUILT DEMO & USER INTERACTIVITY</span>
-                        <span class="slide-indicator gold">Slide 3 of 7</span>
+                        <span class="slide-category">2. BUILT DEMO & INTERACTIVE FEATURES</span>
+                        <span class="slide-indicator gold" id="bayuInd3">Slide 3 of 6</span>
                     </div>
                     <div class="slide-content-area">
-                        <h2 class="slide-heading">Built Free Demo <span>& User Interactivity</span></h2>
-                        <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.86rem;">
-                            Before this meeting, <strong>we have already built a working live demo website for you 100% free of charge!</strong> We will use this live demo as our starting foundation, gathering your requirements to enhance and build the exact final website you want:
+                        <h2 class="slide-heading">Built Free Demo <span>& Interactive Features</span></h2>
+                        <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.84rem;">
+                            Before this meeting, <strong>we have built a working live demo website for you 100% free of charge!</strong> Below are the interactive features & modules engineered into your website:
                         </p>
-                        <div class="grid-3" style="margin-bottom: 12px;">
-                            <div class="card">
+                        
+                        <div class="grid-3" style="margin-bottom: 10px;">
+                            <div class="card" style="padding: 12px 14px;">
                                 <div class="card-icon"><i class="fa-solid fa-film"></i></div>
-                                <h3 class="card-title">Interactive Canvas Storytelling</h3>
-                                <p class="card-desc">
-                                    Scrolling down the home page drives a 101-frame HD canvas animation while key brand messages fade smoothly into view.
+                                <h3 class="card-title" style="font-size: 0.92rem;">Interactive 2D Canvas Storytelling</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">
+                                    101-frame HD visual sequence controlling dynamic scroll storytelling while key brand messages fade smoothly into view.
                                 </p>
                             </div>
-                            <div class="card">
+                            <div class="card" style="padding: 12px 14px;">
                                 <div class="card-icon"><i class="fa-solid fa-book-open-reader"></i></div>
-                                <h3 class="card-title">Tabletop Menu Flipbook</h3>
-                                <p class="card-desc">
-                                    Users can click or drag to turn physical pages of your menu rendered realistically over a wooden table backdrop.
+                                <h3 class="card-title" style="font-size: 0.92rem;">Tabletop Menu Flipbook</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">
+                                    Users drag and flip physical pages of your menu rendered realistically over a wooden dining table backdrop.
                                 </p>
                             </div>
-                            <div class="card">
+                            <div class="card" style="padding: 12px 14px;">
                                 <div class="card-icon"><i class="fa-solid fa-award"></i></div>
-                                <h3 class="card-title">3D Orbiting Certificates & Modal</h3>
-                                <p class="card-desc">
-                                    Visitors click 5 flying 3D certificate badges and Chef 'Adib's award trophies to view full high-res official documents.
+                                <h3 class="card-title" style="font-size: 0.92rem;">Chef Awards & 3D Badges</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">
+                                    Highlights Executive Chef 'Adib with 5 flying 3D certificate badges & competition award popups.
                                 </p>
                             </div>
                         </div>
 
-                        <div class="grid-2">
-                            <div class="card card-gold">
-                                <h3 class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-hand-pointer"></i> Dish Carousel & Catch Selector:</h3>
-                                <p class="card-desc">
-                                    Customers interactively switch signature dishes on custom ceramic plates and cycle through live aquarium catch selections (Lobsters, King Crabs, Mud Crabs).
+                        <div class="grid-3">
+                            <div class="card card-gold" style="padding: 12px 14px;">
+                                <h3 class="card-title" style="color: var(--accent-gold); font-size: 0.9rem;"><i class="fa-solid fa-hand-pointer"></i> Dish Carousel & Live Catch</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">
+                                    Interactive ceramic plate dish selector & vertical stack for Boston Lobster, King Crab, Mud Crab, and Tiger Prawns.
                                 </p>
                             </div>
-                            <div class="card card-gold">
-                                <h3 class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-wand-magic-sparkles"></i> Enhancing The Demo For You:</h3>
-                                <p class="card-desc">
-                                    Using this working demo website as our foundation, we will collect your requested adjustments, dish photos, text edits, and asset requirements to create your final site.
+                            <div class="card card-gold" style="padding: 12px 14px;">
+                                <h3 class="card-title" style="color: var(--accent-gold); font-size: 0.9rem;"><i class="fa-solid fa-calculator"></i> WhatsApp Booking Calculator</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">
+                                    Calculates guest count, date, time, and catch preferences directly into formatted 1-tap WhatsApp reservation messages.
+                                </p>
+                            </div>
+                            <div class="card card-gold" style="padding: 12px 14px;">
+                                <h3 class="card-title" style="color: var(--accent-gold); font-size: 0.9rem;"><i class="fa-solid fa-magnifying-glass"></i> Google Local SEO & Schema</h3>
+                                <p class="card-desc" style="font-size: 0.78rem;">
+                                    Built-in code enabling star ratings, operating hours, and map location directly on Google Search results.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- BAYU SLIDE 4: DEMO FEATURES & FUNCTIONS -->
+                <!-- BAYU SLIDE 4: CLIENT REQUIREMENTS & DIGITAL ASSETS CHECKLIST -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category">3. DEMO WEBSITE FEATURES</span>
-                        <span class="slide-indicator gold">Slide 4 of 7</span>
-                    </div>
-                    <div class="slide-content-area">
-                        <h2 class="slide-heading">Built Interactive <span>Features & Functions</span></h2>
-                        <div class="grid-2">
-                            <ul class="bullet-list">
-                                <li>
-                                    <i class="fa-solid fa-check"></i>
-                                    <div>
-                                        <strong>Apple-Style 2D Canvas Scroll Track:</strong> 101-frame HD visual sequence controlling dynamic scroll storytelling.
-                                    </div>
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-check"></i>
-                                    <div>
-                                        <strong>Chef Awards & 3D Orbiting Certificates:</strong> Highlights Executive Chef 'Adib with 5 flying 3D certificate badges & award competition popups.
-                                    </div>
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-check"></i>
-                                    <div>
-                                        <strong>Physical Tabletop Menu Flipbook:</strong> Guests flip through your physical menu book on a realistic wooden table backdrop.
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <ul class="bullet-list">
-                                <li>
-                                    <i class="fa-solid fa-check"></i>
-                                    <div>
-                                        <strong>Live Catch Vertical Selector:</strong> Interactive image stack for selecting Boston Lobster, King Crab, Mud Crab, and Tiger Prawns.
-                                    </div>
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-check"></i>
-                                    <div>
-                                        <strong>Automated WhatsApp Booking Portal:</strong> Direct booking calculator generating formatted reservation messages.
-                                    </div>
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-check"></i>
-                                    <div>
-                                        <strong>Google Schema.org & Local SEO:</strong> Code enabling star ratings, hours, and map location directly on Google Search.
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BAYU SLIDE 5: CLIENT REQUIREMENTS & DIGITAL ASSETS CHECKLIST -->
-                <div class="slide">
-                    <div class="slide-top-bar">
-                        <span class="slide-category">4. CLIENT REQUIREMENTS & ASSETS</span>
-                        <span class="slide-indicator gold">Slide 5 of 7</span>
+                        <span class="slide-category">3. CLIENT REQUIREMENTS & ASSETS</span>
+                        <span class="slide-indicator gold">Slide 4 of 6</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">What We Need From You <span>Before Customizing Demo</span></h2>
@@ -1266,7 +1515,10 @@
                             <div class="card card-gold">
                                 <h3 class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-list-check"></i> 1. Requested Demo Adjustments</h3>
                                 <ul class="bullet-list" style="margin-top: 8px;">
-                                    <li><i class="fa-solid fa-circle-dot"></i> List of specific text, pricing, or wording edits needed.</li>
+                                    <li><i class="fa-solid fa-circle-dot"></i> List of specific text or wording edits needed.</li>
+                                    <li><i class="fa-solid fa-circle-dot"></i> Layout edit requests & structural arrangement preferences.</li>
+                                    <li><i class="fa-solid fa-circle-dot"></i> Animation edit requests & interactive visual transition preferences.</li>
+                                    <li><i class="fa-solid fa-circle-dot"></i> Any specific features or custom functionality you wish to adjust / add to the website.</li>
                                     <li><i class="fa-solid fa-circle-dot"></i> Requested dish photos to add/replace on the website.</li>
                                     <li><i class="fa-solid fa-circle-dot"></i> Official WhatsApp booking phone number & operating hours.</li>
                                 </ul>
@@ -1284,11 +1536,11 @@
                     </div>
                 </div>
 
-                <!-- BAYU SLIDE 6: FINANCIAL & MAINTENANCE ARRANGEMENT -->
+                <!-- BAYU SLIDE 5: FINANCIAL & MAINTENANCE ARRANGEMENT -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category">5. FINANCIAL & MAINTENANCE STRUCTURE</span>
-                        <span class="slide-indicator gold">Slide 6 of 7</span>
+                        <span class="slide-category">4. FINANCIAL & MAINTENANCE STRUCTURE</span>
+                        <span class="slide-indicator gold">Slide 5 of 6</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Financial Arrangement <span>& Managed Care</span></h2>
@@ -1300,9 +1552,9 @@
                                 </p>
                                 <strong style="color: var(--text-dark); font-size: 0.88rem;">What You Receive:</strong>
                                 <ul class="bullet-list" style="margin-top: 8px;">
-                                    <li><i class="fa-solid fa-check"></i> Complete custom front-end code & luxury dark theme</li>
-                                    <li><i class="fa-solid fa-check"></i> 2D canvas scroll storytelling & interactive modules</li>
-                                    <li><i class="fa-solid fa-check"></i> Local SEO, Schema.org code, and mobile optimization</li>
+                                    <li><i class="fa-solid fa-check"></i> Completed website fully customized with your requested additions & adjustments</li>
+                                    <li><i class="fa-solid fa-check"></i> Complete Search Engine Optimization (SEO) & Google Schema.org setup</li>
+                                    <li><i class="fa-solid fa-check"></i> Responsive Mobile & Desktop (PC) layout optimization</li>
                                 </ul>
                             </div>
 
@@ -1323,11 +1575,11 @@
                     </div>
                 </div>
 
-                <!-- BAYU SLIDE 7: WEBSITE ADJUSTMENTS & CUSTOMIZATION SCOPE -->
+                <!-- BAYU SLIDE 6: WEBSITE ADJUSTMENTS & CUSTOMIZATION SCOPE -->
                 <div class="slide">
                     <div class="slide-top-bar">
-                        <span class="slide-category">6. WEBSITE ADJUSTMENTS SCOPE</span>
-                        <span class="slide-indicator gold">Slide 7 of 7</span>
+                        <span class="slide-category">5. WEBSITE ADJUSTMENTS SCOPE</span>
+                        <span class="slide-indicator gold">Slide 6 of 6</span>
                     </div>
                     <div class="slide-content-area">
                         <h2 class="slide-heading">Website Customization Scope <span>(Minor vs Major)</span></h2>
@@ -1336,7 +1588,7 @@
                                 <h3 class="card-title" style="color: var(--accent-gold);"><i class="fa-solid fa-check-double"></i> Included Minor Adjustments:</h3>
                                 <ul class="bullet-list" style="margin-top: 8px;">
                                     <li><i class="fa-solid fa-circle-dot"></i> Updating copywriting, text descriptions, font colors, and brand messaging.</li>
-                                    <li><i class="fa-solid fa-circle-dot"></i> Replacing or adding food images, pricing details, and contact numbers.</li>
+                                    <li><i class="fa-solid fa-circle-dot"></i> Replacing or adding food images and contact numbers.</li>
                                     <li><i class="fa-solid fa-circle-dot"></i> Minor text styling tweaks and social link updates.</li>
                                 </ul>
                             </div>
@@ -1395,7 +1647,7 @@
                 </div>
 
                 <!-- Live Preview Iframe -->
-                <iframe src="about:blank" class="demo-iframe" id="demoIframe" title="Live Preview Stage" style="display: none;"></iframe>
+                <iframe src="data:text/html;charset=utf-8," class="demo-iframe" id="demoIframe" title="Live Preview Stage" style="display: none;"></iframe>
             </div>
         </div>
 
@@ -1405,10 +1657,10 @@
     <footer class="pres-footer">
         <div class="footer-info">
             <button class="nav-btn-action" id="toggleDemoBtn" onclick="toggleSplitDemo()">
-                <i class="fa-solid fa-columns"></i> Toggle Live Demo Split (50%)
+                <i class="fa-solid fa-columns"></i> Toggle Demo Website
             </button>
             <button class="nav-btn-action vr-btn" id="toggleVrPortfolioBtn" onclick="toggleVrPortfolioSplit()" style="display: none;">
-                <i class="fa-solid fa-globe"></i> Toggle Portfolio Split (50%)
+                <i class="fa-solid fa-globe"></i> Toggle Portfolio Website
             </button>
             <span id="footerText">Bayu Seafood &bull; MFJ Group &bull; VentureRush Tech</span>
         </div>
@@ -1553,7 +1805,7 @@
                 // Bayu Seafood Deck Split Header
                 demoIframeContainer.classList.remove('vr-split-border');
                 splitHeaderContainer.innerHTML = `
-                    <span class="demo-title-tag"><i class="fa-solid fa-desktop" style="color: var(--accent-gold);"></i> Live Demo Preview (index.html)</span>
+                    <span class="demo-title-tag"><i class="fa-solid fa-desktop" style="color: var(--accent-gold);"></i> Live Demo Preview</span>
                     <div class="demo-controls-toolbar">
                         <button type="button" class="demo-tool-btn" onclick="demoIframe.src = 'index.html'">
                             <i class="fa-solid fa-rotate-right"></i> Refresh Demo
@@ -1562,7 +1814,7 @@
                             <i class="fa-solid fa-mobile-screen-button"></i> Mobile Mode
                         </button>
                         <button type="button" class="demo-tool-btn active" onclick="window.open('index.html', '_blank')">
-                            <i class="fa-solid fa-laptop"></i> PC Mode (Fullscreen Web)
+                            <i class="fa-solid fa-laptop"></i> PC Mode
                         </button>
                     </div>
                 `;
@@ -1594,7 +1846,7 @@
             activePortfolioKey = '';
 
             demoIframeStage.classList.remove('mobile-mode');
-            demoIframe.src = 'about:blank';
+            demoIframe.src = 'data:text/html;charset=utf-8,';
             demoIframe.style.display = 'none';
             portfolioChoiceMenu.style.display = 'flex';
 
@@ -1633,7 +1885,7 @@
                 toggleVrPortfolioBtn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Portfolio Split`;
                 toggleVrPortfolioBtn.classList.add('active');
             } else {
-                toggleVrPortfolioBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Toggle Portfolio Split (50%)`;
+                toggleVrPortfolioBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Toggle Portfolio Website`;
                 toggleVrPortfolioBtn.classList.remove('active');
             }
         }
@@ -1651,7 +1903,7 @@
                 demoIframe.style.display = 'block';
                 demoIframe.src = 'index.html';
             } else {
-                toggleDemoBtn.innerHTML = `<i class="fa-solid fa-columns"></i> Toggle Live Demo Split (50%)`;
+                toggleDemoBtn.innerHTML = `<i class="fa-solid fa-columns"></i> Toggle Demo Website`;
                 toggleDemoBtn.classList.remove('active');
             }
         }
@@ -1751,9 +2003,292 @@
             });
         }
 
+        // CASE STUDY MODAL LOGIC
+        function openCaseStudy(key) {
+            const overlay = document.getElementById('caseStudyModalOverlay');
+            const badge = document.getElementById('csModalBadge');
+            const title = document.getElementById('csModalTitle');
+            const body = document.getElementById('csModalBody');
+
+            if (key === 'rimba') {
+                badge.innerText = "Resort & Hospitality Case Study";
+                title.innerText = "MK RIMBA CAMP PARK (PONTIAN)";
+                body.innerHTML = `
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-briefcase"></i> Case Study Background</div>
+                        <p class="cs-text-p">
+                            Before partnering with VentureRush Tech, <strong>MK RIMBA CAMP PARK</strong> managed resort operations, campsite package inquiries, and guest reservations entirely through manual communication channels.
+                        </p>
+
+                        <div style="margin-top: 12px; margin-bottom: 12px;">
+                            <strong style="color: #ef4444; font-size: 0.92rem; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-exclamation"></i> Issues Found (Before VentureRush):
+                            </strong>
+                            <ul class="bullet-list" style="margin-top: 8px; font-size: 0.88rem;">
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>Manual Handling Bottlenecks:</strong> Staff had to manually answer all customer inquiries regarding package pricing, campsite rules, operating dates, and bookings.</li>
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>After-Hours Response Delays:</strong> When staff were off-duty or after operating hours, guest inquiries accumulated without instant replies, risking lost booking opportunities.</li>
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>Operational Stress:</strong> Managing repetitive customer messaging manually diverted team focus away from daily resort venue operations and guest hospitality.</li>
+                            </ul>
+                        </div>
+
+                        <p class="cs-text-p" style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px;">
+                            <strong style="color: #38bdf8;"><i class="fa-solid fa-wand-magic-sparkles"></i> VentureRush Solution & Custom Operations Platform:</strong>
+                            <br>VentureRush developed an official brand website integrated with an online booking engine and a <strong>24/7 AI Chatbot</strong>. Customers can easily check package pricing, operating dates, campsite rules, and finalize bookings automatically 24/7.
+                        </p>
+                        
+                        <div style="margin-top: 10px;">
+                            <strong style="color: #38bdf8; font-size: 0.88rem;"><i class="fa-solid fa-sliders"></i> Integrated Admin & Staff Management System:</strong>
+                            <ul class="bullet-list" style="margin-top: 6px; font-size: 0.86rem;">
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Booking & Reservation Management:</strong> Centralized admin dashboard to monitor, manage, and confirm incoming guest bookings.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Digital Check-In & Check-Out Workflow:</strong> Streamlined front-desk system for managing guest arrivals, departures, and campsite allocation.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Commission & Referral Tracking:</strong> Automated calculations for agent and staff sales commissions.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Real-Time Financial & Sales Reports:</strong> Automated reporting tools for occupancy analytics, revenue metrics, and booking insights.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-robot"></i> Chatbot & Website Performance Analytics</div>
+                        
+                        <div class="cs-image-box" onclick="openLightbox('portfolio/mkrimbaChatbotAnalytics.png', 'This is Chatbot Analytics from 01/01/2026 - 28/07/2026')">
+                            <img src="portfolio/mkrimbaChatbotAnalytics.png" alt="MK Rimba Camp Chatbot Analytics" class="cs-img">
+                            <div class="cs-img-caption">
+                                <i class="fa-solid fa-chart-line" style="color: var(--accent-blue);"></i> This is Chatbot Analytics from 01/01/2026 - 28/07/2026
+                                <br><span style="font-size: 0.76rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click image to open popup preview</span>
+                            </div>
+                        </div>
+
+                        <div class="cs-image-box" style="margin-top: 16px;" onclick="openLightbox('portfolio/mkrimbaWebsiteAnalytics.png', 'This is website analytics for mk rimba camp from 01/01/2026 - 28/07/2026')">
+                            <img src="portfolio/mkrimbaWebsiteAnalytics.png" alt="MK Rimba Camp Website Analytics" class="cs-img">
+                            <div class="cs-img-caption">
+                                <i class="fa-solid fa-chart-pie" style="color: var(--accent-blue);"></i> This is website analytics for mk rimba camp from 01/01/2026 - 28/07/2026
+                                <br><span style="font-size: 0.76rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click image to open popup preview</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (key === 'q13') {
+                badge.innerText = "E-Commerce & Agent Network Case Study";
+                title.innerText = "Q13DYNAMIC";
+                body.innerHTML = `
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-briefcase"></i> Case Study Background</div>
+                        <p class="cs-text-p">
+                            Before partnering with VentureRush Tech, the founder of <strong>Q13DYNAMIC</strong> managed every single business operation single-handedly—from taking customer orders to executing product deliveries across the region.
+                        </p>
+
+                        <div style="margin-top: 12px; margin-bottom: 12px;">
+                            <strong style="color: #ef4444; font-size: 0.92rem; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-exclamation"></i> Issues Found (Before VentureRush):
+                            </strong>
+                            <ul class="bullet-list" style="margin-top: 8px; font-size: 0.88rem;">
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>Single-Operator Burnout:</strong> The founder was overwhelmed handling every stage of the business alone—taking manual orders, verifying payments, and delivering fireworks.</li>
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>Scalability Barriers:</strong> Without a digital platform or structured system, expanding the business across Malaysia or recruiting sales agents was impossible.</li>
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>Lack of Order & Commission Tracking:</strong> No system existed to manage sales agents, automate supplier delivery dispatches, or accurately track commission payouts.</li>
+                            </ul>
+                        </div>
+
+                        <p class="cs-text-p" style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px;">
+                            <strong style="color: #38bdf8;"><i class="fa-solid fa-wand-magic-sparkles"></i> VentureRush Solution & E-Commerce Platform:</strong>
+                            <br>VentureRush engineered a scalable E-Commerce website integrated with a powerful <strong>Admin & Agent Management Portal</strong>.
+                        </p>
+
+                        <div style="margin-top: 10px;">
+                            <strong style="color: #38bdf8; font-size: 0.88rem;"><i class="fa-solid fa-network-wired"></i> Integrated Admin & Agent System Capabilities:</strong>
+                            <ul class="bullet-list" style="margin-top: 6px; font-size: 0.86rem;">
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Real-Time Sales & Revenue Tracking:</strong> Centralized dashboard for admins and agents to monitor live order volume, revenue metrics, and transaction history.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Direct Agent Commission Management:</strong> Automated calculation and instant tracking of direct sales commissions earned per order.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Downline Override Commission Tracking:</strong> Multi-tiered commission structure allowing leader agents to track and earn override commissions from downline sales teams.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Live Inventory & Stock Synchronization:</strong> Admin portal live stock management—when admins adjust stock levels, product availability updates instantly on the public website.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-users"></i> Agent Network Registration Analytics</div>
+                        
+                        <div class="cs-image-box" onclick="openLightbox('portfolio/q13dynamic.png', 'This is the last year agent register analytics')">
+                            <img src="portfolio/q13dynamic.png" alt="Q13Dynamic Agent Registration Analytics" class="cs-img">
+                            <div class="cs-img-caption">
+                                <i class="fa-solid fa-user-plus" style="color: var(--accent-blue);"></i> This is the last year agent register analytics
+                                <br><span style="font-size: 0.76rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click image to open popup preview</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (key === 'south') {
+                badge.innerText = "Watersports & Reputation Case Study";
+                title.innerText = "SOUTH WAVE WATERSPORT";
+                body.innerHTML = `
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-briefcase"></i> Case Study Background</div>
+                        <p class="cs-text-p">
+                            <strong>SOUTH WAVE WATERSPORT</strong> is a watersport business operating under <strong>MK MARINE & YACHT SERVICE</strong> (offering boat rides, yacht charters, vessel maintenance, and watersports). Managing maritime operations alongside ticket sales created heavy daily operational friction.
+                        </p>
+
+                        <div style="margin-top: 12px; margin-bottom: 12px;">
+                            <strong style="color: #ef4444; font-size: 0.92rem; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-exclamation"></i> Issues Found (Before VentureRush):
+                            </strong>
+                            <ul class="bullet-list" style="margin-top: 8px; font-size: 0.88rem;">
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>Poor Online Review & Reputation Profile:</strong> Prior to launching a website, MK MARINE suffered from low online visibility—holding <strong>only 3 total Google reviews with a low 1.0-star average rating</strong>.</li>
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>High Maritime Operational Workload:</strong> Managing boat rides, yacht maintenance, and watersport ticket bookings simultaneously created operational stress for on-site staff.</li>
+                                <li><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> <strong>No Automated Guest Review System:</strong> Staff had no structured tool to reach out to happy customers post-activity to collect feedback or encourage Google reviews.</li>
+                            </ul>
+                        </div>
+
+                        <p class="cs-text-p" style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px;">
+                            <strong style="color: #38bdf8;"><i class="fa-solid fa-wand-magic-sparkles"></i> VentureRush Solution & Operations Platform:</strong>
+                            <br>VentureRush built an official website for South Wave paired with a custom Role-Based Operations Management System and Customer Order Hub.
+                        </p>
+
+                        <div style="margin-top: 10px;">
+                            <strong style="color: #38bdf8; font-size: 0.88rem;"><i class="fa-solid fa-user-shield"></i> Role-Based Operations & Customer Hub System:</strong>
+                            <ul class="bullet-list" style="margin-top: 6px; font-size: 0.86rem;">
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Role-Based Permission Management (Admin vs Crew):</strong> Granular staff permissions controlling access to inventory management, discount promotions, sales reports, financial dashboards, and staff account management.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>On-Site QR & Receipt Order Verification:</strong> On-site crew verification portal allowing staff to instantly scan QR codes or receipts to verify guest bookings and assign rental equipment matching customer orders.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Customer Order Hub & Live Rental Countdown Timer:</strong> Dedicated link generated for each customer displaying their booked activity items and a live countdown timer showing remaining rental time in real-time.</li>
+                                <li><i class="fa-solid fa-check" style="color: #38bdf8;"></i> <strong>Automated Google Review Feedback Generator:</strong> 1-click ready-text message generator enabling staff to send post-activity review links directly to guests, driving massive Google Review growth.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-star" style="color: #f59e0b;"></i> Google Review Growth Results (1 Month)</div>
+                        
+                        <div class="cs-stat-grid">
+                            <div class="cs-stat-box">
+                                <div class="cs-stat-val" style="color: #ef4444;">3 Reviews</div>
+                                <div class="cs-stat-lbl">Before Website (1.0★ Average)</div>
+                            </div>
+                            <div class="cs-stat-box">
+                                <div class="cs-stat-val" style="color: #10b981;">21 Reviews</div>
+                                <div class="cs-stat-lbl">After 1 Month (4.8★ Average)</div>
+                            </div>
+                            <div class="cs-stat-box">
+                                <div class="cs-stat-val" style="color: #f59e0b;">+600% Growth</div>
+                                <div class="cs-stat-lbl">Total Reviews Growth in 1 Month</div>
+                            </div>
+                        </div>
+
+                        <p class="cs-text-p" style="margin-top: 14px; font-weight: 600;">
+                            Before website and system, the company only got 3 total reviews with average rating 1.0 star. After the website and system, the company reviews grew within 1 month to get total review 21 and average rating 4.8 star, which is a <strong>600% growth in 1 month!</strong>
+                        </p>
+
+                        <div class="cs-img-grid">
+                            <div class="cs-image-box" onclick="openLightbox('portfolio/southwaveGoogleAnalytics.png', 'South Wave Google Reviews Analytics - 1')">
+                                <img src="portfolio/southwaveGoogleAnalytics.png" alt="Southwave Google Analytics 1" class="cs-img">
+                                <div class="cs-img-caption" style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to zoom</div>
+                            </div>
+                            <div class="cs-image-box" onclick="openLightbox('portfolio/southwaveGoogleAnalytics1.png', 'South Wave Google Reviews Analytics - 2')">
+                                <img src="portfolio/southwaveGoogleAnalytics1.png" alt="Southwave Google Analytics 2" class="cs-img">
+                                <div class="cs-img-caption" style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to zoom</div>
+                            </div>
+                            <div class="cs-image-box" onclick="openLightbox('portfolio/southwaveGoogleAnalytics2.png', 'South Wave Google Reviews Analytics - 3')">
+                                <img src="portfolio/southwaveGoogleAnalytics2.png" alt="Southwave Google Analytics 3" class="cs-img">
+                                <div class="cs-img-caption" style="font-size: 0.75rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to zoom</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cs-section-card">
+                        <div class="cs-section-title"><i class="fa-solid fa-chart-simple"></i> Website Search Console Performance</div>
+                        
+                        <div class="cs-stat-grid" style="margin-bottom: 12px;">
+                            <div class="cs-stat-box">
+                                <div class="cs-stat-val">211 Clicks</div>
+                                <div class="cs-stat-lbl">Customer Clicks (1 Month)</div>
+                            </div>
+                            <div class="cs-stat-box">
+                                <div class="cs-stat-val">2.89k</div>
+                                <div class="cs-stat-lbl">Total Impressions (1 Month)</div>
+                            </div>
+                        </div>
+
+                        <div class="cs-image-box" onclick="openLightbox('portfolio/southwaveWebsiteAnalytics.png', 'Only 1 month customer click 211 and get total impressions 2.89k in Google Search Console!')">
+                            <img src="portfolio/southwaveWebsiteAnalytics.png" alt="South Wave Website Search Console Analytics" class="cs-img">
+                            <div class="cs-img-caption">
+                                <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--accent-blue);"></i> Only 1 month customer click 211 and get total impressions 2.89k in Google Search Console!
+                                <br><span style="font-size: 0.76rem; color: #60a5fa;"><i class="fa-solid fa-magnifying-glass-plus"></i> Click image to open popup preview</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCaseStudyModal() {
+            const overlay = document.getElementById('caseStudyModalOverlay');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeCaseStudy(e) {
+            if (e.target.id === 'caseStudyModalOverlay') {
+                closeCaseStudyModal();
+            }
+        }
+
+        // IMAGE LIGHTBOX POPUP LOGIC
+        function openLightbox(src, caption) {
+            const overlay = document.getElementById('csLightboxOverlay');
+            const img = document.getElementById('csLightboxImg');
+            const cap = document.getElementById('csLightboxCaption');
+            
+            if (img && overlay) {
+                img.src = src;
+                if (cap) cap.innerText = caption || 'Enlarged Image Preview';
+                overlay.classList.add('active');
+            }
+        }
+
+        function closeLightboxModal() {
+            const overlay = document.getElementById('csLightboxOverlay');
+            if (overlay) overlay.classList.remove('active');
+        }
+
         // Initialize state
         switchDeck('vr');
     </script>
+
+    <!-- Case Study Modal Popup Container -->
+    <div class="cs-modal-overlay" id="caseStudyModalOverlay" onclick="closeCaseStudy(event)">
+        <div class="cs-modal-box" onclick="event.stopPropagation()">
+            <div class="cs-modal-header">
+                <div class="cs-modal-title-group">
+                    <span class="cs-modal-badge" id="csModalBadge">Case Study</span>
+                    <h3 class="cs-modal-title" id="csModalTitle">Project Case Study</h3>
+                </div>
+                <button type="button" class="cs-modal-close-btn" onclick="closeCaseStudyModal()" aria-label="Close Case Study">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="cs-modal-body" id="csModalBody">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Zoom Popup Modal Container -->
+    <div class="cs-lightbox-overlay" id="csLightboxOverlay" onclick="closeLightboxModal()">
+        <div class="cs-lightbox-card" onclick="event.stopPropagation()">
+            <div class="cs-lightbox-header">
+                <div class="cs-lightbox-title">
+                    <i class="fa-solid fa-expand" style="color: #60a5fa;"></i> Image Analytics Preview
+                </div>
+                <button type="button" class="cs-lightbox-close-btn" onclick="closeLightboxModal()" aria-label="Close Image Preview">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="cs-lightbox-body">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="Enlarged Case Study Image" class="cs-lightbox-img" id="csLightboxImg" onclick="closeLightboxModal()">
+                <div class="cs-lightbox-caption" id="csLightboxCaption"></div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
