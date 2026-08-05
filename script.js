@@ -1543,7 +1543,434 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
+    // ==========================================================================
+    // Room & Facilities Interactive 3D VR Spherical Panorama Controller
+    // ==========================================================================
+    function initRoomVRController() {
+        const roomCardPrivate = document.getElementById('roomCardPrivate');
+        const roomCardBallroom = document.getElementById('roomCardBallroom');
+        const vrBtnPrivate = document.getElementById('vrBtnPrivate');
+        const vrBtnBallroom = document.getElementById('vrBtnBallroom');
+        const vrRoomTitle = document.getElementById('vrRoomTitle');
+        const vrRoomDesc = document.getElementById('vrRoomDesc');
+        const vrContainer = document.getElementById('vrContainer');
+        const vrFullscreenBtn = document.getElementById('vrFullscreenBtn');
+        const floorplanContainer = document.getElementById('floorplanContainer');
+        const floorplanZoomBtn = document.getElementById('floorplanZoomBtn');
+        const floorplanModal = document.getElementById('floorplanModal');
+        const floorplanModalClose = document.getElementById('floorplanModalClose');
+        const floorplanModalImg = document.getElementById('floorplanModalImg');
+
+        let currentRoom = 'private'; // 'private' or 'ballroom'
+        let scene, camera, renderer, sphereMesh, textureLoader;
+        let isUserInteracting = false;
+        let onPointerDownPointerX = 0, onPointerDownPointerY = 0;
+        let lon = 0, onPointerDownLon = 0;
+        let lat = 0, onPointerDownLat = 0;
+        let phi = 0, theta = 0;
+
+        const roomData = {
+            private: {
+                title: '360° VR View: Private Room',
+                img: 'panorama1.jpg',
+                desc: 'Currently viewing 3D spherical VR panorama for <strong>Private Room</strong> (Up to 18 Pax, TV screen & Mic provided).'
+            },
+            ballroom: {
+                title: '360° VR View: Ballroom',
+                img: 'panorama2.jpg',
+                desc: 'Currently viewing 3D spherical VR panorama for <strong>Ballroom</strong> (40–80 Pax, Stage & Split Dining).'
+            }
+        };
+
+        // 1. Initialize Three.js 3D VR Spherical Scene
+        function setup3DVRScene() {
+            if (!vrContainer || typeof THREE === 'undefined') return;
+
+            const width = vrContainer.clientWidth || 500;
+            const height = vrContainer.clientHeight || 380;
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, width / height, 1, 1100);
+            camera.target = new THREE.Vector3(0, 0, 0);
+
+            // Inverted sphere for 360 degree 3D panoramic environment
+            const geometry = new THREE.SphereGeometry(500, 60, 40);
+            geometry.scale(-1, 1, 1);
+
+            textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load(roomData[currentRoom].img, () => {
+                animate();
+            });
+
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            sphereMesh = new THREE.Mesh(geometry, material);
+            scene.add(sphereMesh);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(width, height);
+            vrContainer.appendChild(renderer.domElement);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                if (!isUserInteracting) {
+                    lon += 0.05; // Gentle auto pan
+                }
+
+                lat = Math.max(-85, Math.min(85, lat)); // Up/Down pitch constraint
+                phi = THREE.MathUtils.degToRad(90 - lat);
+                theta = THREE.MathUtils.degToRad(lon);
+
+                camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
+                camera.target.y = 500 * Math.cos(phi);
+                camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
+
+                camera.lookAt(camera.target);
+                renderer.render(scene, camera);
+            }
+
+            // Pointer event listeners for full 3D Up, Down, Left, Right swiping!
+            function onPointerDown(e) {
+                isUserInteracting = true;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                onPointerDownPointerX = clientX;
+                onPointerDownPointerY = clientY;
+                onPointerDownLon = lon;
+                onPointerDownLat = lat;
+            }
+
+            function onPointerMove(e) {
+                if (!isUserInteracting) return;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                lon = (onPointerDownPointerX - clientX) * 0.18 + onPointerDownLon; // Left / Right Yaw
+                lat = (clientY - onPointerDownPointerY) * 0.18 + onPointerDownLat; // Up / Down Pitch
+            }
+
+            function onPointerUp() {
+                isUserInteracting = false;
+            }
+
+            vrContainer.addEventListener('mousedown', onPointerDown);
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerUp);
+
+            vrContainer.addEventListener('touchstart', onPointerDown, { passive: true });
+            window.addEventListener('touchmove', onPointerMove, { passive: true });
+            window.addEventListener('touchend', onPointerUp);
+
+            window.addEventListener('resize', () => {
+                if (!vrContainer || !renderer || !camera) return;
+                const w = vrContainer.clientWidth;
+                const h = vrContainer.clientHeight;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            });
+        }
+
+        function switchRoom(room) {
+            if (!roomData[room]) return;
+            currentRoom = room;
+
+            if (sphereMesh && textureLoader) {
+                textureLoader.load(roomData[room].img, (newTexture) => {
+                    sphereMesh.material.map = newTexture;
+                    sphereMesh.material.needsUpdate = true;
+                });
+            }
+            lat = 0;
+            lon = 0;
+
+            if (roomCardPrivate) roomCardPrivate.classList.toggle('active', room === 'private');
+            if (roomCardBallroom) roomCardBallroom.classList.toggle('active', room === 'ballroom');
+            if (vrBtnPrivate) vrBtnPrivate.classList.toggle('active', room === 'private');
+            if (vrBtnBallroom) vrBtnBallroom.classList.toggle('active', room === 'ballroom');
+
+            if (vrRoomTitle) {
+                vrRoomTitle.textContent = roomData[room].title;
+            }
+            if (vrRoomDesc) {
+                vrRoomDesc.innerHTML = `<i class="fa-solid fa-circle-info gold-text"></i> ${roomData[room].desc}`;
+            }
+        }
+
+        // Room Card Click Listeners
+        if (roomCardPrivate) {
+            roomCardPrivate.addEventListener('click', () => switchRoom('private'));
+        }
+        if (roomCardBallroom) {
+            roomCardBallroom.addEventListener('click', () => switchRoom('ballroom'));
+        }
+
+        // VR Header Switcher Buttons
+        if (vrBtnPrivate) {
+            vrBtnPrivate.addEventListener('click', (e) => {
+                e.stopPropagation();
+                switchRoom('private');
+            });
+        }
+        if (vrBtnBallroom) {
+            vrBtnBallroom.addEventListener('click', (e) => {
+                e.stopPropagation();
+                switchRoom('ballroom');
+            });
+        }
+
+        // ==========================================
+        // Inline Card VR Scene Manager
+        // ==========================================
+        const cardVrInstances = {};
+
+        function createInlineCardVR(containerEl, imgPath) {
+            if (!containerEl || typeof THREE === 'undefined') return null;
+
+            let width = containerEl.clientWidth || 400;
+            let height = containerEl.clientHeight || 320;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1100);
+            camera.target = new THREE.Vector3(0, 0, 0);
+
+            const geometry = new THREE.SphereGeometry(500, 60, 40);
+            geometry.scale(-1, 1, 1);
+
+            const textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load(imgPath, () => {
+                render();
+            });
+
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const sphereMesh = new THREE.Mesh(geometry, material);
+            scene.add(sphereMesh);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(width, height);
+            containerEl.appendChild(renderer.domElement);
+
+            let isUserInteracting = false;
+            let onPointerDownPointerX = 0, onPointerDownPointerY = 0;
+            let lon = 0, onPointerDownLon = 0;
+            let lat = 0, onPointerDownLat = 0;
+            let phi = 0, theta = 0;
+            let animId = null;
+
+            function render() {
+                if (!isUserInteracting) {
+                    lon += 0.08;
+                }
+                lat = Math.max(-85, Math.min(85, lat));
+                phi = THREE.MathUtils.degToRad(90 - lat);
+                theta = THREE.MathUtils.degToRad(lon);
+
+                camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
+                camera.target.y = 500 * Math.cos(phi);
+                camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
+
+                camera.lookAt(camera.target);
+                renderer.render(scene, camera);
+            }
+
+            function animate() {
+                animId = requestAnimationFrame(animate);
+                render();
+            }
+            animate();
+
+            function onPointerDown(e) {
+                isUserInteracting = true;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                onPointerDownPointerX = clientX;
+                onPointerDownPointerY = clientY;
+                onPointerDownLon = lon;
+                onPointerDownLat = lat;
+            }
+
+            function onPointerMove(e) {
+                if (!isUserInteracting) return;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                lon = (onPointerDownPointerX - clientX) * 0.2 + onPointerDownLon;
+                lat = (clientY - onPointerDownPointerY) * 0.2 + onPointerDownLat;
+            }
+
+            function onPointerUp() {
+                isUserInteracting = false;
+            }
+
+            containerEl.addEventListener('mousedown', onPointerDown);
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerUp);
+
+            containerEl.addEventListener('touchstart', onPointerDown, { passive: true });
+            window.addEventListener('touchmove', onPointerMove, { passive: true });
+            window.addEventListener('touchend', onPointerUp);
+
+            function resize() {
+                if (!containerEl || !renderer || !camera) return;
+                const w = containerEl.clientWidth;
+                const h = containerEl.clientHeight;
+                if (w > 0 && h > 0) {
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(w, h);
+                }
+            }
+
+            return { resize };
+        }
+
+        // Room Card Action Buttons (View VR inside Card)
+        const vrRoomBtns = document.querySelectorAll('.btn-room-vr');
+        vrRoomBtns.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const roomTarget = btn.getAttribute('data-room-vr');
+                const roomItem = btn.closest('.room-row-item');
+                if (!roomItem || !roomTarget) return;
+
+                const collageGrid = roomItem.querySelector('.viewer-4collage-grid');
+                const vrContainer = roomItem.querySelector('.card-vr-container');
+
+                const isVRActive = roomItem.classList.contains('vr-mode-active');
+
+                if (!isVRActive) {
+                    // Activate Inline VR Mode inside Room Card
+                    roomItem.classList.add('vr-mode-active');
+                    if (collageGrid) collageGrid.style.display = 'none';
+                    if (vrContainer) vrContainer.style.display = 'block';
+
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fa-solid fa-images"></i> View Photos';
+
+                    const imgPath = roomTarget === 'private' ? 'panorama1.jpg' : 'panorama2.jpg';
+
+                    if (!cardVrInstances[roomTarget]) {
+                        cardVrInstances[roomTarget] = createInlineCardVR(vrContainer, imgPath);
+                    } else {
+                        setTimeout(() => {
+                            if (cardVrInstances[roomTarget]) cardVrInstances[roomTarget].resize();
+                        }, 60);
+                    }
+                } else {
+                    // Restore Photo View on Room Card
+                    roomItem.classList.remove('vr-mode-active');
+                    if (collageGrid) collageGrid.style.display = 'flex';
+                    if (vrContainer) vrContainer.style.display = 'none';
+
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="fa-solid fa-vr-cardboard"></i> View VR';
+                }
+            });
+        });
+
+        // Collage Lightbox Expansion for specific clicked image
+        function closeFloorplanModal() {
+            if (!floorplanModal) return;
+            floorplanModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        const collageBoxes = document.querySelectorAll('.v-collage-box');
+        collageBoxes.forEach((box) => {
+            box.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const img = box.querySelector('img');
+                if (img && floorplanModal && floorplanModalImg) {
+                    floorplanModalImg.src = img.src;
+                    floorplanModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        if (floorplanZoomBtn) {
+            floorplanZoomBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!floorplanModal || !floorplanModalImg) return;
+                floorplanModalImg.src = 'e1.jpg';
+                floorplanModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        if (floorplanModalClose) floorplanModalClose.addEventListener('click', closeFloorplanModal);
+        if (floorplanModal) {
+            floorplanModal.addEventListener('click', (e) => {
+                if (e.target === floorplanModal) closeFloorplanModal();
+            });
+        }
+
+        // Interactive 3D VR Fullscreen Mode
+        function resizeVRCanvas() {
+            if (!vrContainer || !renderer || !camera) return;
+            setTimeout(() => {
+                const w = vrContainer.clientWidth || window.innerWidth;
+                const h = vrContainer.clientHeight || window.innerHeight;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            }, 100);
+        }
+
+        window.addEventListener('resize', resizeVRCanvas);
+        document.addEventListener('fullscreenchange', resizeVRCanvas);
+        document.addEventListener('webkitfullscreenchange', resizeVRCanvas);
+
+        if (vrFullscreenBtn) {
+            vrFullscreenBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (vrContainer) {
+                    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                        if (vrContainer.requestFullscreen) {
+                            vrContainer.requestFullscreen();
+                        } else if (vrContainer.webkitRequestFullscreen) {
+                            vrContainer.webkitRequestFullscreen();
+                        } else {
+                            vrContainer.classList.toggle('vr-fullscreen-active');
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        }
+                    }
+                    resizeVRCanvas();
+                }
+            });
+        }
+
+        // URL Hash Hook Listener (#privateroom & #ballroom)
+        function checkRoomHashHook() {
+            const hash = window.location.hash.toLowerCase();
+            if (hash === '#privateroom' || hash === '#private-room' || hash === '#private') {
+                switchRoom('private');
+                const target = document.getElementById('privateroom') || document.getElementById('roomCardPrivate');
+                if (target) {
+                    setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 300);
+                }
+            } else if (hash === '#ballroom') {
+                switchRoom('ballroom');
+                const target = document.getElementById('ballroom') || document.getElementById('roomCardBallroom');
+                if (target) {
+                    setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 300);
+                }
+            }
+        }
+
+        checkRoomHashHook();
+        window.addEventListener('hashchange', checkRoomHashHook);
+
+        setup3DVRScene();
+    }
+
     initPanoramaGallery();
+    initRoomVRController();
 });
 
 
