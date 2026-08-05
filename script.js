@@ -1573,12 +1573,32 @@ document.addEventListener('DOMContentLoaded', () => {
             private: {
                 title: '360° VR View: Private Room',
                 img: 'panorama1.jpg',
+                layoutImg: '3dprivateroom.png',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Private Room</strong> (Up to 18 Pax, TV screen & Mic provided).'
             },
             ballroom: {
                 title: '360° VR View: Ballroom',
                 img: 'panorama2.jpg',
+                layoutImg: '3dballroom.png',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Ballroom</strong> (40–80 Pax, Stage & Split Dining).'
+            },
+            surau: {
+                title: '360° VR View: Surau',
+                img: 'panorama3.jpg',
+                layoutImg: '3dsurau.png',
+                desc: 'Currently viewing 3D spherical VR panorama for <strong>Surau</strong> (Pristine Prayer Room with Dedicated Wuduk Facilities).'
+            },
+            cigar: {
+                title: '360° VR View: Cigar Room',
+                img: 'panorama4.jpg',
+                layoutImg: '3dcigar.png',
+                desc: 'Currently viewing 3D spherical VR panorama for <strong>Cigar Room</strong> (Exclusive Private Lounge & Smoking Sanctuary).'
+            },
+            lounge: {
+                title: '360° VR View: Lounge',
+                img: 'panorama5.jpg',
+                layoutImg: '3dlounge.png',
+                desc: 'Currently viewing 3D spherical VR panorama for <strong>Lounge</strong> (Plush Seating for Pre-Dinner & Social Relaxation).'
             }
         };
 
@@ -1653,22 +1673,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 isUserInteracting = false;
             }
 
+            function onTouchStart(e) {
+                if (e.cancelable) e.preventDefault();
+                isUserInteracting = true;
+                if (e.touches && e.touches[0]) {
+                    onPointerDownPointerX = e.touches[0].clientX;
+                    onPointerDownPointerY = e.touches[0].clientY;
+                    onPointerDownLon = lon;
+                    onPointerDownLat = lat;
+                }
+            }
+
+            function onTouchMove(e) {
+                if (!isUserInteracting) return;
+                if (e.cancelable) e.preventDefault();
+                if (e.touches && e.touches[0]) {
+                    const clientX = e.touches[0].clientX;
+                    const clientY = e.touches[0].clientY;
+                    lon = (onPointerDownPointerX - clientX) * 0.18 + onPointerDownLon;
+                    lat = (clientY - onPointerDownPointerY) * 0.18 + onPointerDownLat;
+                }
+            }
+
+            function onTouchEnd() {
+                isUserInteracting = false;
+            }
+
             vrContainer.addEventListener('mousedown', onPointerDown);
             window.addEventListener('mousemove', onPointerMove);
             window.addEventListener('mouseup', onPointerUp);
 
-            vrContainer.addEventListener('touchstart', onPointerDown, { passive: true });
-            window.addEventListener('touchmove', onPointerMove, { passive: true });
-            window.addEventListener('touchend', onPointerUp);
+            vrContainer.addEventListener('touchstart', onTouchStart, { passive: false });
+            vrContainer.addEventListener('touchmove', onTouchMove, { passive: false });
+            vrContainer.addEventListener('touchend', onTouchEnd, { passive: false });
 
-            window.addEventListener('resize', () => {
+            const handleResize = () => {
                 if (!vrContainer || !renderer || !camera) return;
                 const w = vrContainer.clientWidth;
                 const h = vrContainer.clientHeight;
-                camera.aspect = w / h;
-                camera.updateProjectionMatrix();
-                renderer.setSize(w, h);
-            });
+                if (w > 0 && h > 0) {
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(w, h);
+                }
+            };
+
+            window.addEventListener('resize', handleResize);
+            if ('ResizeObserver' in window) {
+                const resizeObserver = new ResizeObserver(handleResize);
+                resizeObserver.observe(vrContainer);
+            }
         }
 
         function switchRoom(room) {
@@ -1684,10 +1738,21 @@ document.addEventListener('DOMContentLoaded', () => {
             lat = 0;
             lon = 0;
 
+            const vr3dImg = document.getElementById('vr3dImg');
+            if (vr3dImg && roomData[room].layoutImg) {
+                vr3dImg.style.opacity = '0.3';
+                setTimeout(() => {
+                    vr3dImg.src = roomData[room].layoutImg;
+                    vr3dImg.style.opacity = '1';
+                }, 150);
+            }
+
             if (roomCardPrivate) roomCardPrivate.classList.toggle('active', room === 'private');
             if (roomCardBallroom) roomCardBallroom.classList.toggle('active', room === 'ballroom');
-            if (vrBtnPrivate) vrBtnPrivate.classList.toggle('active', room === 'private');
-            if (vrBtnBallroom) vrBtnBallroom.classList.toggle('active', room === 'ballroom');
+            
+            document.querySelectorAll('.vr-switch-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-room') === room);
+            });
 
             if (vrRoomTitle) {
                 vrRoomTitle.textContent = roomData[room].title;
@@ -1706,18 +1771,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // VR Header Switcher Buttons
-        if (vrBtnPrivate) {
-            vrBtnPrivate.addEventListener('click', (e) => {
+        document.querySelectorAll('.vr-switch-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                switchRoom('private');
+                const room = btn.getAttribute('data-room');
+                if (room) {
+                    switchRoom(room);
+                    if (btn.classList.contains('facility-vr-btn')) {
+                        const vrViewer = document.getElementById('vrContainer');
+                        if (vrViewer) {
+                            vrViewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                }
             });
-        }
-        if (vrBtnBallroom) {
-            vrBtnBallroom.addEventListener('click', (e) => {
-                e.stopPropagation();
-                switchRoom('ballroom');
-            });
-        }
+        });
 
         // ==========================================
         // Inline Card VR Scene Manager
@@ -1802,13 +1870,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 isUserInteracting = false;
             }
 
+            function onTouchStartCard(e) {
+                if (e.cancelable) e.preventDefault();
+                isUserInteracting = true;
+                if (e.touches && e.touches[0]) {
+                    onPointerDownPointerX = e.touches[0].clientX;
+                    onPointerDownPointerY = e.touches[0].clientY;
+                    onPointerDownLon = lon;
+                    onPointerDownLat = lat;
+                }
+            }
+
+            function onTouchMoveCard(e) {
+                if (!isUserInteracting) return;
+                if (e.cancelable) e.preventDefault();
+                if (e.touches && e.touches[0]) {
+                    const clientX = e.touches[0].clientX;
+                    const clientY = e.touches[0].clientY;
+                    lon = (onPointerDownPointerX - clientX) * 0.2 + onPointerDownLon;
+                    lat = (clientY - onPointerDownPointerY) * 0.2 + onPointerDownLat;
+                }
+            }
+
+            function onTouchEndCard() {
+                isUserInteracting = false;
+            }
+
             containerEl.addEventListener('mousedown', onPointerDown);
             window.addEventListener('mousemove', onPointerMove);
             window.addEventListener('mouseup', onPointerUp);
 
-            containerEl.addEventListener('touchstart', onPointerDown, { passive: true });
-            window.addEventListener('touchmove', onPointerMove, { passive: true });
-            window.addEventListener('touchend', onPointerUp);
+            containerEl.addEventListener('touchstart', onTouchStartCard, { passive: false });
+            containerEl.addEventListener('touchmove', onTouchMoveCard, { passive: false });
+            containerEl.addEventListener('touchend', onTouchEndCard, { passive: false });
 
             function resize() {
                 if (!containerEl || !renderer || !camera) return;
@@ -1847,7 +1941,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.classList.add('active');
                     btn.innerHTML = '<i class="fa-solid fa-images"></i> View Photos';
 
-                    const imgPath = roomTarget === 'private' ? 'panorama1.jpg' : 'panorama2.jpg';
+                    const imgPath = roomData[roomTarget] ? roomData[roomTarget].img : 'panorama1.jpg';
 
                     if (!cardVrInstances[roomTarget]) {
                         cardVrInstances[roomTarget] = createInlineCardVR(vrContainer, imgPath);
