@@ -368,17 +368,19 @@ header.scrolled .mobile-nav-toggle span {
 .nav-menu {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 20px;
+    flex-wrap: nowrap;
 }
 
 .nav-link {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     color: var(--color-text-light);
     position: relative;
     padding: 8px 0;
+    white-space: nowrap !important;
 }
 
 .nav-link::after {
@@ -3279,7 +3281,7 @@ footer {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1080px) {
     :root {
         --nav-height: 70px;
     }
@@ -4112,4 +4114,1130 @@ footer {
     .collage-item {
         border-radius: 10px;
     }
+}
+
+/* ==========================================================================
+   Room & Facilities Showcase (3 Facilities, 2 Rooms, Floor Plan & 360° VR)
+   ========================================================================== */
+
+.subsection-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text-white);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 1. Facilities Grid (3 Horizontal Cards) */
+/* Facilities Header Row */
+.facilities-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.facilities-subtitle-tag {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-gold);
+    background: rgba(179, 143, 45, 0.08);
+    border: 1px solid rgba(179, 143, 45, 0.22);
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 1. Facilities Grid (Modern 3-Card Interactive Grid) */
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.facility-card-modern {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(179, 143, 45, 0.22);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 32px rgba(13, 23, 39, 0.05), 0 2px 6px rgba(13, 23, 39, 0.02);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+    position: relative;
+}
+
+.facility-card-modern:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-gold);
+    box-shadow: 0 22px 45px rgba(179, 143, 45, 0.2), 0 6px 18px rgba(13, 23, 39, 0.06);
+}
+
+.facility-img-box {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.facility-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.facility-card-modern:hover .facility-img {
+    transform: scale(1.08) rotate(1deg);
+}
+
+.facility-img-overlay {
+    display: none;
+}
+
+.facility-tag-pill {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(14, 24, 36, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--color-gold);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 2;
+}
+
+.facility-card-body {
+    padding: 24px 24px 26px 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.facility-header-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.facility-icon-badge {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    border-radius: 14px;
+    background: var(--gradient-gold);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 8px 20px rgba(179, 143, 45, 0.3);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.facility-card-modern:hover .facility-icon-badge {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 10px 25px rgba(179, 143, 45, 0.45);
+}
+
+.facility-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.facility-cat {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-gold);
+    font-weight: 700;
+    display: block;
+}
+
+.facility-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text-white);
+    margin-top: 2px;
+    line-height: 1.2;
+}
+
+.facility-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.facility-desc em {
+    color: var(--color-gold-dark);
+    font-weight: 600;
+    font-style: normal;
+}
+
+.facility-pills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.f-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    background: rgba(179, 143, 45, 0.08);
+    border: 1px solid rgba(179, 143, 45, 0.2);
+    padding: 4px 10px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.f-pill i {
+    color: var(--color-gold);
+    font-size: 0.72rem;
+}
+
+.facility-card-modern:hover .f-pill {
+    background: rgba(179, 143, 45, 0.15);
+    border-color: var(--color-gold);
+    color: var(--color-text-white);
+}
+
+/* 2. Rooms Grid (2 Horizontal Cards) */
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+.room-card {
+    background: #ffffff;
+    border-radius: var(--border-radius-md, 16px);
+    border: 2px solid rgba(179, 143, 45, 0.2);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(13, 23, 39, 0.05);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.room-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-gold);
+    box-shadow: 0 18px 40px rgba(179, 143, 45, 0.2);
+}
+
+.room-card.active {
+    border-color: var(--color-gold);
+    background: linear-gradient(135deg, #ffffff 0%, #fefcf7 100%);
+    box-shadow: 0 18px 45px rgba(179, 143, 45, 0.25);
+}
+
+.room-card.active::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 20px;
+    right: 20px;
+    height: 4px;
+    background: var(--gradient-gold);
+    border-radius: 4px 4px 0 0;
+}
+
+.room-card-header {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.room-type-badge {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-gold);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.room-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-text-white);
+    margin-bottom: 10px;
+}
+
+.room-pax-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--gradient-gold);
+    padding: 5px 14px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(179, 143, 45, 0.25);
+}
+
+.room-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.room-features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.5;
+}
+
+.room-features-list li i {
+    font-size: 1.1rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.room-card-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(179, 143, 45, 0.25);
+}
+
+.action-btn-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition-smooth);
+}
+
+.room-card:hover .action-btn-text {
+    transform: translateX(4px);
+}
+
+.active-indicator {
+    display: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #25d366;
+    align-items: center;
+    gap: 5px;
+    background: rgba(37, 211, 102, 0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.room-card.active .active-indicator {
+    display: inline-flex;
+}
+
+/* 3. Below Room Cards: Side-by-Side Viewers (Floor Plan Left, VR Panorama Right) */
+.room-viewer-section {
+    width: 100%;
+}
+
+.viewer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.viewer-card {
+    background: #ffffff;
+    border-radius: var(--border-radius-md, 16px);
+    border: 1px solid rgba(179, 143, 45, 0.2);
+    box-shadow: 0 15px 40px rgba(13, 23, 39, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.viewer-header {
+    padding: 18px 24px;
+    background: #0d1727;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(179, 143, 45, 0.25);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.viewer-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.viewer-title-wrap i {
+    font-size: 1.2rem;
+}
+
+.viewer-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.viewer-expand-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition-smooth);
+}
+
+.viewer-expand-btn:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: #ffffff;
+}
+
+/* Floor Plan Container */
+.floorplan-image-container {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    background: #080f1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.floorplan-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 15px;
+    transition: transform 0.4s ease;
+}
+
+.floorplan-image-container:hover .floorplan-img {
+    transform: scale(1.05);
+}
+
+.floorplan-overlay-hint {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 19, 28, 0.45);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+}
+
+.floorplan-image-container:hover .floorplan-overlay-hint {
+    opacity: 1;
+}
+
+.floorplan-overlay-hint i {
+    font-size: 2rem;
+    color: var(--color-gold-light);
+}
+
+/* VR Mode Panorama Container */
+.vr-room-switchers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vr-switch-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.vr-switch-btn.active,
+.vr-switch-btn:hover {
+    background: var(--gradient-gold);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(179, 143, 45, 0.3);
+}
+
+.vr-container {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    background: #000000;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+}
+
+.vr-container:active {
+    cursor: grabbing;
+}
+
+.vr-panorama-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    will-change: transform;
+    transition: opacity 0.4s ease;
+}
+
+.vr-panorama-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.vr-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(13, 23, 39, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--color-gold);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 5;
+}
+
+.vr-live-dot {
+    width: 8px;
+    height: 8px;
+    background: #25d366;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #25d366;
+    animation: pulseDot 1.8s infinite;
+}
+
+.vr-drag-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(13, 23, 39, 0.8);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 5;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.vr-fullscreen-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(13, 23, 39, 0.8);
+    border: 1px solid var(--color-gold);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    z-index: 5;
+    transition: var(--transition-smooth);
+}
+
+.vr-fullscreen-btn:hover {
+    background: var(--gradient-gold);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(179, 143, 45, 0.35);
+}
+
+.viewer-footer {
+    padding: 14px 20px;
+    background: #09121f;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(179, 143, 45, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.viewer-footer strong {
+    color: var(--color-gold-light);
+}
+
+/* Floor Plan & VR Lightbox Modal */
+.floorplan-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(10, 19, 28, 0.92);
+    backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease, visibility 0.4s step-end;
+}
+
+.floorplan-modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.floorplan-modal-content {
+    position: relative;
+    background: #0d1727;
+    border-radius: var(--border-radius-md);
+    max-width: 1000px;
+    width: 95%;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--color-gold);
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+}
+
+.floorplan-modal-header {
+    padding: 16px 24px;
+    background: #080f1a;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(179, 143, 45, 0.25);
+}
+
+.floorplan-modal-body {
+    padding: 20px;
+    background: #050a12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.floorplan-modal-body img {
+    max-width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Responsive Media Queries for Room & Facilities */
+@media (max-width: 991px) {
+    .facilities-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .rooms-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .viewer-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .floorplan-image-container,
+    .vr-container {
+        height: 320px;
+    }
+}
+
+@media (max-width: 600px) {
+    .room-card {
+        padding: 24px 20px;
+    }
+
+    .room-title {
+        font-size: 1.5rem;
+    }
+
+    .facility-card-modern {
+        border-radius: 16px;
+    }
+
+    .floorplan-image-container,
+    .vr-container {
+        height: 270px;
+    }
+
+    .viewer-header {
+        padding: 14px 18px;
+    }
+
+    .vr-room-switchers {
+        width: 100%;
+        margin-top: 8px;
+        justify-content: flex-start;
+    }
+}
+
+/* Room Action Buttons (Book Now & View VR) */
+.room-card-buttons-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.btn-room-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-room-book {
+    background: linear-gradient(135deg, var(--color-gold) 0%, #8c6d1f 100%);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(179, 143, 45, 0.3);
+}
+
+.btn-room-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(179, 143, 45, 0.45);
+    background: linear-gradient(135deg, #cda737 0%, var(--color-gold) 100%);
+}
+
+.btn-room-vr {
+    background: rgba(13, 23, 39, 0.06);
+    color: var(--color-navy);
+    border: 1px solid rgba(13, 23, 39, 0.18);
+}
+
+.btn-room-vr:hover,
+.room-row-item.active .btn-room-vr {
+    background: var(--color-navy);
+    color: var(--color-gold);
+    border-color: var(--color-navy);
+    box-shadow: 0 4px 15px rgba(13, 23, 39, 0.2);
+}
+
+.btn-room-vr.active {
+    background: var(--gradient-gold) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 6px 18px rgba(179, 143, 45, 0.35) !important;
+}
+
+/* Card Inline VR Container */
+.card-vr-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    background: #000000;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 6px 18px rgba(13, 23, 39, 0.12);
+    border: 1px solid rgba(179, 143, 45, 0.3);
+}
+
+.card-vr-container:active {
+    cursor: grabbing;
+}
+
+.card-vr-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+.vr-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-gold);
+    background: rgba(179, 143, 45, 0.1);
+    border: 1px solid rgba(179, 143, 45, 0.25);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+}
+
+.vr-mode-text {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.55;
+    margin-bottom: 15px;
+}
+
+.room-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.room-card:hover .room-card-img {
+    transform: scale(1.08);
+}
+
+.room-card-overlay-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(10, 19, 28, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--color-gold);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.room-card-body {
+    padding: 24px 28px 28px 28px;
+}
+
+/* 4-Photo Asymmetrical Collage Grid Layout (On White Card Background) */
+.viewer-4collage-grid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    background: transparent;
+}
+
+.collage-row-top {
+    display: flex;
+    gap: 12px;
+    height: 50%;
+    width: 100%;
+}
+
+.collage-row-bottom {
+    display: flex;
+    gap: 12px;
+    height: 50%;
+    width: 100%;
+}
+
+/* Top Left 70% width, Top Right 30% width */
+.v-collage-box.top-left {
+    flex: 0 0 calc(70% - 6px);
+    width: calc(70% - 6px);
+}
+
+.v-collage-box.top-right {
+    flex: 0 0 calc(30% - 6px);
+    width: calc(30% - 6px);
+}
+
+/* Bottom Left 40% width, Bottom Right 60% width */
+.v-collage-box.bottom-left {
+    flex: 0 0 calc(40% - 6px);
+    width: calc(40% - 6px);
+}
+
+.v-collage-box.bottom-right {
+    flex: 0 0 calc(60% - 6px);
+    width: calc(60% - 6px);
+}
+
+.v-collage-box {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(13, 23, 39, 0.08);
+    border: 1px solid rgba(179, 143, 45, 0.18);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.v-collage-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.room-row-item:hover .v-collage-box img {
+    transform: scale(1.08);
+}
+
+/* Rooms Section - 1 Room Row per Row */
+.room-rows-list {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.room-row-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+    background: #ffffff;
+    border-radius: var(--border-radius-md, 16px);
+    border: 2px solid rgba(179, 143, 45, 0.2);
+    box-shadow: 0 10px 30px rgba(13, 23, 39, 0.05);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.room-row-item:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-gold);
+    box-shadow: 0 18px 40px rgba(179, 143, 45, 0.2);
+}
+
+.room-row-item.active {
+    border-color: var(--color-gold);
+    box-shadow: 0 18px 45px rgba(179, 143, 45, 0.25);
+    background: linear-gradient(135deg, #ffffff 0%, #fefcf7 100%);
+}
+
+.room-row-left {
+    padding: 35px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.room-row-right {
+    position: relative;
+    background: transparent;
+    min-height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+}
+
+.room-row-right .viewer-4collage-grid {
+    height: 100%;
+    min-height: 300px;
+}
+
+/* Below Rooms Full-Width VR Section */
+.vr-full-card {
+    background: #ffffff;
+    border-radius: var(--border-radius-md, 16px);
+    border: 1px solid rgba(179, 143, 45, 0.2);
+    box-shadow: 0 15px 40px rgba(13, 23, 39, 0.06);
+    overflow: hidden;
+}
+
+.vr-full-card .vr-container {
+    height: 450px;
+}
+
+@media (max-width: 991px) {
+    .facilities-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .rooms-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .viewer-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .floorplan-image-container,
+    .vr-container {
+        height: 320px;
+    }
+
+    .room-row-item {
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+    }
+
+    .room-row-left,
+    .room-row-info {
+        display: contents;
+    }
+
+    .room-card-header {
+        order: 1;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .room-row-right {
+        order: 2;
+        width: 100%;
+        height: 280px;
+        min-height: 280px;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+
+    .room-row-item.vr-mode-active .room-row-right {
+        height: 320px;
+        min-height: 320px;
+        margin-bottom: 24px;
+    }
+
+    .room-pax-tag {
+        order: 3;
+        margin-bottom: 14px;
+        align-self: flex-start;
+    }
+
+    .room-features-list {
+        order: 4;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .room-card-buttons-group {
+        order: 5;
+        width: 100%;
+        margin-top: 0;
+        display: flex;
+        gap: 12px;
+    }
+
+    .room-card-buttons-group .btn-room-action {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+        padding: 12px 14px;
+    }
+}
+
+/* Fullscreen 3D VR Mode Styling */
+#vrContainer:fullscreen,
+#vrContainer:-webkit-full-screen,
+#vrContainer.vr-fullscreen-active {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    background: #000000 !important;
+}
+
+#vrContainer:fullscreen canvas,
+#vrContainer:-webkit-full-screen canvas,
+#vrContainer.vr-fullscreen-active canvas {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+#vrContainer:fullscreen .vr-fullscreen-btn,
+#vrContainer:-webkit-full-screen .vr-fullscreen-btn,
+#vrContainer.vr-fullscreen-active .vr-fullscreen-btn {
+    top: 24px;
+    right: 24px;
+    bottom: auto;
+    z-index: 1000000;
 }
