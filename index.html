@@ -161,6 +161,7 @@
                 <a href="#about" class="nav-link">Our Story</a>
                 <a href="#aquariums" class="nav-link">Live Catch</a>
                 <a href="#menu" class="nav-link">Signature Menu</a>
+                <a href="#events" class="nav-link">Room &amp; Facilities</a>
                 <a href="#gallery" class="nav-link">Gallery</a>
                 <a href="#contact" class="nav-link">Contact</a>
                 <a href="#reservation" class="nav-link mobile-only-cta">Book A Table</a>
@@ -723,71 +724,244 @@
             </div>
         </section>
 
-        <!-- Events & Ambiance Showcase Section -->
+        <!-- Room & Facilities Section (The Perfect Place to Eat & Celebrate) -->
         <section class="section section-darker events-section" id="events">
             <div class="container">
                 <div class="section-header text-center scroll-reveal">
                     <div class="events-logo-badge">
                         <img src="bayu-logo.jpg" alt="Bayu Seafood Logo" class="events-logo-img">
                     </div>
-                    <span class="section-subtitle">Aesthetic Atmosphere &amp; Celebrations</span>
+                    <span class="section-subtitle">Room &amp; Facilities</span>
                     <h2 class="section-title">The Perfect Place to <span class="gold-text">Eat &amp; Celebrate</span>
                     </h2>
-                    <p class="section-desc">Breathtaking lakeside ambiance and 100% Halal seafood dining, perfect for
-                        birthdays, private events, and government functions.</p>
+                    <p class="section-desc">Discover our premium guest facilities, exclusive private rooms, and flexible ballroom spaces designed for memorable dining and events.</p>
                 </div>
 
-                <!-- Main Layout: Collage Grid & Highlight Cards -->
-                <div class="events-showcase-layout scroll-reveal">
-                    <!-- Photo Collage Grid combining e1.jpg, e2.jpg, e3.jpg, e4.jpg -->
-                    <div class="events-collage-grid">
-                        <div class="collage-item item-1">
-                            <img src="e1.jpg" alt="Bayu Seafood Event Ambiance 1" class="collage-img">
+                <!-- 1. Rooms Block: 1 Room per Row (Left: Details, Right: 4 Collage Grid or 360° VR View) -->
+                <div class="rooms-block scroll-reveal">
+                    <h3 class="subsection-title"><i class="fa-solid fa-door-closed gold-text"></i> Rooms &amp; Event Spaces</h3>
+                    
+                    <div class="room-rows-list">
+                        <!-- Row 1: Private Room -->
+                        <div class="room-row-item active" id="privateroom" data-room="private">
+                            <!-- Left Side: Room Details -->
+                            <div class="room-row-left">
+                                <div class="room-row-info">
+                                    <div class="room-card-header">
+                                        <span class="room-type-badge">Private Space</span>
+                                        <h4 class="room-title">Private Room</h4>
+                                    </div>
+                                    <span class="room-pax-tag"><i class="fa-solid fa-user-group"></i> Up to 18 Pax</span>
+                                    <ul class="room-features-list">
+                                        <li><i class="fa-solid fa-microphone gold-text"></i> <span>Got microphone &amp; audio system</span></li>
+                                        <li><i class="fa-solid fa-tv gold-text"></i> <span>TV screen for presentation &amp; media</span></li>
+                                        <li><i class="fa-solid fa-users gold-text"></i> <span>Ideal intimate setup for <strong>18 pax</strong></span></li>
+                                    </ul>
+                                </div>
+                                <div class="room-card-buttons-group">
+                                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20want%20to%20book%20the%20private%20room" target="_blank" rel="noopener noreferrer" class="btn-room-action btn-room-book">
+                                        <i class="fa-solid fa-calendar-check"></i> Book Now
+                                    </a>
+                                    <button class="btn-room-action btn-room-vr" data-room-vr="private">
+                                        <i class="fa-solid fa-vr-cardboard"></i> <span class="btn-vr-text">View VR</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right Side: 4 Collage Image Grid OR Interactive VR Canvas -->
+                            <div class="room-row-right" id="floorplanContainer">
+                                <div class="viewer-4collage-grid">
+                                    <div class="collage-row-top">
+                                        <div class="v-collage-box top-left"><img src="pr1.png" alt="Private Room Ambiance 1"></div>
+                                        <div class="v-collage-box top-right"><img src="pr2.png" alt="Private Room Ambiance 2"></div>
+                                    </div>
+                                    <div class="collage-row-bottom">
+                                        <div class="v-collage-box bottom-left"><img src="pr3.png" alt="Private Room Ambiance 3"></div>
+                                        <div class="v-collage-box bottom-right"><img src="pr4.png" alt="Private Room Ambiance 4"></div>
+                                    </div>
+                                    <div class="floorplan-overlay-hint">
+                                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                        <span>Click to Expand Collage</span>
+                                    </div>
+                                </div>
+                                <!-- Inline 360° VR Viewer Container -->
+                                <div class="card-vr-container" id="cardVrPrivate" style="display: none;">
+                                    <div class="vr-badge">
+                                        <span class="vr-live-dot"></span>
+                                        <span>3D 360° VR MODE</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="collage-item item-2">
-                            <img src="e2.jpg" alt="Bayu Seafood Event Ambiance 2" class="collage-img">
-                        </div>
-                        <div class="collage-item item-3">
-                            <img src="e3.jpg" alt="Bayu Seafood Event Ambiance 3" class="collage-img">
-                        </div>
-                        <div class="collage-item item-4">
-                            <img src="e4.jpg" alt="Bayu Seafood Event Ambiance 4" class="collage-img">
+
+                        <!-- Row 2: Ballroom -->
+                        <div class="room-row-item" id="ballroom" data-room="ballroom">
+                            <!-- Left Side: Room Details -->
+                            <div class="room-row-left">
+                                <div class="room-row-info">
+                                    <div class="room-card-header">
+                                        <span class="room-type-badge">Grand Event Hall</span>
+                                        <h4 class="room-title">Ballroom</h4>
+                                    </div>
+                                    <span class="room-pax-tag"><i class="fa-solid fa-user-group"></i> 40 – 80 Pax</span>
+                                    <ul class="room-features-list">
+                                        <li><i class="fa-solid fa-masks-theater gold-text"></i> <span>Got stage for speeches &amp; performances</span></li>
+                                        <li><i class="fa-solid fa-users gold-text"></i> <span>For <strong>40 to 80 pax</strong> capacity</span></li>
+                                        <li><i class="fa-solid fa-sliders gold-text"></i> <span>Versatile setup: Can split <strong>30 at front at stage</strong> &amp; <strong>50 at behind dining area</strong></span></li>
+                                    </ul>
+                                </div>
+                                <div class="room-card-buttons-group">
+                                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20want%20to%20book%20the%20ballroom" target="_blank" rel="noopener noreferrer" class="btn-room-action btn-room-book">
+                                        <i class="fa-solid fa-calendar-check"></i> Book Now
+                                    </a>
+                                    <button class="btn-room-action btn-room-vr" data-room-vr="ballroom">
+                                        <i class="fa-solid fa-vr-cardboard"></i> <span class="btn-vr-text">View VR</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right Side: 4 Collage Image Grid OR Interactive VR Canvas -->
+                            <div class="room-row-right">
+                                <div class="viewer-4collage-grid">
+                                    <div class="collage-row-top">
+                                        <div class="v-collage-box top-left"><img src="br1.png" alt="Ballroom Ambiance 1"></div>
+                                        <div class="v-collage-box top-right"><img src="br2.png" alt="Ballroom Ambiance 2"></div>
+                                    </div>
+                                    <div class="collage-row-bottom">
+                                        <div class="v-collage-box bottom-left"><img src="br3.png" alt="Ballroom Ambiance 3"></div>
+                                        <div class="v-collage-box bottom-right"><img src="br4.png" alt="Ballroom Ambiance 4"></div>
+                                    </div>
+                                    <div class="floorplan-overlay-hint">
+                                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                        <span>Click to Expand Collage</span>
+                                    </div>
+                                </div>
+                                <!-- Inline 360° VR Viewer Container -->
+                                <div class="card-vr-container" id="cardVrBallroom" style="display: none;">
+                                    <div class="vr-badge">
+                                        <span class="vr-live-dot"></span>
+                                        <span>3D 360° VR MODE</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Side Highlight Features Cards -->
-                    <div class="events-features-column">
-                        <div class="event-feature-card">
-                            <div class="feature-icon"><i class="fa-solid fa-cake-candles"></i></div>
-                            <div class="feature-text">
-                                <h3>Perfect for Birthday</h3>
-                                <p>Lakeside dining, vibrant decor, and fresh seafood feasts for your special day.</p>
+                <!-- 2. Facilities Block: Modern 3-Card Interactive Grid -->
+                <div class="facilities-block scroll-reveal" style="margin-top: 50px;">
+                    <div class="facilities-header-row">
+                        <h3 class="subsection-title"><i class="fa-solid fa-bell-concierge gold-text"></i> Guest Facilities</h3>
+                        <span class="facilities-subtitle-tag"><i class="fa-solid fa-sparkles gold-text"></i> Crafted for Your Comfort</span>
+                    </div>
+
+                    <div class="facilities-grid">
+                        <!-- Card 1: Surau (f1.png) -->
+                        <div class="facility-card-modern">
+                            <div class="facility-img-box">
+                                <img src="f1.png" alt="Surau Facility" class="facility-img">
+                                <span class="facility-tag-pill"><i class="fa-solid fa-mosque"></i> Prayer Area</span>
+                            </div>
+                            <div class="facility-card-body">
+                                <div class="facility-header-wrap">
+                                    <div class="facility-icon-badge"><i class="fa-solid fa-mosque"></i></div>
+                                    <div class="facility-meta">
+                                        <span class="facility-cat">Peace &amp; Serenity</span>
+                                        <h4 class="facility-title">Surau</h4>
+                                    </div>
+                                </div>
+                                <p class="facility-desc">Separate, pristine, and comfortable surau for men and women, complete with dedicated ablution (wuduk) facilities for effortless prayers.</p>
+                                <div class="facility-pills-list">
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Men &amp; Women</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Dedicated Wuduk</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Air-Conditioned</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="event-feature-card">
-                            <div class="feature-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
-                            <div class="feature-text">
-                                <h3>Perfect for Private Event</h3>
-                                <p>Exclusive seating and tailored menus for serene, intimate celebrations.</p>
+                        <!-- Card 2: Cigar Room (f2.png) -->
+                        <div class="facility-card-modern">
+                            <div class="facility-img-box">
+                                <img src="f2.png" alt="Cigar Room Facility" class="facility-img">
+                                <span class="facility-tag-pill"><i class="fa-solid fa-smoking"></i> Private Lounge</span>
+                            </div>
+                            <div class="facility-card-body">
+                                <div class="facility-header-wrap">
+                                    <div class="facility-icon-badge"><i class="fa-solid fa-smoking"></i></div>
+                                    <div class="facility-meta">
+                                        <span class="facility-cat">Exclusive Space</span>
+                                        <h4 class="facility-title">Cigar Room</h4>
+                                    </div>
+                                </div>
+                                <p class="facility-desc">A sophisticated private sanctuary designed specifically for smoking and unwinding in refined luxury. <em>(Dining is strictly not permitted)</em>.</p>
+                                <div class="facility-pills-list">
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Premium Seating</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Air Filtration</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Private Zone</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="event-feature-card">
-                            <div class="feature-icon"><i class="fa-solid fa-building-columns"></i></div>
-                            <div class="feature-text">
-                                <h3>Perfect for Government &amp; Corporate</h3>
-                                <p>Dignified VIP arrangements for ministry dinners, corporate events, and official
-                                    functions.</p>
+                        <!-- Card 3: Lounge (f3.png) -->
+                        <div class="facility-card-modern">
+                            <div class="facility-img-box">
+                                <img src="f3.png" alt="Lounge Facility" class="facility-img">
+                                <span class="facility-tag-pill"><i class="fa-solid fa-couch"></i> Social Lounge</span>
                             </div>
-                        </div>
-
-                        <div class="events-cta-box">
-                            <a href="#reservation" class="btn-primary events-reserve-btn">
-                                Book Event / Celebration <i class="fa-solid fa-arrow-right"></i>
-                            </a>
+                            <div class="facility-card-body">
+                                <div class="facility-header-wrap">
+                                    <div class="facility-icon-badge"><i class="fa-solid fa-couch"></i></div>
+                                    <div class="facility-meta">
+                                        <span class="facility-cat">Relaxation &amp; Meet</span>
+                                        <h4 class="facility-title">Luxury Lounge</h4>
+                                    </div>
+                                </div>
+                                <p class="facility-desc">Plush seating environment thoughtfully crafted for social gatherings, executive networking, pre-dinner drinks, and calm conversations.</p>
+                                <div class="facility-pills-list">
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Pre-Dinner Rest</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Plush Sofas</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Elegant Ambiance</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- 3. Below Room Cards: Full-Width 360° 3D VR Mode View -->
+                <div class="vr-viewer-section scroll-reveal" style="margin-top: 50px;">
+                    <h3 class="subsection-title"><i class="fa-solid fa-vr-cardboard gold-text"></i> 360° Interactive VR Tour</h3>
+                    <div class="viewer-card vr-card vr-full-card">
+                        <div class="viewer-header">
+                            <div class="viewer-title-wrap">
+                                <i class="fa-solid fa-vr-cardboard gold-text"></i>
+                                <h4 class="viewer-title" id="vrRoomTitle">360° VR View: Private Room</h4>
+                            </div>
+                            <div class="vr-room-switchers">
+                                <button class="vr-switch-btn active" id="vrBtnPrivate" data-room="private">Private Room</button>
+                                <button class="vr-switch-btn" id="vrBtnBallroom" data-room="ballroom">Ballroom</button>
+                            </div>
+                        </div>
+                        <div class="vr-container" id="vrContainer">
+                            <!-- VR Overlay Badges & Controls -->
+                            <div class="vr-badge">
+                                <span class="vr-live-dot"></span>
+                                <span>3D 360° VR MODE</span>
+                            </div>
+                            <button class="vr-fullscreen-btn" id="vrFullscreenBtn" title="Fullscreen 3D VR View">
+                                <i class="fa-solid fa-expand"></i>
+                            </button>
+                        </div>
+                        <div class="viewer-footer">
+                            <span id="vrRoomDesc"><i class="fa-solid fa-circle-info gold-text"></i> Currently viewing 3D VR panorama for <strong>Private Room</strong> (18 Pax)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="events-cta-box text-center scroll-reveal" style="margin-top: 40px;">
+                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20would%20like%20to%20make%20an%20event" target="_blank" rel="noopener noreferrer" class="btn-primary events-reserve-btn">
+                        Book Room / Event Space <i class="fa-solid fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </section>
@@ -1014,6 +1188,21 @@
         </div>
     </footer>
 
+    <!-- Floor Plan & VR Fullscreen Modal -->
+    <div class="floorplan-modal-backdrop" id="floorplanModal" aria-hidden="true">
+        <div class="floorplan-modal-content">
+            <div class="floorplan-modal-header">
+                <h4 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff; margin: 0;"><i class="fa-solid fa-expand gold-text"></i> Detailed Fullscreen View</h4>
+                <button class="cert-modal-close" id="floorplanModalClose" aria-label="Close Lightbox" style="position: static;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="floorplan-modal-body">
+                <img id="floorplanModalImg" src="floorplan.png" alt="Bayu Seafood Detailed View">
+            </div>
+        </div>
+    </div>
+
     <!-- Gallery Image Lightbox Modal -->
     <div class="gallery-modal-backdrop" id="galleryModal" aria-hidden="true">
         <div class="gallery-modal-content">
@@ -1043,6 +1232,8 @@
         <span class="whatsapp-float-tooltip">Book via WhatsApp</span>
     </a>
 
+    <!-- Three.js 3D Library for True Spherical 3D VR Panorama -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- PDF.js and StPageFlip Libraries for Standalone Interactive Menu Flipbook -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
