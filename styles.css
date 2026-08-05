@@ -4597,6 +4597,7 @@ footer {
 .vr-room-switchers {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
 }
 
@@ -4628,6 +4629,12 @@ footer {
     overflow: hidden;
     cursor: grab;
     user-select: none;
+    touch-action: none !important;
+}
+
+.vr-container canvas,
+.card-vr-container canvas {
+    touch-action: none !important;
 }
 
 .vr-container:active {
@@ -5119,17 +5126,69 @@ footer {
     min-height: 300px;
 }
 
-/* Below Rooms Full-Width VR Section */
-.vr-full-card {
-    background: #ffffff;
-    border-radius: var(--border-radius-md, 16px);
-    border: 1px solid rgba(179, 143, 45, 0.2);
-    box-shadow: 0 15px 40px rgba(13, 23, 39, 0.06);
-    overflow: hidden;
+/* 360 VR Tour Separate 2-Column Layout */
+.vr-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    align-items: center;
+    width: 100%;
 }
 
-.vr-full-card .vr-container {
-    height: 450px;
+.vr-left-image-side {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    padding: 10px;
+}
+
+.vr-standalone-3d-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 480px;
+    object-fit: contain;
+    background: transparent;
+    border-radius: 12px;
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+    animation: floatBreathe3D 4.5s ease-in-out infinite;
+    will-change: transform, filter;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+}
+
+.vr-left-image-side:hover .vr-standalone-3d-img {
+    animation-play-state: paused;
+    transform: translateY(-14px) scale(1.06);
+    filter: drop-shadow(0 30px 45px rgba(179, 143, 45, 0.35));
+}
+
+/* Floating & Breathing Infinite Animation for 3D Image */
+@keyframes floatBreathe3D {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4));
+    }
+    50% {
+        transform: translateY(-14px) scale(1.04);
+        filter: drop-shadow(0 25px 40px rgba(179, 143, 45, 0.25));
+    }
+}
+
+.vr-right-mode-side {
+    background: #09121f;
+    border-radius: var(--border-radius-md, 16px);
+    border: 1px solid rgba(179, 143, 45, 0.3);
+    box-shadow: 0 15px 40px rgba(13, 23, 39, 0.25);
+    overflow: hidden;
+    width: 100%;
+}
+
+.vr-right-mode-side .vr-container {
+    height: 400px;
+    position: relative;
+    width: 100%;
 }
 
 @media (max-width: 991px) {
@@ -5151,6 +5210,11 @@ footer {
     .floorplan-image-container,
     .vr-container {
         height: 320px;
+    }
+
+    .vr-grid-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
     }
 
     .room-row-item {
