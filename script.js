@@ -1044,17 +1044,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const getDimensions = () => {
                 const w = window.innerWidth;
                 if (w <= 400) {
-                    // Mobile narrow: 2-page spread ~230px wide total
-                    return { width: 115, height: 158, minW: 90, maxW: 130, minH: 120, maxH: 180 };
+                    // Mobile narrow: larger 2-page spread
+                    return { width: 175, height: 240, minW: 135, maxW: 200, minH: 180, maxH: 275 };
                 } else if (w <= 600) {
-                    // Mobile medium: 2-page spread ~260px wide total
-                    return { width: 130, height: 178, minW: 100, maxW: 150, minH: 140, maxH: 210 };
+                    // Mobile medium: larger 2-page spread
+                    return { width: 210, height: 285, minW: 160, maxW: 240, minH: 215, maxH: 330 };
                 } else if (w <= 900) {
-                    // Tablet: 2-page spread ~360px wide total
-                    return { width: 180, height: 245, minW: 140, maxW: 210, minH: 190, maxH: 290 };
+                    // Tablet: larger 2-page spread
+                    return { width: 270, height: 365, minW: 200, maxW: 320, minH: 270, maxH: 430 };
                 } else {
-                    // Desktop: 2-page spread ~440px wide total (compact POV on 1000px table.png)
-                    return { width: 220, height: 300, minW: 180, maxW: 260, minH: 240, maxH: 360 };
+                    // Desktop: significantly larger 2-page spread (~680px total width)
+                    return { width: 340, height: 460, minW: 260, maxW: 420, minH: 350, maxH: 570 };
                 }
             };
 
@@ -1102,7 +1102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set initial position & breathing for closed cover
             updateCoverPosition(0);
 
-            // Scroll reveal observer: Table slides up from bottom to top, Menu slides down from top to bottom
+            // Scroll reveal observer: Table slides up, Menu emerges small from table surface and rises to top while scaling up
             const tableStage = document.querySelector('.table-stage');
             if (tableStage && typeof IntersectionObserver !== 'undefined') {
                 const revealObs = new IntersectionObserver((entries) => {
@@ -1127,10 +1127,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const currentWidth = stage.offsetWidth;
                 const isMobile = window.innerWidth <= 600;
-                const refWidth = isMobile ? 520 : 950;
+                const refWidth = isMobile ? 440 : 950;
 
                 let scale = currentWidth / refWidth;
-                scale = Math.min(1.0, Math.max(0.42, scale));
+                scale = Math.min(1.15, Math.max(0.62, scale));
                 overlay.style.setProperty('--flipbook-scale', scale.toFixed(3));
 
                 if (actionsBar) {
@@ -1749,7 +1749,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (roomCardPrivate) roomCardPrivate.classList.toggle('active', room === 'private');
             if (roomCardBallroom) roomCardBallroom.classList.toggle('active', room === 'ballroom');
-            
+
             document.querySelectorAll('.vr-switch-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-room') === room);
             });
@@ -2061,6 +2061,195 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('hashchange', checkRoomHashHook);
 
         setup3DVRScene();
+    }
+
+    // Instagram Slider Track Controls
+    const instaContainer = document.querySelector('.insta-slider-container');
+    const instaPrevBtn = document.getElementById('instaPrevBtn');
+    const instaNextBtn = document.getElementById('instaNextBtn');
+
+    if (instaContainer && instaPrevBtn && instaNextBtn) {
+        instaPrevBtn.addEventListener('click', () => {
+            instaContainer.scrollBy({ left: -320, behavior: 'smooth' });
+        });
+        instaNextBtn.addEventListener('click', () => {
+            instaContainer.scrollBy({ left: 320, behavior: 'smooth' });
+        });
+    }
+
+    // Voucher Campaign PDF Generation & Claim Handler
+    const voucherClaimForm = document.getElementById('voucherClaimForm');
+    const voucherSuccessBox = document.getElementById('voucherSuccessBox');
+    const btnRedownloadPdf = document.getElementById('btnRedownloadPdf');
+
+    let currentVoucherData = null;
+
+    function generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr) {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            alert('PDF Generator is initializing, please try again in a moment.');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+
+        // Background dark navy
+        doc.setFillColor(13, 23, 39);
+        doc.rect(0, 0, 148, 210, 'F');
+
+        // Gold outer frame border
+        doc.setDrawColor(212, 175, 55);
+        doc.setLineWidth(1.5);
+        doc.rect(6, 6, 136, 198, 'S');
+
+        // Inner dashed border
+        doc.setLineWidth(0.4);
+        doc.setLineDashPattern([2, 2], 0);
+        doc.rect(9, 9, 130, 192, 'S');
+        doc.setLineDashPattern([], 0);
+
+        // Header Title
+        doc.setTextColor(212, 175, 55);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text("BAYU SEAFOOD", 74, 25, { align: "center" });
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.text("PREMIUM HALAL LAKESIDE DINING & EVENTS", 74, 31, { align: "center" });
+
+        // Voucher Box Graphic
+        doc.setFillColor(212, 175, 55);
+        doc.rect(16, 40, 116, 30, 'F');
+
+        doc.setTextColor(13, 23, 39);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(24);
+        doc.text("RM50 OFF", 74, 55, { align: "center" });
+
+        doc.setFontSize(9);
+        doc.text("EXCLUSIVE CAMPAIGN DINING VOUCHER", 74, 63, { align: "center" });
+
+        // Customer Details Section Header
+        doc.setTextColor(212, 175, 55);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text("VOUCHER & CUSTOMER DETAILS", 16, 82);
+        doc.setDrawColor(212, 175, 55);
+        doc.setLineWidth(0.4);
+        doc.line(16, 85, 132, 85);
+
+        // Details Fields
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9.5);
+        
+        doc.setFont('helvetica', 'bold');
+        doc.text("Customer Name:", 16, 94);
+        doc.setFont('helvetica', 'normal');
+        doc.text(name, 56, 94);
+
+        doc.setFont('helvetica', 'bold');
+        doc.text("Customer Phone:", 16, 102);
+        doc.setFont('helvetica', 'normal');
+        doc.text(phone, 56, 102);
+
+        doc.setFont('helvetica', 'bold');
+        doc.text("Voucher ID:", 16, 110);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(212, 175, 55);
+        doc.text(voucherId, 56, 110);
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.text("Issued Date:", 16, 118);
+        doc.setFont('helvetica', 'normal');
+        doc.text(issueDateStr, 56, 118);
+
+        doc.setFont('helvetica', 'bold');
+        doc.text("Expiry Date:", 16, 126);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(239, 68, 68);
+        doc.text(expiryDateStr + " (Valid for 30 Days)", 56, 126);
+
+        // How to Redeem Section Header
+        doc.setTextColor(212, 175, 55);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text("HOW TO REDEEM YOUR VOUCHER", 16, 142);
+        doc.setDrawColor(212, 175, 55);
+        doc.line(16, 145, 132, 145);
+
+        doc.setTextColor(220, 220, 220);
+        doc.setFontSize(8.5);
+        doc.setFont('helvetica', 'normal');
+        doc.text("1. Visit Bayu Seafood Lakeside Restaurant at Tasik Perdana, KL.", 16, 153);
+        doc.text("2. Present this PDF voucher (on your phone or printed copy) to staff.", 16, 160);
+        doc.text("3. RM50 will be deducted directly from your total bill upon payment.", 16, 167);
+        doc.text("4. Voucher is valid for 30 days from date of issuance.", 16, 174);
+
+        // Footer
+        doc.setDrawColor(212, 175, 55);
+        doc.line(16, 184, 132, 184);
+
+        doc.setFontSize(7.5);
+        doc.setTextColor(160, 160, 160);
+        doc.text("Bayu Seafood Lakeside Dining • Bukit Aman, Tasik Perdana, KL", 74, 191, { align: "center" });
+        doc.text("Reservations / Inquiry: +60 17-734 7030", 74, 196, { align: "center" });
+
+        doc.save('Bayu_Seafood_Voucher_' + voucherId + '.pdf');
+    }
+
+    if (voucherClaimForm) {
+        voucherClaimForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nameInput = document.getElementById('voucherName');
+            const phoneInput = document.getElementById('voucherPhone');
+
+            const name = nameInput ? nameInput.value.trim() : '';
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+
+            if (!name || !phone) return;
+
+            const now = new Date();
+            const issueDateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const expiryDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+            const expiryDateStr = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            const voucherId = 'BSV-' + randomNum;
+
+            currentVoucherData = { name, phone, voucherId, issueDateStr, expiryDateStr };
+
+            // Generate PDF
+            generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr);
+
+            // Update UI success state
+            document.getElementById('resVoucherId').textContent = voucherId;
+            document.getElementById('resVoucherName').textContent = name;
+            document.getElementById('resVoucherExpiry').textContent = expiryDateStr;
+
+            voucherClaimForm.style.display = 'none';
+            if (voucherSuccessBox) {
+                voucherSuccessBox.style.display = 'block';
+            }
+        });
+    }
+
+    if (btnRedownloadPdf) {
+        btnRedownloadPdf.addEventListener('click', () => {
+            if (currentVoucherData) {
+                generateVoucherPdf(
+                    currentVoucherData.name,
+                    currentVoucherData.phone,
+                    currentVoucherData.voucherId,
+                    currentVoucherData.issueDateStr,
+                    currentVoucherData.expiryDateStr
+                );
+            }
+        });
     }
 
     initPanoramaGallery();
