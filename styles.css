@@ -3473,7 +3473,7 @@ footer {
    ========================================================================== */
 
 .menu-flipbook-wrapper {
-    margin-top: 20px;
+    margin-top: 100px;
     width: 100%;
     position: relative;
     display: flex;
@@ -3483,7 +3483,7 @@ footer {
 .table-stage {
     position: relative;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1180px;
     margin: 0 auto;
     background: transparent !important;
     display: flex;
@@ -3508,13 +3508,13 @@ footer {
     transform: translateY(0);
 }
 
-/* 2. Entrance animation: Flipbook overlay slides in from Top to Bottom AFTER table appears */
+/* 2. Entrance animation: Flipbook overlay emerges from table surface to top and expands from small to big */
 .flipbook-overlay {
     position: absolute;
-    top: 30%;
-    /* Shifted higher up on table surface for desktop & mobile */
+    top: 38%;
+    /* Positioned nicely over the wood table surface */
     left: 50%;
-    transform: translate(-50%, -85%) scale(var(--flipbook-scale, 1));
+    transform: translate(-50%, 20%) scale(calc(var(--flipbook-scale, 1) * 0.35));
     transform-origin: center center;
     z-index: 3;
     width: 100%;
@@ -3522,8 +3522,8 @@ footer {
     justify-content: center;
     align-items: center;
     opacity: 0;
-    /* 0.85s delay ensures table completes its bottom-to-top animation first */
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.85s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.85s;
+    /* Smooth transition rising from table to top & scaling up */
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.35s;
 }
 
 .table-stage.in-view .flipbook-overlay {
@@ -3674,6 +3674,10 @@ footer {
 }
 
 @media (max-width: 600px) {
+    .menu-flipbook-wrapper {
+        margin-top: 60px;
+    }
+
     .table-actions-bar {
         bottom: 5.5%;
         gap: 6px;
@@ -3720,12 +3724,12 @@ footer {
 }
 
 .pdf-swipe-indicator.swipe-indicator-left {
-    left: calc(50% - 275px);
+    left: calc(50% - 430px);
     animation: swipeIndicatorNudgeLeft 2.4s ease-in-out infinite;
 }
 
 .pdf-swipe-indicator.swipe-indicator-right {
-    right: calc(50% - 275px);
+    right: calc(50% - 430px);
     animation: swipeIndicatorNudgeRight 2.4s ease-in-out infinite;
 }
 
@@ -3833,14 +3837,24 @@ footer {
     }
 }
 
-/* Responsive positioning: keep buttons close to PDF and ALWAYS keep "SWIPE" text visible on mobile */
-@media (max-width: 900px) {
+/* Responsive positioning: keep buttons outside PDF edges so reading is uninterrupted */
+@media (max-width: 1100px) {
     .pdf-swipe-indicator.swipe-indicator-left {
-        left: calc(50% - 225px);
+        left: calc(50% - 370px);
     }
 
     .pdf-swipe-indicator.swipe-indicator-right {
-        right: calc(50% - 225px);
+        right: calc(50% - 370px);
+    }
+}
+
+@media (max-width: 900px) {
+    .pdf-swipe-indicator.swipe-indicator-left {
+        left: calc(50% - 310px);
+    }
+
+    .pdf-swipe-indicator.swipe-indicator-right {
+        right: calc(50% - 310px);
     }
 }
 
@@ -3852,11 +3866,11 @@ footer {
     }
 
     .pdf-swipe-indicator.swipe-indicator-left {
-        left: calc(50% - 165px);
+        left: 1.5%;
     }
 
     .pdf-swipe-indicator.swipe-indicator-right {
-        right: calc(50% - 165px);
+        right: 1.5%;
     }
 
     .pdf-swipe-indicator i {
@@ -3878,11 +3892,11 @@ footer {
     }
 
     .pdf-swipe-indicator.swipe-indicator-left {
-        left: calc(50% - 145px);
+        left: 1%;
     }
 
     .pdf-swipe-indicator.swipe-indicator-right {
-        right: calc(50% - 145px);
+        right: 1%;
     }
 
     .pdf-swipe-indicator i {
@@ -5166,10 +5180,13 @@ footer {
 
 /* Floating & Breathing Infinite Animation for 3D Image */
 @keyframes floatBreathe3D {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0) scale(1);
         filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4));
     }
+
     50% {
         transform: translateY(-14px) scale(1.04);
         filter: drop-shadow(0 25px 40px rgba(179, 143, 45, 0.25));
@@ -5304,4 +5321,762 @@ footer {
     right: 24px;
     bottom: auto;
     z-index: 1000000;
+}
+
+/* ==========================================================================
+   Instagram Feed & Reels Section Styling (Clean Light / White Theme)
+   ========================================================================== */
+
+.insta-section {
+    position: relative;
+    padding: 0 0;
+    background: #ffffff !important;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Infinite Marquee Ticker Banners (Top Left Scroll, Bottom Right Scroll) */
+.insta-ticker-bar {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 14px 0;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    user-select: none;
+    position: relative;
+    z-index: 2;
+}
+
+.insta-ticker-bar.ticker-top {
+    margin-bottom: 50px;
+}
+
+.insta-ticker-bar.ticker-bottom {
+    margin-top: 50px;
+}
+
+.ticker-track {
+    display: flex;
+    width: max-content;
+}
+
+.track-left {
+    animation: marqueeLeft 28s linear infinite;
+    will-change: transform;
+}
+
+.track-right {
+    animation: marqueeRight 28s linear infinite;
+    will-change: transform;
+}
+
+@keyframes marqueeLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes marqueeRight {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.ticker-content {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding-right: 30px;
+}
+
+.ticker-content span {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #0d1727;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.ticker-content i.gold-dot {
+    font-size: 0.4rem;
+    color: var(--color-gold, #d4af37);
+}
+
+.insta-section .section-title {
+    color: #0d1727 !important;
+}
+
+.insta-section .section-desc {
+    color: #4a5568 !important;
+}
+
+.insta-section .subsection-title {
+    color: #0d1727 !important;
+}
+
+.insta-top-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.insta-header-col {
+    flex: 1 1 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.insta-follow-card {
+    margin-top: 25px;
+    padding: 20px 24px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px !important; /* Smooth curved border */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.insta-profile-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.insta-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-gold, #d4af37);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.insta-handle-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.insta-name {
+    color: #0d1727;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.insta-handle {
+    color: var(--color-gold, #d4af37);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.btn-insta-follow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #ffffff !important;
+    border-radius: 25px !important; /* Curved pill button */
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(220, 39, 67, 0.25);
+}
+
+.btn-insta-follow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(220, 39, 67, 0.4);
+}
+
+.insta-top-reels {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.insta-top-reels .insta-embed-card {
+    width: 320px;
+    max-width: 320px;
+    min-width: 310px;
+    height: 620px;
+    margin: 0;
+}
+
+.insta-embed-card {
+    background: #ffffff;
+    border-radius: 3px !important; /* 3px border radius as specified */
+    overflow: hidden;
+    box-shadow: none !important;
+    border: 1px solid rgb(219, 219, 219) !important;
+    height: 620px;
+    width: calc(100% - 2px);
+    max-width: 320px;
+    min-width: 310px;
+    margin: 0 auto;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+}
+
+.insta-embed-card:hover {
+    transform: translateY(-4px);
+    border-color: rgb(180, 180, 180) !important;
+}
+
+.insta-iframe {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    border: none !important;
+    background: #ffffff;
+    display: block;
+    object-fit: cover;
+}
+
+/* Bottom Reels Slider Track */
+.insta-bottom-slider-section {
+    margin-top: 30px;
+}
+
+.insta-bottom-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.insta-slider-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.insta-nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50% !important; /* Curved circular nav button */
+    background: #0d1727;
+    border: 1px solid var(--color-gold, #d4af37);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.insta-nav-btn:hover {
+    background: var(--color-gold, #d4af37);
+    color: #0d1727;
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
+}
+
+.insta-slider-container {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 10px 5px 25px 5px;
+}
+
+.insta-slider-container::-webkit-scrollbar {
+    display: none;
+}
+
+.insta-slider-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+}
+
+.insta-slide-item {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.insta-slide-item .insta-embed-card {
+    height: 620px;
+    min-width: 310px;
+}
+
+@media (max-width: 991px) {
+    .insta-top-grid {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .insta-top-reels {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .insta-slide-item {
+        width: 290px;
+    }
+
+    .insta-top-reels .insta-embed-card,
+    .insta-slide-item .insta-embed-card {
+        width: 100%;
+        max-width: 320px;
+        min-width: 280px;
+    }
+    
+    .insta-follow-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-insta-follow {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   Voucher Campaign Section Styling
+   ========================================================================== */
+
+.voucher-campaign-section {
+    position: relative;
+    padding: 85px 0;
+    background: #ffffff !important;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.voucher-campaign-section .section-title {
+    color: #0d1727 !important;
+}
+
+.voucher-campaign-section .section-desc {
+    color: #475569 !important;
+}
+
+.voucher-campaign-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.voucher-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.voucher-steps-wrap {
+    margin-top: 25px;
+    padding: 24px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.voucher-steps-heading {
+    color: #0d1727;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.voucher-steps-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.voucher-step-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.voucher-step-card:hover {
+    transform: translateX(5px);
+    border-color: var(--color-gold, #d4af37);
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.12);
+}
+
+.step-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-gold, #d4af37), #b38f2d);
+    color: #0d1727;
+    font-weight: 800;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
+}
+
+.step-text-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.step-title {
+    color: #0d1727;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.step-desc {
+    color: #475569;
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.voucher-expiry-notice {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #334155;
+    font-size: 0.85rem;
+}
+
+/* Voucher Ticket Card Graphic (Light Theme) */
+.voucher-ticket-card {
+    background: transparent;
+    border: none !important; /* Outer card has no border */
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.ticket-header {
+    padding: 35px 25px 25px;
+    background: linear-gradient(135deg, #fffcf0, #fef3c7);
+    text-align: center;
+    border-bottom: 2px dashed rgba(212, 175, 55, 0.6);
+    border-radius: 20px 20px 0 0;
+    position: relative;
+}
+
+.ticket-header::before,
+.ticket-header::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: #ffffff;
+    border-radius: 50%;
+    z-index: 5;
+}
+
+.ticket-header::before {
+    left: -22px;
+    border-right: 2px solid var(--color-gold, #d4af37);
+}
+
+.ticket-header::after {
+    right: -22px;
+    border-left: 2px solid var(--color-gold, #d4af37);
+}
+
+.ticket-header-top {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.ticket-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    color: #8c6809;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.ticket-header-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 4px;
+}
+
+.ticket-visual-id {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    color: #0d1727;
+    font-family: monospace, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.barcode-icon-long {
+    font-size: 1.4rem;
+    color: #0d1727;
+    display: inline-block;
+    transform: scaleX(1.4);
+    transform-origin: center right;
+}
+
+.ticket-brand-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ticket-brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--color-gold, #d4af37);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-title {
+    color: #0d1727;
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.ticket-amount {
+    color: #b38f2d;
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.ticket-amount span {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.ticket-subtitle {
+    color: #64748b;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.ticket-body {
+    padding: 30px 25px;
+    background: #ffffff;
+    border: 2px solid var(--color-gold, #d4af37); /* Golden border outline covers ONLY form section */
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+}
+
+.voucher-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.voucher-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.voucher-form-group label {
+    color: #0d1727;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.voucher-form-group label i {
+    color: var(--color-gold, #d4af37);
+}
+
+.voucher-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    color: #0d1727;
+    font-size: 0.92rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.voucher-input:focus {
+    border-color: var(--color-gold, #d4af37);
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+}
+
+.btn-claim-voucher {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--color-gold, #d4af37), #b38f2d);
+    color: #0d1727;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+    margin-top: 8px;
+}
+
+.btn-claim-voucher:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+    background: linear-gradient(135deg, #e5be48, var(--color-gold, #d4af37));
+}
+
+/* Voucher Success Box */
+.voucher-success-box {
+    text-align: center;
+    padding: 10px 0;
+    animation: fadeInSuccess 0.4s ease forwards;
+}
+
+@keyframes fadeInSuccess {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.success-icon {
+    font-size: 3rem;
+    color: #10b981;
+    margin-bottom: 10px;
+}
+
+.voucher-success-box h4 {
+    color: #0d1727;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.voucher-success-box p {
+    color: #475569;
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+}
+
+.voucher-generated-info {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.voucher-generated-info div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+.btn-redownload-pdf {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--color-gold, #d4af37);
+    color: #946f0e;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-redownload-pdf:hover {
+    background: rgba(212, 175, 55, 0.15);
+}
+
+@media (max-width: 991px) {
+    .voucher-campaign-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
 }
