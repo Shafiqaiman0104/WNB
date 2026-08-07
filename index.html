@@ -16,7 +16,7 @@
     <meta name="author" content="MFJ GROUP SDN BHD">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="theme-color" content="#0e1824">
-    <link rel="canonical" href="https://bayuseafooddemo.venturerushtech.com/">
+    <link rel="canonical" href="https://bayuseafood.com/">
 
     <!-- Geo & Local SEO Meta Tags -->
     <meta name="geo.region" content="MY-14">
@@ -30,9 +30,9 @@
     <meta property="og:title" content="Bayu Seafood | Premium Halal Live Seafood Restaurant KL">
     <meta property="og:description"
         content="Premier 100% Halal live seafood dining by Tasik Perdana, Kuala Lumpur. Choose live lobster, crab &amp; fresh fish straight from our aquariums.">
-    <meta property="og:url" content="https://bayuseafooddemo.venturerushtech.com/">
-    <meta property="og:image" content="https://bayuseafooddemo.venturerushtech.com/bayu-logo.jpg">
-    <meta property="og:image:secure_url" content="https://bayuseafooddemo.venturerushtech.com/bayu-logo.jpg">
+    <meta property="og:url" content="https://bayuseafood.com/">
+    <meta property="og:image" content="https://bayuseafood.com/bayu-logo.jpg">
+    <meta property="og:image:secure_url" content="https://bayuseafood.com/bayu-logo.jpg">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -45,7 +45,7 @@
     <meta name="twitter:title" content="Bayu Seafood | Premium Halal Live Seafood Restaurant KL">
     <meta name="twitter:description"
         content="Premier 100% Halal live seafood dining at Bukit Aman, Tasik Perdana, Kuala Lumpur. Fresh live lobster, crab &amp; fish.">
-    <meta name="twitter:image" content="https://bayuseafooddemo.venturerushtech.com/bayu-logo.jpg">
+    <meta name="twitter:image" content="https://bayuseafood.com/bayu-logo.jpg">
     <meta name="twitter:image:alt" content="Bayu Seafood Restaurant">
 
     <!-- Favicons & App Touch Icons -->
@@ -56,6 +56,8 @@
     <!-- Stylesheets & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <!-- jsPDF Library for Client-Side PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <!-- Structured Data / JSON-LD (Schema.org) for Search Engine Rich Snippets -->
     <script type="application/ld+json">
@@ -64,16 +66,16 @@
       "@graph": [
         {
           "@type": "Restaurant",
-          "@id": "https://bayuseafooddemo.venturerushtech.com/#restaurant",
+          "@id": "https://bayuseafood.com/#restaurant",
           "name": "Bayu Seafood",
           "alternateName": "Bayu Seafood Kuala Lumpur",
           "description": "Premium 100% Halal live seafood dining destination at Cascade Parking Bukit Aman, Tasik Perdana, Kuala Lumpur.",
           "image": [
-            "https://bayuseafooddemo.venturerushtech.com/bayu-logo.jpg",
-            "https://bayuseafooddemo.venturerushtech.com/chef.png"
+            "https://bayuseafood.com/bayu-logo.jpg",
+            "https://bayuseafood.com/chef.png"
           ],
-          "logo": "https://bayuseafooddemo.venturerushtech.com/bayu-logo.jpg",
-          "url": "https://bayuseafooddemo.venturerushtech.com/",
+          "logo": "https://bayuseafood.com/bayu-logo.jpg",
+          "url": "https://bayuseafood.com/",
           "telephone": "+60177347030",
           "priceRange": "$$$",
           "servesCuisine": [
@@ -112,8 +114,8 @@
             }
           ],
           "acceptsReservations": "True",
-          "menu": "https://bayuseafooddemo.venturerushtech.com/#menu",
-          "hasMenu": "https://bayuseafooddemo.venturerushtech.com/#menu",
+          "menu": "https://bayuseafood.com/#menu",
+          "hasMenu": "https://bayuseafood.com/#menu",
           "parentOrganization": {
             "@type": "Organization",
             "name": "MFJ GROUP SDN BHD",
@@ -126,8 +128,8 @@
         },
         {
           "@type": "WebSite",
-          "@id": "https://bayuseafooddemo.venturerushtech.com/#website",
-          "url": "https://bayuseafooddemo.venturerushtech.com/",
+          "@id": "https://bayuseafood.com/#website",
+          "url": "https://bayuseafood.com/",
           "name": "Bayu Seafood",
           "description": "Lakeside Premium Halal Live Seafood Dining at Tasik Perdana, Kuala Lumpur.",
           "publisher": {
@@ -667,7 +669,7 @@
                 </div>
 
                 <!-- Section Header for Interactive Menu -->
-                <div class="section-header scroll-reveal" style="margin-top: 70px; margin-bottom: 35px;">
+                <div class="section-header scroll-reveal" style="margin-top: 60px; margin-bottom: 45px;">
                     <span class="section-subtitle">Complete Catalog</span>
                     <h2 class="section-title">Our <span class="gold-text">Menu</span></h2>
                     <p class="section-desc">Explore our complete physical menu book directly on the table. Click or drag
@@ -734,13 +736,15 @@
                     <span class="section-subtitle">Room &amp; Facilities</span>
                     <h2 class="section-title">The Perfect Place to <span class="gold-text">Eat &amp; Celebrate</span>
                     </h2>
-                    <p class="section-desc">Discover our premium guest facilities, exclusive private rooms, and flexible ballroom spaces designed for memorable dining and events.</p>
+                    <p class="section-desc">Discover our premium guest facilities, exclusive private rooms, and flexible
+                        ballroom spaces designed for memorable dining and events.</p>
                 </div>
 
                 <!-- 1. Rooms Block: 1 Room per Row (Left: Details, Right: 4 Collage Grid or 360° VR View) -->
                 <div class="rooms-block scroll-reveal">
-                    <h3 class="subsection-title"><i class="fa-solid fa-door-closed gold-text"></i> Rooms &amp; Event Spaces</h3>
-                    
+                    <h3 class="subsection-title"><i class="fa-solid fa-door-closed gold-text"></i> Rooms &amp; Event
+                        Spaces</h3>
+
                     <div class="room-rows-list">
                         <!-- Row 1: Private Room -->
                         <div class="room-row-item active" id="privateroom" data-room="private">
@@ -751,19 +755,25 @@
                                         <span class="room-type-badge">Private Space</span>
                                         <h4 class="room-title">Private Room</h4>
                                     </div>
-                                    <span class="room-pax-tag"><i class="fa-solid fa-user-group"></i> Up to 18 Pax</span>
+                                    <span class="room-pax-tag"><i class="fa-solid fa-user-group"></i> Up to 18
+                                        Pax</span>
                                     <ul class="room-features-list">
-                                        <li><i class="fa-solid fa-microphone gold-text"></i> <span>Got microphone &amp; audio system</span></li>
-                                        <li><i class="fa-solid fa-tv gold-text"></i> <span>TV screen for presentation &amp; media</span></li>
-                                        <li><i class="fa-solid fa-users gold-text"></i> <span>Ideal intimate setup for <strong>18 pax</strong></span></li>
+                                        <li><i class="fa-solid fa-microphone gold-text"></i> <span>Got microphone &amp;
+                                                audio system</span></li>
+                                        <li><i class="fa-solid fa-tv gold-text"></i> <span>TV screen for presentation
+                                                &amp; media</span></li>
+                                        <li><i class="fa-solid fa-users gold-text"></i> <span>Ideal intimate setup for
+                                                <strong>18 pax</strong></span></li>
                                     </ul>
                                 </div>
                                 <div class="room-card-buttons-group">
-                                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20want%20to%20book%20the%20private%20room" target="_blank" rel="noopener noreferrer" class="btn-room-action btn-room-book">
+                                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20want%20to%20book%20the%20private%20room"
+                                        target="_blank" rel="noopener noreferrer" class="btn-room-action btn-room-book">
                                         <i class="fa-solid fa-calendar-check"></i> Book Now
                                     </a>
                                     <button class="btn-room-action btn-room-vr" data-room-vr="private">
-                                        <i class="fa-solid fa-vr-cardboard"></i> <span class="btn-vr-text">View VR</span>
+                                        <i class="fa-solid fa-vr-cardboard"></i> <span class="btn-vr-text">View
+                                            VR</span>
                                     </button>
                                 </div>
                             </div>
@@ -772,12 +782,16 @@
                             <div class="room-row-right" id="floorplanContainer">
                                 <div class="viewer-4collage-grid">
                                     <div class="collage-row-top">
-                                        <div class="v-collage-box top-left"><img src="pr1.png" alt="Private Room Ambiance 1"></div>
-                                        <div class="v-collage-box top-right"><img src="pr2.png" alt="Private Room Ambiance 2"></div>
+                                        <div class="v-collage-box top-left"><img src="pr1.png"
+                                                alt="Private Room Ambiance 1"></div>
+                                        <div class="v-collage-box top-right"><img src="pr2.png"
+                                                alt="Private Room Ambiance 2"></div>
                                     </div>
                                     <div class="collage-row-bottom">
-                                        <div class="v-collage-box bottom-left"><img src="pr3.png" alt="Private Room Ambiance 3"></div>
-                                        <div class="v-collage-box bottom-right"><img src="pr4.png" alt="Private Room Ambiance 4"></div>
+                                        <div class="v-collage-box bottom-left"><img src="pr3.png"
+                                                alt="Private Room Ambiance 3"></div>
+                                        <div class="v-collage-box bottom-right"><img src="pr4.png"
+                                                alt="Private Room Ambiance 4"></div>
                                     </div>
                                     <div class="floorplan-overlay-hint">
                                         <i class="fa-solid fa-magnifying-glass-plus"></i>
@@ -805,17 +819,23 @@
                                     </div>
                                     <span class="room-pax-tag"><i class="fa-solid fa-user-group"></i> 40 – 80 Pax</span>
                                     <ul class="room-features-list">
-                                        <li><i class="fa-solid fa-masks-theater gold-text"></i> <span>Got stage for speeches &amp; performances</span></li>
-                                        <li><i class="fa-solid fa-users gold-text"></i> <span>For <strong>40 to 80 pax</strong> capacity</span></li>
-                                        <li><i class="fa-solid fa-sliders gold-text"></i> <span>Versatile setup: Can split <strong>30 at front at stage</strong> &amp; <strong>50 at behind dining area</strong></span></li>
+                                        <li><i class="fa-solid fa-masks-theater gold-text"></i> <span>Got stage for
+                                                speeches &amp; performances</span></li>
+                                        <li><i class="fa-solid fa-users gold-text"></i> <span>For <strong>40 to 80
+                                                    pax</strong> capacity</span></li>
+                                        <li><i class="fa-solid fa-sliders gold-text"></i> <span>Versatile setup: Can
+                                                split <strong>30 at front at stage</strong> &amp; <strong>50 at behind
+                                                    dining area</strong></span></li>
                                     </ul>
                                 </div>
                                 <div class="room-card-buttons-group">
-                                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20want%20to%20book%20the%20ballroom" target="_blank" rel="noopener noreferrer" class="btn-room-action btn-room-book">
+                                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20want%20to%20book%20the%20ballroom"
+                                        target="_blank" rel="noopener noreferrer" class="btn-room-action btn-room-book">
                                         <i class="fa-solid fa-calendar-check"></i> Book Now
                                     </a>
                                     <button class="btn-room-action btn-room-vr" data-room-vr="ballroom">
-                                        <i class="fa-solid fa-vr-cardboard"></i> <span class="btn-vr-text">View VR</span>
+                                        <i class="fa-solid fa-vr-cardboard"></i> <span class="btn-vr-text">View
+                                            VR</span>
                                     </button>
                                 </div>
                             </div>
@@ -824,12 +844,16 @@
                             <div class="room-row-right">
                                 <div class="viewer-4collage-grid">
                                     <div class="collage-row-top">
-                                        <div class="v-collage-box top-left"><img src="br1.png" alt="Ballroom Ambiance 1"></div>
-                                        <div class="v-collage-box top-right"><img src="br2.png" alt="Ballroom Ambiance 2"></div>
+                                        <div class="v-collage-box top-left"><img src="br1.png"
+                                                alt="Ballroom Ambiance 1"></div>
+                                        <div class="v-collage-box top-right"><img src="br2.png"
+                                                alt="Ballroom Ambiance 2"></div>
                                     </div>
                                     <div class="collage-row-bottom">
-                                        <div class="v-collage-box bottom-left"><img src="br3.png" alt="Ballroom Ambiance 3"></div>
-                                        <div class="v-collage-box bottom-right"><img src="br4.png" alt="Ballroom Ambiance 4"></div>
+                                        <div class="v-collage-box bottom-left"><img src="br3.png"
+                                                alt="Ballroom Ambiance 3"></div>
+                                        <div class="v-collage-box bottom-right"><img src="br4.png"
+                                                alt="Ballroom Ambiance 4"></div>
                                     </div>
                                     <div class="floorplan-overlay-hint">
                                         <i class="fa-solid fa-magnifying-glass-plus"></i>
@@ -851,8 +875,10 @@
                 <!-- 2. Facilities Block: Modern 3-Card Interactive Grid -->
                 <div class="facilities-block scroll-reveal" style="margin-top: 50px;">
                     <div class="facilities-header-row">
-                        <h3 class="subsection-title"><i class="fa-solid fa-bell-concierge gold-text"></i> Guest Facilities</h3>
-                        <span class="facilities-subtitle-tag"><i class="fa-solid fa-sparkles gold-text"></i> Crafted for Your Comfort</span>
+                        <h3 class="subsection-title"><i class="fa-solid fa-bell-concierge gold-text"></i> Guest
+                            Facilities</h3>
+                        <span class="facilities-subtitle-tag"><i class="fa-solid fa-sparkles gold-text"></i> Crafted for
+                            Your Comfort</span>
                     </div>
 
                     <div class="facilities-grid">
@@ -870,13 +896,15 @@
                                         <h4 class="facility-title">Surau</h4>
                                     </div>
                                 </div>
-                                <p class="facility-desc">Separate, pristine, and comfortable surau for men and women, complete with dedicated ablution (wuduk) facilities for effortless prayers.</p>
+                                <p class="facility-desc">Separate, pristine, and comfortable surau for men and women,
+                                    complete with dedicated ablution (wuduk) facilities for effortless prayers.</p>
                                 <div class="facility-pills-list">
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Men &amp; Women</span>
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Dedicated Wuduk</span>
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Air-Conditioned</span>
                                 </div>
-                                <button class="vr-switch-btn facility-vr-btn" data-room="surau" style="margin-top: 15px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;">
+                                <button class="vr-switch-btn facility-vr-btn" data-room="surau"
+                                    style="margin-top: 15px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;">
                                     <i class="fa-solid fa-vr-cardboard"></i> View 360° VR Tour
                                 </button>
                             </div>
@@ -886,7 +914,8 @@
                         <div class="facility-card-modern">
                             <div class="facility-img-box">
                                 <img src="f2.png" alt="Cigar Room Facility" class="facility-img">
-                                <span class="facility-tag-pill"><i class="fa-solid fa-smoking"></i> Private Lounge</span>
+                                <span class="facility-tag-pill"><i class="fa-solid fa-smoking"></i> Private
+                                    Lounge</span>
                             </div>
                             <div class="facility-card-body">
                                 <div class="facility-header-wrap">
@@ -896,13 +925,16 @@
                                         <h4 class="facility-title">Cigar Room</h4>
                                     </div>
                                 </div>
-                                <p class="facility-desc">A sophisticated private sanctuary designed specifically for smoking and unwinding in refined luxury. <em>(Dining is strictly not permitted)</em>.</p>
+                                <p class="facility-desc">A sophisticated private sanctuary designed specifically for
+                                    smoking and unwinding in refined luxury. <em>(Dining is strictly not
+                                        permitted)</em>.</p>
                                 <div class="facility-pills-list">
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Premium Seating</span>
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Air Filtration</span>
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Private Zone</span>
                                 </div>
-                                <button class="vr-switch-btn facility-vr-btn" data-room="cigar" style="margin-top: 15px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;">
+                                <button class="vr-switch-btn facility-vr-btn" data-room="cigar"
+                                    style="margin-top: 15px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;">
                                     <i class="fa-solid fa-vr-cardboard"></i> View 360° VR Tour
                                 </button>
                             </div>
@@ -922,13 +954,16 @@
                                         <h4 class="facility-title">Luxury Lounge</h4>
                                     </div>
                                 </div>
-                                <p class="facility-desc">Plush seating environment thoughtfully crafted for social gatherings, executive networking, pre-dinner drinks, and calm conversations.</p>
+                                <p class="facility-desc">Plush seating environment thoughtfully crafted for social
+                                    gatherings, executive networking, pre-dinner drinks, and calm conversations.</p>
                                 <div class="facility-pills-list">
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Pre-Dinner Rest</span>
                                     <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Plush Sofas</span>
-                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Elegant Ambiance</span>
+                                    <span class="f-pill"><i class="fa-solid fa-circle-check"></i> Elegant
+                                        Ambiance</span>
                                 </div>
-                                <button class="vr-switch-btn facility-vr-btn" data-room="lounge" style="margin-top: 15px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;">
+                                <button class="vr-switch-btn facility-vr-btn" data-room="lounge"
+                                    style="margin-top: 15px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;">
                                     <i class="fa-solid fa-vr-cardboard"></i> View 360° VR Tour
                                 </button>
                             </div>
@@ -938,7 +973,8 @@
 
                 <!-- 3. Below Room Cards: Full-Width 360° 3D VR Mode View -->
                 <div class="vr-viewer-section scroll-reveal" style="margin-top: 50px;">
-                    <h3 class="subsection-title"><i class="fa-solid fa-vr-cardboard gold-text"></i> 360° Interactive VR Tour</h3>
+                    <h3 class="subsection-title"><i class="fa-solid fa-vr-cardboard gold-text"></i> 360° Interactive VR
+                        Tour</h3>
                     <div class="vr-grid-container">
                         <!-- Left Side: Pure 3D Image (No Background Box) -->
                         <div class="vr-left-image-side">
@@ -953,8 +989,10 @@
                                     <h4 class="viewer-title" id="vrRoomTitle">360° VR View: Private Room</h4>
                                 </div>
                                 <div class="vr-room-switchers">
-                                    <button class="vr-switch-btn active" id="vrBtnPrivate" data-room="private">Private Room</button>
-                                    <button class="vr-switch-btn" id="vrBtnBallroom" data-room="ballroom">Ballroom</button>
+                                    <button class="vr-switch-btn active" id="vrBtnPrivate" data-room="private">Private
+                                        Room</button>
+                                    <button class="vr-switch-btn" id="vrBtnBallroom"
+                                        data-room="ballroom">Ballroom</button>
                                     <button class="vr-switch-btn" id="vrBtnSurau" data-room="surau">Surau</button>
                                     <button class="vr-switch-btn" id="vrBtnCigar" data-room="cigar">Cigar Room</button>
                                     <button class="vr-switch-btn" id="vrBtnLounge" data-room="lounge">Lounge</button>
@@ -971,7 +1009,8 @@
                                 </button>
                             </div>
                             <div class="viewer-footer">
-                                <span id="vrRoomDesc"><i class="fa-solid fa-circle-info gold-text"></i> Currently viewing 3D VR panorama for <strong>Private Room</strong> (18 Pax)</span>
+                                <span id="vrRoomDesc"><i class="fa-solid fa-circle-info gold-text"></i> Currently
+                                    viewing 3D VR panorama for <strong>Private Room</strong> (18 Pax)</span>
                             </div>
                         </div>
                     </div>
@@ -979,9 +1018,106 @@
 
                 <!-- CTA Button -->
                 <div class="events-cta-box text-center scroll-reveal" style="margin-top: 40px;">
-                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20would%20like%20to%20make%20an%20event" target="_blank" rel="noopener noreferrer" class="btn-primary events-reserve-btn">
+                    <a href="https://api.whatsapp.com/send?phone=60177347030&text=Hi!%20I%20would%20like%20to%20make%20an%20event"
+                        target="_blank" rel="noopener noreferrer" class="btn-primary events-reserve-btn">
                         Book Room / Event Space <i class="fa-solid fa-arrow-right"></i>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exclusive Voucher Campaign Section -->
+        <section class="section section-light voucher-campaign-section" id="voucher-campaign">
+            <div class="container">
+                <div class="voucher-campaign-grid scroll-reveal">
+                    <!-- Left Side: Voucher Banner & Offer Info -->
+                    <div class="voucher-info-col">
+                        <span class="section-subtitle"><i class="fa-solid fa-ticket gold-text"></i> Special Campaign Reward</span>
+                        <h2 class="section-title">Claim Your <span class="gold-text">RM50 Dining Voucher</span></h2>
+                        <p class="section-desc">Experience luxury lakeside dining with an exclusive RM50 instant discount on your total bill at Bayu Seafood. Fill in your details below to instantly generate and download your official personalized PDF voucher.</p>
+
+                        <!-- Step-by-Step Usage Guide -->
+                        <div class="voucher-steps-wrap">
+                            <h4 class="voucher-steps-heading"><i class="fa-solid fa-list-check gold-text"></i> How To Claim &amp; Use Your Voucher</h4>
+                            <div class="voucher-steps-grid">
+                                <div class="voucher-step-card">
+                                    <div class="step-badge">1</div>
+                                    <div class="step-text-wrap">
+                                        <strong class="step-title">Claim PDF Online</strong>
+                                        <p class="step-desc">Enter your Name &amp; Phone below to generate your personalized PDF voucher instantly.</p>
+                                    </div>
+                                </div>
+                                <div class="voucher-step-card">
+                                    <div class="step-badge">2</div>
+                                    <div class="step-text-wrap">
+                                        <strong class="step-title">Visit Our Restaurant</strong>
+                                        <p class="step-desc">Dine at Bayu Seafood Lakeside Restaurant at Tasik Perdana, Kuala Lumpur.</p>
+                                    </div>
+                                </div>
+                                <div class="voucher-step-card">
+                                    <div class="step-badge">3</div>
+                                    <div class="step-text-wrap">
+                                        <strong class="step-title">Deduct Total Bill</strong>
+                                        <p class="step-desc">Show your PDF voucher on your phone or printed copy upon checkout to deduct RM50 off!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voucher-expiry-notice">
+                                <i class="fa-solid fa-clock-rotate-left gold-text"></i>
+                                <span>Note: Voucher remains valid for <strong>30 Days</strong> from the date of issuance.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Interactive Voucher Ticket Card & Claim Form -->
+                    <div class="voucher-card-col">
+                        <div class="voucher-ticket-card">
+                            <div class="ticket-header">
+                                <div class="ticket-header-top">
+                                    <span class="ticket-tag"><i class="fa-solid fa-star"></i> OFFICIAL CAMPAIGN</span>
+                                </div>
+                                <div class="ticket-brand-wrap">
+                                    <img src="bayu-logo.jpg" alt="Bayu Seafood Logo" class="ticket-brand-logo">
+                                    <h3 class="ticket-title">BAYU SEAFOOD</h3>
+                                </div>
+                                <div class="ticket-amount">RM50 <span>OFF</span></div>
+                                <p class="ticket-subtitle">LAKESIDE DINING VOUCHER</p>
+                                <div class="ticket-header-footer">
+                                    <span class="ticket-visual-id"><i class="fa-solid fa-barcode barcode-icon-long"></i> BSV-001</span>
+                                </div>
+                            </div>
+                            <div class="ticket-body">
+                                <form id="voucherClaimForm" class="voucher-form">
+                                    <div class="voucher-form-group">
+                                        <label for="voucherName"><i class="fa-solid fa-user"></i> Full Name</label>
+                                        <input type="text" id="voucherName" class="voucher-input" placeholder="e.g. Sarah Ahmad" required>
+                                    </div>
+                                    <div class="voucher-form-group">
+                                        <label for="voucherPhone"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                                        <input type="tel" id="voucherPhone" class="voucher-input" placeholder="e.g. +60123456789" required>
+                                    </div>
+                                    <button type="submit" id="btnClaimVoucher" class="btn-claim-voucher">
+                                        <i class="fa-solid fa-file-pdf"></i> Claim &amp; Download PDF Voucher
+                                    </button>
+                                </form>
+
+                                <!-- Success Confirmation State (Hidden initially) -->
+                                <div id="voucherSuccessBox" class="voucher-success-box" style="display: none;">
+                                    <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                                    <h4>Voucher Claimed Successfully!</h4>
+                                    <p>Your PDF voucher has been generated and downloaded.</p>
+                                    <div class="voucher-generated-info">
+                                        <div><span>Voucher ID:</span> <strong id="resVoucherId" class="gold-text">BS-VOUCHER-XXXXXX</strong></div>
+                                        <div><span>Customer:</span> <strong id="resVoucherName">Name</strong></div>
+                                        <div><span>Valid Until:</span> <strong id="resVoucherExpiry" class="gold-text">DD MMM YYYY</strong></div>
+                                    </div>
+                                    <button type="button" id="btnRedownloadPdf" class="btn-redownload-pdf">
+                                        <i class="fa-solid fa-download"></i> Download PDF Again
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -992,7 +1128,7 @@
                 <div class="reserve-banner-content">
                     <span class="section-subtitle scroll-reveal">WhatsApp Booking Portal</span>
                     <h2 class="reserve-banner-title scroll-reveal">Host an Exquisite <span class="gold-text">Lakeside
-                            Dinner</span></h2>
+                            Dinner &amp; Events</span></h2>
                     <p class="reserve-banner-text scroll-reveal">Fill in your reservation details below to compile a
                         pre-formatted WhatsApp booking request. Clicking submit will automatically connect you with our
                         booking manager.</p>
@@ -1047,6 +1183,148 @@
                                 WhatsApp
                             </button>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instagram Feed & Reels Section -->
+        <section class="section section-dark insta-section" id="instagram-feed">
+            <!-- Top Marquee Ticker (Scrolling Left) -->
+            <div class="insta-ticker-bar ticker-top">
+                <div class="ticker-track track-left">
+                    <div class="ticker-content">
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                    </div>
+                    <div class="ticker-content" aria-hidden="true">
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <!-- Top Row: Left Side Title & Info, Right Side 2 Featured Reels -->
+                <div class="insta-top-grid scroll-reveal">
+                    <!-- Left Side Header -->
+                    <div class="insta-header-col">
+                        <span class="section-subtitle"><i class="fa-brands fa-instagram gold-text"></i> Live Social Highlights</span>
+                        <h2 class="section-title">Watch Our <span class="gold-text">Bayu Seafood</span> Instagram Moments</h2>
+                        <p class="section-desc">Experience the vibrant atmosphere of our live seafood dining, master chef culinary creations, and scenic lakeside celebrations featured live on Instagram.</p>
+                        
+                        <div class="insta-follow-card">
+                            <div class="insta-profile-info">
+                                <img src="bayu-logo.jpg" alt="Bayu Seafood Instagram Profile" class="insta-avatar">
+                                <div class="insta-handle-text">
+                                    <span class="insta-name">Bayu Seafood KL</span>
+                                    <span class="insta-handle">@bayu_seafood</span>
+                                </div>
+                            </div>
+                            <a href="https://www.instagram.com/bayu_seafood/?hl=en" target="_blank" rel="noopener noreferrer" class="btn-insta-follow">
+                                <i class="fa-brands fa-instagram"></i> Follow on Instagram
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: 2 Featured Embedded Reels Cards -->
+                    <div class="insta-top-reels">
+                        <!-- Featured Reel 1 -->
+                        <div class="insta-embed-card white-card">
+                            <iframe src="https://www.instagram.com/reel/DaPG0H3R-Vq/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Instagram Reel 1"></iframe>
+                        </div>
+                        <!-- Featured Reel 2 -->
+                        <div class="insta-embed-card white-card">
+                            <iframe src="https://www.instagram.com/reel/DbNJxA_Rq_5/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Instagram Reel 2"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Sub-Title & Horizontal 4-Column Slider Track for Recent Posts -->
+                <div class="insta-bottom-slider-section scroll-reveal">
+                    <div class="insta-bottom-header">
+                        <div>
+                            <span class="section-subtitle">Fresh Content</span>
+                            <h3 class="subsection-title" style="margin: 0;"><i class="fa-solid fa-fire gold-text"></i> Our Recent Posts</h3>
+                        </div>
+                        <div class="insta-slider-nav">
+                            <button class="insta-nav-btn prev-btn" id="instaPrevBtn" aria-label="Previous Posts"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button class="insta-nav-btn next-btn" id="instaNextBtn" aria-label="Next Posts"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Slider Container -->
+                    <div class="insta-slider-container">
+                        <div class="insta-slider-track" id="instaSliderTrack">
+                            <!-- Recent Post 1 -->
+                            <div class="insta-slide-item">
+                                <div class="insta-embed-card white-card">
+                                    <iframe src="https://www.instagram.com/reel/DbNKp4ERGes/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Recent Post 1"></iframe>
+                                </div>
+                            </div>
+                            <!-- Recent Post 2 -->
+                            <div class="insta-slide-item">
+                                <div class="insta-embed-card white-card">
+                                    <iframe src="https://www.instagram.com/reel/DbiWBTWRR6J/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Recent Post 2"></iframe>
+                                </div>
+                            </div>
+                            <!-- Recent Post 3 -->
+                            <div class="insta-slide-item">
+                                <div class="insta-embed-card white-card">
+                                    <iframe src="https://www.instagram.com/reel/DbNDvGvR5qo/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" frameborder="0" scrolling="no" title="Recent Post 3"></iframe>
+                                </div>
+                            </div>
+                            <!-- Recent Post 4 -->
+                            <div class="insta-slide-item">
+                                <div class="insta-embed-card white-card">
+                                    <iframe src="https://www.instagram.com/reel/Da5MPlDTFou/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Recent Post 4"></iframe>
+                                </div>
+                            </div>
+                            <!-- Recent Post 5 -->
+                            <div class="insta-slide-item">
+                                <div class="insta-embed-card white-card">
+                                    <iframe src="https://www.instagram.com/reel/Da5MRQyzTJV/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" frameborder="0" scrolling="no" title="Recent Post 5"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Marquee Ticker (Scrolling Right) -->
+            <div class="insta-ticker-bar ticker-bottom">
+                <div class="ticker-track track-right">
+                    <div class="ticker-content">
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                    </div>
+                    <div class="ticker-content" aria-hidden="true">
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
+                        <span>Bayu Seafood <i class="fa-solid fa-circle gold-dot"></i></span>
                     </div>
                 </div>
             </div>
@@ -1212,8 +1490,10 @@
     <div class="floorplan-modal-backdrop" id="floorplanModal" aria-hidden="true">
         <div class="floorplan-modal-content">
             <div class="floorplan-modal-header">
-                <h4 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff; margin: 0;"><i class="fa-solid fa-expand gold-text"></i> Detailed Fullscreen View</h4>
-                <button class="cert-modal-close" id="floorplanModalClose" aria-label="Close Lightbox" style="position: static;">
+                <h4 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff; margin: 0;"><i
+                        class="fa-solid fa-expand gold-text"></i> Detailed Fullscreen View</h4>
+                <button class="cert-modal-close" id="floorplanModalClose" aria-label="Close Lightbox"
+                    style="position: static;">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
