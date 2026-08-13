@@ -5674,7 +5674,7 @@ footer {
 .voucher-campaign-section {
     position: relative;
     padding: 85px 0;
-    background: #ffffff !important;
+    background: #ffffff;
     border-top: 1px solid #e2e8f0;
     border-bottom: 1px solid #e2e8f0;
 }
@@ -5803,6 +5803,14 @@ footer {
     border-bottom: 2px dashed rgba(212, 175, 55, 0.6);
     border-radius: 20px 20px 0 0;
     position: relative;
+    -webkit-mask: radial-gradient(circle 22px at left 50%, #0000 98%, #000) left,
+                  radial-gradient(circle 22px at right 50%, #0000 98%, #000) right;
+    -webkit-mask-size: 51% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask: radial-gradient(circle 22px at left 50%, #0000 98%, #000) left,
+          radial-gradient(circle 22px at right 50%, #0000 98%, #000) right;
+    mask-size: 51% 100%;
+    mask-repeat: no-repeat;
 }
 
 .ticket-header::before,
@@ -5813,9 +5821,10 @@ footer {
     transform: translateY(-50%);
     width: 44px;
     height: 44px;
-    background: #ffffff;
+    background: transparent;
     border-radius: 50%;
     z-index: 5;
+    pointer-events: none;
 }
 
 .ticket-header::before {
@@ -5840,7 +5849,7 @@ footer {
     align-items: center;
     gap: 6px;
     padding: 0;
-    background: transparent !important;
+    background: transparent;
     border: none !important;
     color: #8c6809;
     font-size: 0.72rem;
@@ -5912,11 +5921,21 @@ footer {
     font-size: 3rem;
     font-weight: 900;
     line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
 }
 
-.ticket-amount span {
-    font-size: 1.4rem;
-    font-weight: 700;
+.ticket-amount > span {
+    font-size: 3rem;
+    font-weight: 900;
+}
+
+.ticket-amount .ticket-off-tag {
+    font-size: 1.4rem !important;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
 .ticket-subtitle {
@@ -6074,9 +6093,311 @@ footer {
     background: rgba(212, 175, 55, 0.15);
 }
 
+.voucher-success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-whatsapp-claim {
+    width: 100%;
+    padding: 13px 18px;
+    background: #25d366;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp-claim:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    color: #ffffff !important;
+}
+
+.btn-whatsapp-claim i {
+    font-size: 1.25rem;
+}
+
 @media (max-width: 991px) {
     .voucher-campaign-grid {
         grid-template-columns: 1fr;
         gap: 40px;
     }
+}
+
+/* Voucher Campaign Extra Sections (No Campaign, Upcoming, History) */
+.no-campaign-banner-box {
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 24px;
+    padding: 50px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    margin-bottom: 20px;
+}
+
+.no-campaign-icon-wrap {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: rgba(217, 119, 6, 0.1);
+    border: 2px solid var(--color-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin: 0 auto 20px auto;
+}
+
+.campaign-subblock-wrap {
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 24px;
+    padding: 36px 28px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+}
+
+.campaign-subblock-header {
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    padding-bottom: 16px;
+}
+
+.campaign-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.campaign-item-card {
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 16px;
+    padding: 22px 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.campaign-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+    border-color: var(--color-gold);
+}
+
+.campaign-item-card.upcoming-card {
+    border-left: 4px solid var(--color-gold);
+}
+
+.campaign-item-card.history-card {
+    border-left: 4px solid #94a3b8;
+    opacity: 0.85;
+}
+
+.campaign-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.campaign-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.campaign-badge.upcoming {
+    background: rgba(217, 119, 6, 0.15);
+    color: #b45309;
+}
+
+.campaign-badge.history {
+    background: rgba(148, 163, 184, 0.18);
+    color: #475569;
+}
+
+.campaign-card-name {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.campaign-card-value {
+    font-family: var(--font-body);
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-gold);
+    margin-bottom: 8px;
+}
+
+.campaign-card-subtext {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Side-by-Side Campaign Layout (30% History | 70% Upcoming) */
+.campaign-side-by-side-grid {
+    display: grid;
+    grid-template-columns: calc(30% - 15px) calc(70% - 15px);
+    gap: 30px;
+    align-items: start;
+}
+
+@media (max-width: 991px) {
+    .campaign-side-by-side-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+.history-cards-vertical-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.history-item-mini-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #94a3b8;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+}
+
+.history-item-mini-card:hover {
+    transform: translateX(3px);
+    border-color: var(--color-gold);
+}
+
+.history-mini-name {
+    font-family: var(--font-heading);
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.history-mini-value {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-gold);
+}
+
+.upcoming-feature-box {
+    background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%);
+    border: 2px solid var(--color-gold-light, #dfc785);
+    border-left: 6px solid var(--color-gold);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 25px rgba(179, 143, 45, 0.08);
+}
+
+.upcoming-feature-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.upcoming-feature-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.upcoming-feature-value {
+    font-family: var(--font-body);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--color-gold);
+    margin-bottom: 16px;
+}
+
+/* Countdown Timer Component */
+.upcoming-countdown-widget {
+    background: #0f172a;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 16px;
+    padding: 20px 18px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.countdown-label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+}
+
+.countdown-timer-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.timer-box {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    min-width: 65px;
+    text-align: center;
+}
+
+.timer-number {
+    font-family: 'Plus Jakarta Sans', monospace;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-gold);
+    display: block;
+    line-height: 1.1;
+}
+
+.timer-unit {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 4px;
+}
+
+.timer-colon {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-gold);
+    line-height: 1;
 }
