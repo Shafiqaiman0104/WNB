@@ -1028,13 +1028,43 @@
 
         <!-- Exclusive Voucher Campaign Section -->
         <section class="section section-light voucher-campaign-section" id="voucher-campaign">
+            <a id="campaign"></a>
             <div class="container">
-                <div class="voucher-campaign-grid scroll-reveal">
+
+                <!-- 0. Loading Progress Container (Displayed initially while checking PocketBase) -->
+                <div id="campaignLoadingWrap" class="no-campaign-banner-box scroll-reveal">
+                    <div class="no-campaign-content">
+                        <div class="no-campaign-icon-wrap" style="border-color: var(--color-gold);">
+                            <i class="fa-solid fa-spinner fa-spin gold-text" style="font-size: 2.2rem;"></i>
+                        </div>
+                        <span class="section-subtitle">Live Promotion Status</span>
+                        <h2 class="section-title">Checking Available Campaign<span class="gold-text">..</span></h2>
+                        <p class="section-desc">Connecting to database and verifying current promotions. Please wait a moment...</p>
+                    </div>
+                </div>
+
+                <!-- 0. Error State Container (Displayed if fetching fails or times out after 30 seconds) -->
+                <div id="campaignErrorWrap" class="no-campaign-banner-box scroll-reveal" style="display: none;">
+                    <div class="no-campaign-content">
+                        <div class="no-campaign-icon-wrap" style="border-color: #ef4444; background: rgba(239, 68, 68, 0.1);">
+                            <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 2.2rem;"></i>
+                        </div>
+                        <span class="section-subtitle" style="color: #ef4444;">Network / Connection Notice</span>
+                        <h2 class="section-title">Failed to fetch data, <span style="color: #ef4444;">please check your connection / refresh the page</span></h2>
+                        <p class="section-desc">Unable to retrieve live campaign data. Please verify your internet connection or try refreshing the page.</p>
+                        <button type="button" onclick="loadDynamicVoucherData()" class="btn-primary" style="margin-top: 20px;">
+                            <i class="fa-solid fa-rotate-right"></i> Try Again / Refresh Status
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1. Active Voucher Campaign Container -->
+                <div id="activeVoucherCampaignWrap" class="voucher-campaign-grid scroll-reveal" style="display: none;">
                     <!-- Left Side: Voucher Banner & Offer Info -->
                     <div class="voucher-info-col">
                         <span class="section-subtitle"><i class="fa-solid fa-ticket gold-text"></i> Special Campaign Reward</span>
-                        <h2 class="section-title">Claim Your <span class="gold-text">RM50 Dining Voucher</span></h2>
-                        <p class="section-desc">Experience luxury lakeside dining with an exclusive RM50 instant discount on your total bill at Bayu Seafood. Fill in your details below to instantly generate and download your official personalized PDF voucher.</p>
+                        <h2 class="section-title" id="dynVoucherTitle">Claim Your <span class="gold-text">RM50 Dining Voucher</span></h2>
+                        <p class="section-desc" id="dynVoucherDescription">Experience luxury lakeside dining with an exclusive RM50 instant discount on your total bill at Bayu Seafood. Fill in your details below to instantly generate and download your official personalized PDF voucher.</p>
 
                         <!-- Step-by-Step Usage Guide -->
                         <div class="voucher-steps-wrap">
@@ -1043,26 +1073,26 @@
                                 <div class="voucher-step-card">
                                     <div class="step-badge">1</div>
                                     <div class="step-text-wrap">
-                                        <strong class="step-title">Claim PDF Online</strong>
-                                        <p class="step-desc">Enter your Name &amp; Phone below to generate your personalized PDF voucher instantly.</p>
+                                        <strong class="step-title">Generate PDF Voucher</strong>
+                                        <p class="step-desc" id="voucherStep1Desc">Fill in your Name &amp; Phone number below to generate your personalized RM50 PDF voucher and code.</p>
                                     </div>
                                 </div>
                                 <div class="voucher-step-card">
                                     <div class="step-badge">2</div>
                                     <div class="step-text-wrap">
-                                        <strong class="step-title">Visit Our Restaurant</strong>
-                                        <p class="step-desc">Dine at Bayu Seafood Lakeside Restaurant at Tasik Perdana, Kuala Lumpur.</p>
+                                        <strong class="step-title">WhatsApp PDF &amp; Code</strong>
+                                        <p class="step-desc">Send your generated PDF voucher and Voucher Code directly to Bayu Seafood via WhatsApp.</p>
                                     </div>
                                 </div>
                                 <div class="voucher-step-card">
                                     <div class="step-badge">3</div>
                                     <div class="step-text-wrap">
-                                        <strong class="step-title">Deduct Total Bill</strong>
-                                        <p class="step-desc">Show your PDF voucher on your phone or printed copy upon checkout to deduct RM50 off!</p>
+                                        <strong class="step-title">Staff Verification</strong>
+                                        <p class="step-desc" id="voucherStep3Desc">Our Bayu Seafood staff will verify your voucher code so you can enjoy RM50 off your total dining bill!</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="voucher-expiry-notice">
+                            <div class="voucher-expiry-notice" id="voucherExpiryNotice">
                                 <i class="fa-solid fa-clock-rotate-left gold-text"></i>
                                 <span>Note: Voucher remains valid for <strong>30 Days</strong> from the date of issuance.</span>
                             </div>
@@ -1071,7 +1101,7 @@
 
                     <!-- Right Side: Interactive Voucher Ticket Card & Claim Form -->
                     <div class="voucher-card-col">
-                        <div class="voucher-ticket-card">
+                        <div class="voucher-ticket-card" id="dynVoucherTicketCard">
                             <div class="ticket-header">
                                 <div class="ticket-header-top">
                                     <span class="ticket-tag"><i class="fa-solid fa-star"></i> OFFICIAL CAMPAIGN</span>
@@ -1080,13 +1110,23 @@
                                     <img src="bayu-logo.jpg" alt="Bayu Seafood Logo" class="ticket-brand-logo">
                                     <h3 class="ticket-title">BAYU SEAFOOD</h3>
                                 </div>
-                                <div class="ticket-amount">RM50 <span>OFF</span></div>
-                                <p class="ticket-subtitle">LAKESIDE DINING VOUCHER</p>
+                                <div class="ticket-amount" id="dynVoucherValue">RM50 <span>OFF</span></div>
+                                <p class="ticket-subtitle" id="dynVoucherName">LAKESIDE DINING VOUCHER</p>
                                 <div class="ticket-header-footer">
                                     <span class="ticket-visual-id"><i class="fa-solid fa-barcode barcode-icon-long"></i> BSV-001</span>
                                 </div>
                             </div>
                             <div class="ticket-body">
+                                <!-- Lock Claim Notice Box (Shown when lockClaim = true) -->
+                                <div id="voucherLockClaimNotice" class="voucher-lock-notice" style="display: none; background: #ffffff; border: 2px solid #cbd5e1; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; text-align: center; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08);">
+                                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(239, 68, 68, 0.12); color: #dc2626; border-radius: 50%; font-size: 1.25rem; margin-bottom: 8px;">
+                                        <i class="fa-solid fa-lock"></i>
+                                    </div>
+                                    <div id="voucherLockClaimReasonText" style="color: #000000; font-weight: 700; font-size: 1.05rem; line-height: 1.4;">
+                                        Campaign Update in Progress...
+                                    </div>
+                                </div>
+
                                 <form id="voucherClaimForm" class="voucher-form">
                                     <div class="voucher-form-group">
                                         <label for="voucherName"><i class="fa-solid fa-user"></i> Full Name</label>
@@ -1105,20 +1145,93 @@
                                 <div id="voucherSuccessBox" class="voucher-success-box" style="display: none;">
                                     <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
                                     <h4>Voucher Claimed Successfully!</h4>
-                                    <p>Your PDF voucher has been generated and downloaded.</p>
+                                    <p>Your PDF voucher has been generated and downloaded. Please WhatsApp our staff with your Voucher Code and PDF to verify!</p>
                                     <div class="voucher-generated-info">
                                         <div><span>Voucher ID:</span> <strong id="resVoucherId" class="gold-text">BS-VOUCHER-XXXXXX</strong></div>
                                         <div><span>Customer:</span> <strong id="resVoucherName">Name</strong></div>
                                         <div><span>Valid Until:</span> <strong id="resVoucherExpiry" class="gold-text">DD MMM YYYY</strong></div>
                                     </div>
-                                    <button type="button" id="btnRedownloadPdf" class="btn-redownload-pdf">
-                                        <i class="fa-solid fa-download"></i> Download PDF Again
-                                    </button>
+                                    <div class="voucher-success-actions">
+                                        <button type="button" id="btnRedownloadPdf" class="btn-redownload-pdf">
+                                            <i class="fa-solid fa-download"></i> Download PDF Again
+                                        </button>
+                                        <a href="#" id="btnWhatsappVoucher" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-claim">
+                                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Bayu Seafood to Verify
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- 2. No Active Campaign Banner Container (Shown when NO active campaign & NO upcoming campaign) -->
+                <div id="noActiveCampaignWrap" class="no-campaign-banner-box scroll-reveal" style="display: none;">
+                    <div class="no-campaign-content">
+                        <div class="no-campaign-icon-wrap">
+                            <i class="fa-solid fa-bullhorn gold-text"></i>
+                        </div>
+                        <span class="section-subtitle">Promotions &amp; Rewards</span>
+                        <h2 class="section-title">Currently No Active Campaign <span class="gold-text">• Stay Tuned</span></h2>
+                        <p class="section-desc">Our culinary team is currently curating exclusive privileges and dining rewards for our valued guests. Please check back soon for our next official campaign announcement!</p>
+                    </div>
+                </div>
+
+                <!-- 3. Side-by-Side Container: History Campaign (30% Space) | Upcoming Campaign (70% Space) -->
+                <div id="sideBySideCampaignWrap" class="scroll-reveal" style="display: none;">
+
+                    <!-- Top Upcoming Campaign Banner Title -->
+                    <div class="no-campaign-banner-box" style="margin-bottom: 30px;">
+                        <div class="no-campaign-content">
+                            <div class="no-campaign-icon-wrap">
+                                <i class="fa-solid fa-calendar-check gold-text"></i>
+                            </div>
+                            <span class="section-subtitle">Promotions &amp; Rewards</span>
+                            <h2 class="section-title">Upcoming Dining Campaign <span class="gold-text">• Launching Soon</span></h2>
+                            <p class="section-desc">Our culinary team is preparing our next exclusive privileges and dining rewards for our valued guests. Preview our upcoming campaign details and live launch countdown below!</p>
+                        </div>
+                    </div>
+
+                    <!-- Side-by-Side Grid Layout (30% History | 70% Upcoming) -->
+                    <div class="campaign-side-by-side-grid">
+                        <!-- Left Column: History Campaign (30% space) -->
+                        <div class="history-col-30 campaign-subblock-wrap">
+                            <div class="campaign-subblock-header">
+                                <span class="section-subtitle"><i class="fa-solid fa-clock-rotate-left gold-text"></i> Past Rewards</span>
+                                <h3 class="subsection-title" style="margin: 0; font-size: 1.25rem;"><i class="fa-solid fa-box-archive gold-text"></i> History Campaign</h3>
+                            </div>
+                            <div id="sideHistoryCardsList" class="history-cards-vertical-list">
+                                <!-- Dynamically populated past campaigns showing voucherName & voucherValue -->
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Upcoming Campaign (70% space) -->
+                        <div class="upcoming-col-70 campaign-subblock-wrap">
+                            <div class="campaign-subblock-header">
+                                <span class="section-subtitle"><i class="fa-solid fa-rocket gold-text"></i> Exclusive Launch</span>
+                                <h3 class="subsection-title" style="margin: 0; font-size: 1.4rem;"><i class="fa-solid fa-calendar-star gold-text"></i> Upcoming Campaign</h3>
+                                <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">Get ready for our next exclusive culinary reward launching soon.</p>
+                            </div>
+                            <div id="sideUpcomingCardContainer">
+                                <!-- Dynamically populated 1 nearest upcoming campaign with Countdown Timer -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 4. Standalone History Campaign Container (Shown when NO active campaign & NO upcoming campaign) -->
+                <div id="historyOnlyCampaignWrap" class="campaign-subblock-wrap scroll-reveal" style="display: none; margin-top: 30px;">
+                    <div class="campaign-subblock-header">
+                        <span class="section-subtitle"><i class="fa-solid fa-clock-rotate-left gold-text"></i> Past Promotions</span>
+                        <h3 class="subsection-title" style="margin: 0;"><i class="fa-solid fa-box-archive gold-text"></i> Campaign History</h3>
+                        <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">Explore our previous rewards and concluded dining campaigns.</p>
+                    </div>
+                    <div id="historyOnlyCardsGrid" class="campaign-cards-grid">
+                        <!-- Dynamically populated past campaigns -->
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -1240,7 +1353,7 @@
                     </div>
 
                     <!-- Right Side: 2 Featured Embedded Reels Cards -->
-                    <div class="insta-top-reels">
+                    <div class="insta-top-reels" id="instaTopReelsContainer">
                         <!-- Featured Reel 1 -->
                         <div class="insta-embed-card white-card">
                             <iframe src="https://www.instagram.com/reel/DaPG0H3R-Vq/embed/?cr=1&amp;v=14&amp;wp=500" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Instagram Reel 1"></iframe>
@@ -1537,6 +1650,8 @@
     <!-- PDF.js and StPageFlip Libraries for Standalone Interactive Menu Flipbook -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+    <!-- PocketBase SDK Client -->
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.1/dist/pocketbase.umd.js"></script>
     <!-- Custom Client Interactions Script -->
     <script src="script.js"></script>
 </body>
