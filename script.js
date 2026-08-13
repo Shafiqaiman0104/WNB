@@ -2060,6 +2060,20 @@ document.addEventListener('DOMContentLoaded', () => {
         checkRoomHashHook();
         window.addEventListener('hashchange', checkRoomHashHook);
 
+        // URL Hash Hook Listener (#campaign, #campaigns, #voucher, #vouchers & #voucher-campaign)
+        function checkCampaignHashHook() {
+            const hash = window.location.hash.toLowerCase();
+            if (hash === '#campaign' || hash === '#campaigns' || hash === '#voucher' || hash === '#vouchers' || hash === '#voucher-campaign') {
+                const target = document.getElementById('campaign') || document.getElementById('voucher-campaign');
+                if (target) {
+                    setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 300);
+                }
+            }
+        }
+
+        checkCampaignHashHook();
+        window.addEventListener('hashchange', checkCampaignHashHook);
+
         setup3DVRScene();
     }
 
@@ -2081,58 +2095,122 @@ document.addEventListener('DOMContentLoaded', () => {
     const voucherClaimForm = document.getElementById('voucherClaimForm');
     const voucherSuccessBox = document.getElementById('voucherSuccessBox');
     const btnRedownloadPdf = document.getElementById('btnRedownloadPdf');
+    const btnWhatsappVoucher = document.getElementById('btnWhatsappVoucher');
 
     let currentVoucherData = null;
+    let activeVoucherValText = "RM50";
+    let activeVoucherNameText = "EXCLUSIVE CAMPAIGN DINING VOUCHER";
+    let activeVoucherEndDateStr = "";
+    let activeVoucherRawEndDateIso = "";
 
-    function generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr) {
+    // Helper function to load image to base64 for jsPDF
+    function getBase64ImageFromUrl(imgUrl) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    resolve(canvas.toDataURL('image/jpeg'));
+                } catch (e) {
+                    resolve(null);
+                }
+            };
+            img.onerror = () => resolve(null);
+            img.src = imgUrl;
+        });
+    }
+
+    async function generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr, customVoucherName) {
         if (!window.jspdf || !window.jspdf.jsPDF) {
             alert('PDF Generator is initializing, please try again in a moment.');
             return;
         }
 
+        const btnClaim = document.getElementById('btnClaimVoucher');
+        let oldBtnHtml = '';
+        if (btnClaim) {
+            oldBtnHtml = btnClaim.innerHTML;
+            btnClaim.disabled = true;
+            btnClaim.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating PDF Voucher...';
+        }
+
+        const logoUrl = 'bayu-logo.jpg';
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(voucherId)}&size=150x150`;
+
+        const [logoBase64, qrBase64] = await Promise.all([
+            getBase64ImageFromUrl(logoUrl),
+            getBase64ImageFromUrl(qrUrl)
+        ]);
+
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
 
-        // Background dark navy
-        doc.setFillColor(13, 23, 39);
+        // 1. Modern Light Mode Background
+        doc.setFillColor(255, 255, 255);
         doc.rect(0, 0, 148, 210, 'F');
 
-        // Gold outer frame border
+        // Outer Gold Accent Border
         doc.setDrawColor(212, 175, 55);
-        doc.setLineWidth(1.5);
+        doc.setLineWidth(1.2);
         doc.rect(6, 6, 136, 198, 'S');
 
-        // Inner dashed border
+        // Inner Light Border
+        doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.4);
-        doc.setLineDashPattern([2, 2], 0);
         doc.rect(9, 9, 130, 192, 'S');
-        doc.setLineDashPattern([], 0);
 
-        // Header Title
-        doc.setTextColor(212, 175, 55);
+        // 2. Header Section (Bayu Seafood Logo + Title)
+        let headerTextLeft = 74;
+        if (logoBase64) {
+            doc.addImage(logoBase64, 'JPEG', 16, 16, 16, 16);
+            doc.setDrawColor(212, 175, 55);
+            doc.setLineWidth(0.5);
+            doc.circle(24, 24, 8.2, 'S');
+            headerTextLeft = 82;
+        }
+
+        doc.setTextColor(15, 23, 42); // Deep Navy
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
-        doc.text("BAYU SEAFOOD", 74, 25, { align: "center" });
+        doc.text("BAYU SEAFOOD", headerTextLeft, 22, { align: "center" });
 
-        doc.setTextColor(255, 255, 255);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.text("PREMIUM HALAL LAKESIDE DINING & EVENTS", 74, 31, { align: "center" });
+        doc.setTextColor(180, 83, 9); // Gold Accent
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.text("PREMIUM HALAL LAKESIDE DINING & EVENTS", headerTextLeft, 27, { align: "center" });
 
-        // Voucher Box Graphic
-        doc.setFillColor(212, 175, 55);
-        doc.rect(16, 40, 116, 30, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(16, 36, 132, 36);
 
-        doc.setTextColor(13, 23, 39);
+        // 3. Voucher Box Banner Graphic (Modern Light Gold Box)
+        doc.setFillColor(254, 243, 199);
+        doc.rect(16, 40, 116, 32, 'F');
+        doc.setDrawColor(212, 175, 55);
+        doc.setLineWidth(0.8);
+        doc.rect(16, 40, 116, 32, 'S');
+
+        // Voucher Value Text
+        doc.setTextColor(180, 83, 9);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(24);
-        doc.text("RM50 OFF", 74, 55, { align: "center" });
+        const pdfValText = (activeVoucherValText.toLowerCase().includes('off') || activeVoucherValText.includes('%')) ? activeVoucherValText : `${activeVoucherValText} OFF`;
+        doc.text(pdfValText, 74, 54, { align: "center" });
 
-        doc.setFontSize(9);
-        doc.text("EXCLUSIVE CAMPAIGN DINING VOUCHER", 74, 63, { align: "center" });
+        // Dynamic Voucher Name (voucherName text)
+        const vName = (customVoucherName || activeVoucherNameText || "EXCLUSIVE CAMPAIGN DINING VOUCHER").toUpperCase();
+        doc.setTextColor(15, 23, 42);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.text(vName, 74, 63, { align: "center" });
 
-        // Customer Details Section Header
-        doc.setTextColor(212, 175, 55);
+        // 4. Customer Details Section Header
+        doc.setTextColor(180, 83, 9);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         doc.text("VOUCHER & CUSTOMER DETAILS", 16, 82);
@@ -2141,67 +2219,88 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.line(16, 85, 132, 85);
 
         // Details Fields
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(9.5);
-        
+        doc.setTextColor(15, 23, 42);
+        doc.setFontSize(9);
+
         doc.setFont('helvetica', 'bold');
         doc.text("Customer Name:", 16, 94);
         doc.setFont('helvetica', 'normal');
-        doc.text(name, 56, 94);
+        doc.text(name, 48, 94);
 
         doc.setFont('helvetica', 'bold');
         doc.text("Customer Phone:", 16, 102);
         doc.setFont('helvetica', 'normal');
-        doc.text(phone, 56, 102);
+        doc.text(phone, 48, 102);
 
         doc.setFont('helvetica', 'bold');
-        doc.text("Voucher ID:", 16, 110);
+        doc.text("Voucher Code:", 16, 110);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(212, 175, 55);
-        doc.text(voucherId, 56, 110);
+        doc.setTextColor(180, 83, 9);
+        doc.text(voucherId, 48, 110);
 
-        doc.setTextColor(255, 255, 255);
+        doc.setTextColor(15, 23, 42);
         doc.setFont('helvetica', 'bold');
         doc.text("Issued Date:", 16, 118);
         doc.setFont('helvetica', 'normal');
-        doc.text(issueDateStr, 56, 118);
+        doc.text(issueDateStr, 48, 118);
 
         doc.setFont('helvetica', 'bold');
         doc.text("Expiry Date:", 16, 126);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(239, 68, 68);
-        doc.text(expiryDateStr + " (Valid for 30 Days)", 56, 126);
+        doc.setTextColor(220, 38, 38);
+        doc.text(expiryDateStr, 48, 126);
 
-        // How to Redeem Section Header
-        doc.setTextColor(212, 175, 55);
+        // Embed QR Code on the Right
+        if (qrBase64) {
+            doc.setFillColor(255, 255, 255);
+            doc.rect(96, 88, 36, 40, 'F');
+            doc.setDrawColor(226, 232, 240);
+            doc.setLineWidth(0.4);
+            doc.rect(96, 88, 36, 40, 'S');
+
+            doc.addImage(qrBase64, 'PNG', 99, 90, 30, 30);
+            doc.setFontSize(6.5);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(100, 116, 139);
+            doc.text("SCAN QR TO VERIFY", 114, 125, { align: "center" });
+        }
+
+        // 5. How to Redeem Section Header
+        doc.setTextColor(180, 83, 9);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         doc.text("HOW TO REDEEM YOUR VOUCHER", 16, 142);
         doc.setDrawColor(212, 175, 55);
         doc.line(16, 145, 132, 145);
 
-        doc.setTextColor(220, 220, 220);
+        // Exactly 3 Steps Requested by User
+        doc.setTextColor(51, 65, 85);
         doc.setFontSize(8.5);
         doc.setFont('helvetica', 'normal');
-        doc.text("1. Visit Bayu Seafood Lakeside Restaurant at Tasik Perdana, KL.", 16, 153);
-        doc.text("2. Present this PDF voucher (on your phone or printed copy) to staff.", 16, 160);
-        doc.text("3. RM50 will be deducted directly from your total bill upon payment.", 16, 167);
-        doc.text("4. Voucher is valid for 30 days from date of issuance.", 16, 174);
+        doc.text(`1. Fill details & generate your unique ${activeVoucherValText} PDF Voucher.`, 16, 153);
+        doc.text("2. WhatsApp this PDF voucher or Voucher Code to Bayu Seafood staff.", 16, 161);
+        doc.text(`3. Our staff will verify your code to deduct ${activeVoucherValText} off your total bill.`, 16, 169);
 
-        // Footer
-        doc.setDrawColor(212, 175, 55);
-        doc.line(16, 184, 132, 184);
+        // 6. Footer
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.4);
+        doc.line(16, 182, 132, 182);
 
         doc.setFontSize(7.5);
-        doc.setTextColor(160, 160, 160);
-        doc.text("Bayu Seafood Lakeside Dining • Bukit Aman, Tasik Perdana, KL", 74, 191, { align: "center" });
-        doc.text("Reservations / Inquiry: +60 17-734 7030", 74, 196, { align: "center" });
+        doc.setTextColor(100, 116, 139);
+        doc.text("Bayu Seafood Lakeside Dining • Bukit Aman, Tasik Perdana, KL", 74, 188, { align: "center" });
+        doc.text("Reservations / WhatsApp Inquiry: +60 17-734 7030", 74, 193, { align: "center" });
 
         doc.save('Bayu_Seafood_Voucher_' + voucherId + '.pdf');
+
+        if (btnClaim) {
+            btnClaim.disabled = false;
+            btnClaim.innerHTML = oldBtnHtml || '<i class="fa-solid fa-file-pdf"></i> Claim &amp; Download PDF Voucher';
+        }
     }
 
     if (voucherClaimForm) {
-        voucherClaimForm.addEventListener('submit', (e) => {
+        voucherClaimForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const nameInput = document.getElementById('voucherName');
@@ -2212,24 +2311,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!name || !phone) return;
 
+            const btnSubmit = document.getElementById('btnClaimVoucher');
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting &amp; Verifying Claim...';
+            }
+
             const now = new Date();
             const issueDateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-            const expiryDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-            const expiryDateStr = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            let expiryDateStr = activeVoucherEndDateStr;
+            if (!expiryDateStr) {
+                const expiryDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+                expiryDateStr = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
 
             const randomNum = Math.floor(100000 + Math.random() * 900000);
             const voucherId = 'BSV-' + randomNum;
 
-            currentVoucherData = { name, phone, voucherId, issueDateStr, expiryDateStr };
+            const claimExpiryIso = activeVoucherRawEndDateIso 
+                ? activeVoucherRawEndDateIso 
+                : (activeVoucherEndDateStr && !isNaN(new Date(activeVoucherEndDateStr).getTime()) 
+                    ? new Date(activeVoucherEndDateStr).toISOString() 
+                    : new Date(now.getTime() + 30 * 86400000).toISOString());
 
-            // Generate PDF
-            generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr);
+            const claimPayload = {
+                "voucherId": voucherId,
+                "nameVoucher": activeVoucherNameText,
+                "valueVoucher": activeVoucherValText,
+                "customerName": name,
+                "customerPhone": phone,
+                "issuedDate": now.toISOString(),
+                "expiryDate": claimExpiryIso,
+                "redeemStatus": "Pending",
+                "claimStatus": "Pending",
+                "claimAt": now.toISOString(),
+                "remark": "Generated via Bayu Seafood Website"
+            };
+
+            // STEP 1: Send data to PocketBase database FIRST & verify receipt
+            let createdRecord = null;
+            if (window.PocketBase) {
+                try {
+                    const pb = new window.PocketBase('https://pocketbase2.venturerushtech.com');
+                    createdRecord = await pb.collection('WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_CLAIMS_DATABASE').create(claimPayload, { requestKey: null });
+                } catch (pbErr) {
+                    console.warn('PocketBase voucher claim creation error:', pbErr);
+                }
+            }
+
+            // STEP 2: Verify if database received the record
+            if (!createdRecord || !createdRecord.id) {
+                alert('Claim Failed: Unable to save your voucher claim due to a network connection issue or server timeout. Please check your internet connection and try again.');
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-file-pdf"></i> Claim &amp; Download PDF Voucher';
+                }
+                return;
+            }
+
+            // STEP 3: Database confirmed! Store local backup & generate PDF
+            currentVoucherData = {
+                name,
+                phone,
+                voucherId,
+                issueDateStr,
+                expiryDateStr,
+                voucherName: activeVoucherNameText
+            };
+
+            try {
+                let claims = [];
+                const localStr = localStorage.getItem('mfj_bayuseafood_db_claims');
+                if (localStr) claims = JSON.parse(localStr);
+                claims.unshift({ ...createdRecord });
+                localStorage.setItem('mfj_bayuseafood_db_claims', JSON.stringify(claims));
+            } catch (e) { }
+
+            // Generate PDF with QR Code & Logo
+            await generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr, activeVoucherNameText);
 
             // Update UI success state
             document.getElementById('resVoucherId').textContent = voucherId;
             document.getElementById('resVoucherName').textContent = name;
             document.getElementById('resVoucherExpiry').textContent = expiryDateStr;
+
+            // Configure WhatsApp button text and URL
+            if (btnWhatsappVoucher) {
+                const waMsg = `Hi Bayu Seafood! 👋 I have generated my ${activeVoucherValText} Dining Voucher.\n\n` +
+                    `🎟️ Voucher Code: ${voucherId}\n` +
+                    `👤 Customer Name: ${name}\n` +
+                    `📱 Phone Number: ${phone}\n` +
+                    `📅 Valid Until: ${expiryDateStr}\n\n` +
+                    `I am attaching my PDF voucher here for verification. Please verify my voucher code! Thank you!`;
+                const waUrl = `https://api.whatsapp.com/send?phone=60177347030&text=${encodeURIComponent(waMsg)}`;
+                btnWhatsappVoucher.setAttribute('href', waUrl);
+            }
 
             voucherClaimForm.style.display = 'none';
             if (voucherSuccessBox) {
@@ -2239,21 +2416,815 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btnRedownloadPdf) {
-        btnRedownloadPdf.addEventListener('click', () => {
+        btnRedownloadPdf.addEventListener('click', async () => {
             if (currentVoucherData) {
-                generateVoucherPdf(
+                await generateVoucherPdf(
                     currentVoucherData.name,
                     currentVoucherData.phone,
                     currentVoucherData.voucherId,
                     currentVoucherData.issueDateStr,
-                    currentVoucherData.expiryDateStr
+                    currentVoucherData.expiryDateStr,
+                    currentVoucherData.voucherName
                 );
             }
         });
     }
 
+    /* ==========================================================================
+       Bayu Seafood - Dynamic Instagram Reels from PocketBase Database
+       Collection: WNBMFJGROUP_BAYUSEAFOOD_INSTAGRAM_DATABASE
+       ========================================================================== */
+    async function loadDynamicInstagramReels() {
+        const instaTopContainer = document.getElementById('instaTopReelsContainer');
+        const instaSliderTrack = document.getElementById('instaSliderTrack');
+
+        if (!instaTopContainer || !instaSliderTrack) return;
+
+        let reels = [];
+        const REELS_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_INSTAGRAM_DATABASE';
+
+        // 1. Fetch from PocketBase Database
+        if (window.PocketBase) {
+            try {
+                const pb = new window.PocketBase('https://pocketbase2.venturerushtech.com');
+                const list = await pb.collection(REELS_COLLECTION).getFullList({
+                    sort: 'positionNumber'
+                });
+                if (list && list.length > 0) {
+                    reels = list;
+                }
+            } catch (err) {
+                console.warn('PocketBase Instagram Reels fetch notice:', err);
+            }
+        }
+
+        // 2. Fallback to localStorage if offline / empty
+        if (reels.length === 0) {
+            const localStr = localStorage.getItem('mfj_bayuseafood_reels');
+            if (localStr) {
+                try { reels = JSON.parse(localStr); } catch (e) {}
+            }
+        }
+
+        // 3. Fallback defaults if still empty
+        if (reels.length === 0) {
+            reels = [
+                { positionNumber: 1, instagramReelUrl: 'https://www.instagram.com/reel/DaPG0H3R-Vq/' },
+                { positionNumber: 2, instagramReelUrl: 'https://www.instagram.com/reel/DbNJxA_Rq_5/' },
+                { positionNumber: 3, instagramReelUrl: 'https://www.instagram.com/reel/DbNKp4ERGes/' },
+                { positionNumber: 4, instagramReelUrl: 'https://www.instagram.com/reel/DbiWBTWRR6J/' },
+                { positionNumber: 5, instagramReelUrl: 'https://www.instagram.com/reel/DbNDvGvR5qo/' },
+                { positionNumber: 6, instagramReelUrl: 'https://www.instagram.com/reel/Da5MPlDTFou/' },
+                { positionNumber: 7, instagramReelUrl: 'https://www.instagram.com/reel/Da5MRQyzTJV/' }
+            ];
+        }
+
+        // Sort reels strictly by positionNumber ascending
+        reels.sort((a, b) => Number(a.positionNumber || 0) - Number(b.positionNumber || 0));
+
+        // Helper function to build clean, valid Instagram embed URL
+        function buildEmbedUrl(rawUrl) {
+            if (!rawUrl) return '';
+            let str = rawUrl.trim();
+
+            const match = str.match(/\/(reel|p|tv)\/([A-Za-z0-9_-]+)/i);
+            let code = '';
+            if (match && match[2]) {
+                code = match[2];
+            } else if (/^[A-Za-z0-9_-]+$/.test(str)) {
+                code = str;
+            }
+
+            if (code) {
+                return `https://www.instagram.com/p/${code}/embed/captioned/`;
+            }
+
+            if (str.includes('/embed')) {
+                return str;
+            }
+
+            str = str.split('?')[0];
+            if (!str.endsWith('/')) str += '/';
+            return str + 'embed/captioned/';
+        }
+
+        // Top 2 Reels (Position 1 and Position 2)
+        const top2Reels = reels.slice(0, 2);
+        let topHtml = '';
+        top2Reels.forEach((reel, idx) => {
+            const embedUrl = buildEmbedUrl(reel.instagramReelUrl);
+            topHtml += `
+                <div class="insta-embed-card white-card">
+                    <iframe src="${embedUrl}" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Featured Reel ${idx + 1}"></iframe>
+                </div>
+            `;
+        });
+        instaTopContainer.innerHTML = topHtml;
+
+        // Remaining Reels (Position 3, 4, 5, 6... and beyond)
+        const remainingReels = reels.slice(2);
+        let sliderHtml = '';
+        if (remainingReels.length > 0) {
+            remainingReels.forEach((reel, idx) => {
+                const embedUrl = buildEmbedUrl(reel.instagramReelUrl);
+                sliderHtml += `
+                    <div class="insta-slide-item">
+                        <div class="insta-embed-card white-card">
+                            <iframe src="${embedUrl}" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Recent Post ${idx + 3}"></iframe>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            // Show top reels in slider if total count <= 2
+            reels.forEach((reel, idx) => {
+                const embedUrl = buildEmbedUrl(reel.instagramReelUrl);
+                sliderHtml += `
+                    <div class="insta-slide-item">
+                        <div class="insta-embed-card white-card">
+                            <iframe src="${embedUrl}" class="instagram-media instagram-media-rendered insta-iframe" allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no" title="Reel Post ${idx + 1}"></iframe>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        instaSliderTrack.innerHTML = sliderHtml;
+
+        // Initialize slider scroll button handlers
+        initInstaSlider();
+    }
+
+    function initInstaSlider() {
+        const track = document.getElementById('instaSliderTrack');
+        const prevBtn = document.getElementById('instaPrevBtn');
+        const nextBtn = document.getElementById('instaNextBtn');
+        if (!track) return;
+
+        const cardWidth = 300;
+
+        if (cardWidth) {
+            if (prevBtn) {
+                prevBtn.onclick = () => {
+                    track.scrollBy({ left: -cardWidth * 2, behavior: 'smooth' });
+                };
+            }
+
+            if (nextBtn) {
+                nextBtn.onclick = () => {
+                    track.scrollBy({ left: cardWidth * 2, behavior: 'smooth' });
+                };
+            }
+        }
+    }
+
+    /* ==========================================================================
+       Bayu Seafood - Dynamic Voucher Campaign Data from PocketBase Database
+       Collection: WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_DATABASE
+       ========================================================================== */
+    let countdownIntervalId = null;
+    let fetchTimeoutId = null;
+
+    async function loadDynamicVoucherData() {
+        if (countdownIntervalId) {
+            clearInterval(countdownIntervalId);
+            countdownIntervalId = null;
+        }
+        if (fetchTimeoutId) {
+            clearTimeout(fetchTimeoutId);
+            fetchTimeoutId = null;
+        }
+
+        const VOUCHERS_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_DATABASE';
+        let allVouchers = [];
+
+        // DOM Wrappers
+        const loadingWrap = document.getElementById('campaignLoadingWrap');
+        const errorWrap = document.getElementById('campaignErrorWrap');
+        const activeWrap = document.getElementById('activeVoucherCampaignWrap');
+        const noActiveWrap = document.getElementById('noActiveCampaignWrap');
+        const sideBySideWrap = document.getElementById('sideBySideCampaignWrap');
+        const historyOnlyWrap = document.getElementById('historyOnlyCampaignWrap');
+
+        const sideHistoryList = document.getElementById('sideHistoryCardsList');
+        const sideUpcomingContainer = document.getElementById('sideUpcomingCardContainer');
+        const historyOnlyGrid = document.getElementById('historyOnlyCardsGrid');
+
+        // Show Loading Progress initially
+        if (loadingWrap) loadingWrap.style.display = 'block';
+        if (errorWrap) errorWrap.style.display = 'none';
+        if (activeWrap) activeWrap.style.display = 'none';
+        if (noActiveWrap) noActiveWrap.style.display = 'none';
+        if (sideBySideWrap) sideBySideWrap.style.display = 'none';
+        if (historyOnlyWrap) historyOnlyWrap.style.display = 'none';
+
+        let hasTimedOut = false;
+
+        // Set 30-second error timeout timer
+        fetchTimeoutId = setTimeout(() => {
+            hasTimedOut = true;
+            if (loadingWrap) loadingWrap.style.display = 'none';
+            if (activeWrap) activeWrap.style.display = 'none';
+            if (noActiveWrap) noActiveWrap.style.display = 'none';
+            if (sideBySideWrap) sideBySideWrap.style.display = 'none';
+            if (historyOnlyWrap) historyOnlyWrap.style.display = 'none';
+            if (errorWrap) errorWrap.style.display = 'block';
+        }, 30000);
+
+        // 1. Fetch from PocketBase Database
+        if (window.PocketBase) {
+            try {
+                const pb = new window.PocketBase('https://pocketbase2.venturerushtech.com');
+                const list = await pb.collection(VOUCHERS_COLLECTION).getFullList({
+                    sort: '-created'
+                });
+                if (list && list.length > 0) {
+                    allVouchers = list;
+                }
+            } catch (err) {
+                console.warn('PocketBase Vouchers fetch notice:', err);
+            }
+        }
+
+        // 2. Fallback to localStorage if offline or empty
+        if (allVouchers.length === 0) {
+            const localStr = localStorage.getItem('mfj_bayuseafood_db_vouchers');
+            if (localStr) {
+                try {
+                    allVouchers = JSON.parse(localStr);
+                } catch (e) {}
+            }
+        }
+
+        if (hasTimedOut) return;
+
+        // Clear 30-second error timeout timer since fetch completed
+        if (fetchTimeoutId) {
+            clearTimeout(fetchTimeoutId);
+            fetchTimeoutId = null;
+        }
+
+        // Hide loading progress animation
+        if (loadingWrap) loadingWrap.style.display = 'none';
+
+        function escapeHtmlText(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        const now = new Date();
+
+        const activeVouchers = [];
+        const upcomingVouchers = [];
+        const historyVouchers = [];
+
+        allVouchers.forEach(v => {
+            const isStatusTrue = v.voucherStatus === true || v.voucherStatus === 'true';
+            const startDate = v.voucherStartDate ? new Date(v.voucherStartDate) : null;
+            const endDate = v.voucherEndDate ? new Date(v.voucherEndDate) : null;
+
+            const isStartFuture = startDate && startDate > now;
+            const isEndPast = endDate && endDate < now;
+
+            if (isStatusTrue) {
+                if (isStartFuture) {
+                    upcomingVouchers.push(v);
+                } else if (isEndPast) {
+                    historyVouchers.push(v);
+                } else {
+                    activeVouchers.push(v);
+                }
+            } else {
+                // If voucherStatus = false, ONLY show in history if voucherEndDate has ALREADY passed (isEndPast)
+                // If voucherEndDate is not end yet, DO NOT show in history campaign
+                if (isEndPast) {
+                    historyVouchers.push(v);
+                }
+            }
+        });
+
+        // Sort historyVouchers strictly by voucherEndDate descending (latest end date first)
+        historyVouchers.sort((a, b) => {
+            const dateA = a.voucherEndDate ? new Date(a.voucherEndDate).getTime() : (a.created ? new Date(a.created).getTime() : 0);
+            const dateB = b.voucherEndDate ? new Date(b.voucherEndDate).getTime() : (b.created ? new Date(b.created).getTime() : 0);
+            return dateB - dateA;
+        });
+
+        // RULE 1: If there is an Active Campaign (voucherStatus = true & startDate <= now & endDate >= now)
+        if (activeVouchers.length > 0) {
+            // ONLY show the 1 active campaign! Do NOT show upcoming and history campaign!
+            if (activeWrap) activeWrap.style.display = 'grid';
+            if (noActiveWrap) noActiveWrap.style.display = 'none';
+            if (sideBySideWrap) sideBySideWrap.style.display = 'none';
+            if (historyOnlyWrap) historyOnlyWrap.style.display = 'none';
+
+            const v = activeVouchers[0];
+            populateActiveVoucherUI(v);
+            return;
+        }
+
+        // NO active campaign is live!
+        if (activeWrap) activeWrap.style.display = 'none';
+
+        // RULE 2 & 5: If got upcoming campaign (voucherStartDate > now & voucherStatus = true)
+        if (upcomingVouchers.length > 0) {
+            if (noActiveWrap) noActiveWrap.style.display = 'none';
+            if (historyOnlyWrap) historyOnlyWrap.style.display = 'none';
+            if (sideBySideWrap) sideBySideWrap.style.display = 'block';
+
+            // Pick ONLY 1 upcoming campaign—the one with voucherStartDate closest to now!
+            upcomingVouchers.sort((a, b) => {
+                const dateA = new Date(a.voucherStartDate).getTime();
+                const dateB = new Date(b.voucherStartDate).getTime();
+                return dateA - dateB;
+            });
+            const nearestUpcoming = upcomingVouchers[0];
+
+            // Render Right Column: Upcoming Campaign (70% space) with Countdown Timer
+            if (sideUpcomingContainer) {
+                const name = escapeHtmlText(nearestUpcoming.voucherName || 'Upcoming Dining Privilege');
+                const value = escapeHtmlText(nearestUpcoming.voucherValue || 'RM50');
+                const startDateObj = new Date(nearestUpcoming.voucherStartDate);
+                const startStr = startDateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                sideUpcomingContainer.innerHTML = `
+                    <div class="upcoming-feature-box">
+                        <div class="upcoming-feature-header">
+                            <span class="campaign-badge upcoming"><i class="fa-solid fa-clock"></i> UPCOMING CAMPAIGN</span>
+                            <span style="font-size: 0.85rem; color: #b45309; font-weight: 700;"><i class="fa-solid fa-calendar-day"></i> Launches ${startStr}</span>
+                        </div>
+                        <h4 class="upcoming-feature-title">${name}</h4>
+                        <div class="upcoming-feature-value">${value}</div>
+
+                        <!-- Live Countdown Timer Widget -->
+                        <div class="upcoming-countdown-widget">
+                            <span class="countdown-label"><i class="fa-solid fa-stopwatch gold-text"></i> Campaign Countdown Timer</span>
+                            <div class="countdown-timer-grid">
+                                <div class="timer-box">
+                                    <span class="timer-number" id="cdDays">00</span>
+                                    <span class="timer-unit">DAYS</span>
+                                </div>
+                                <div class="timer-colon">:</div>
+                                <div class="timer-box">
+                                    <span class="timer-number" id="cdHours">00</span>
+                                    <span class="timer-unit">HOURS</span>
+                                </div>
+                                <div class="timer-colon">:</div>
+                                <div class="timer-box">
+                                    <span class="timer-number" id="cdMins">00</span>
+                                    <span class="timer-unit">MINS</span>
+                                </div>
+                                <div class="timer-colon">:</div>
+                                <div class="timer-box">
+                                    <span class="timer-number" id="cdSecs">00</span>
+                                    <span class="timer-unit">SECS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Start Live Countdown Timer Interval
+                function updateCountdown() {
+                    const currentTime = new Date().getTime();
+                    const targetTime = startDateObj.getTime();
+                    const diff = targetTime - currentTime;
+
+                    if (diff <= 0) {
+                        if (countdownIntervalId) clearInterval(countdownIntervalId);
+                        loadDynamicVoucherData();
+                        return;
+                    }
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    const elDays = document.getElementById('cdDays');
+                    const elHours = document.getElementById('cdHours');
+                    const elMins = document.getElementById('cdMins');
+                    const elSecs = document.getElementById('cdSecs');
+
+                    if (elDays) elDays.textContent = String(days).padStart(2, '0');
+                    if (elHours) elHours.textContent = String(hours).padStart(2, '0');
+                    if (elMins) elMins.textContent = String(minutes).padStart(2, '0');
+                    if (elSecs) elSecs.textContent = String(seconds).padStart(2, '0');
+                }
+
+                updateCountdown();
+                countdownIntervalId = setInterval(updateCountdown, 1000);
+            }
+
+            // Render Left Column: History Campaign (30% space) - Top 3 Latest Only
+            if (sideHistoryList) {
+                if (historyVouchers.length > 0) {
+                    const top3History = historyVouchers.slice(0, 3);
+                    sideHistoryList.innerHTML = top3History.map(v => {
+                        const name = escapeHtmlText(v.voucherName || 'Concluded Campaign');
+                        const value = escapeHtmlText(v.voucherValue || 'RM50');
+                        const endStr = v.voucherEndDate ? new Date(v.voucherEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Concluded';
+                        return `
+                            <div class="history-item-mini-card">
+                                <h5 class="history-mini-name">${name}</h5>
+                                <div class="history-mini-bottom" style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 6px;">
+                                    <div class="history-mini-value">${value}</div>
+                                    <span class="history-mini-enddate" style="font-size: 0.75rem; color: #64748b; font-weight: 600;"><i class="fa-solid fa-calendar-xmark" style="font-size: 0.7rem; color: #94a3b8; margin-right: 3px;"></i> Ended ${endStr}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    sideHistoryList.innerHTML = `
+                        <div style="font-size: 0.85rem; color: #94a3b8; font-style: italic; text-align: center; padding: 20px 0;">
+                            No past campaigns recorded.
+                        </div>
+                    `;
+                }
+            }
+
+        } else {
+            // RULE 3: No Active Campaign AND No Upcoming Campaign exists
+            if (sideBySideWrap) sideBySideWrap.style.display = 'none';
+
+            // Show "Currently No Active Campaign" banner
+            if (noActiveWrap) noActiveWrap.style.display = 'block';
+
+            // Show History Campaign below if history exists - Top 3 Latest Only
+            if (historyVouchers.length > 0) {
+                if (historyOnlyWrap) historyOnlyWrap.style.display = 'block';
+                if (historyOnlyGrid) {
+                    const top3History = historyVouchers.slice(0, 3);
+                    historyOnlyGrid.innerHTML = top3History.map(v => {
+                        const name = escapeHtmlText(v.voucherName || 'Dining Campaign');
+                        const value = escapeHtmlText(v.voucherValue || 'RM50');
+                        const endStr = v.voucherEndDate ? new Date(v.voucherEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Concluded';
+                        return `
+                            <div class="campaign-item-card history-card">
+                                <div>
+                                    <div class="campaign-card-header">
+                                        <span class="campaign-badge history"><i class="fa-solid fa-box-archive"></i> Concluded</span>
+                                    </div>
+                                    <h4 class="campaign-card-name">${name}</h4>
+                                    <div class="campaign-card-value">${value}</div>
+                                </div>
+                                <div class="campaign-card-subtext" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <span><i class="fa-solid fa-circle-check"></i> Official Campaign Ended</span>
+                                    <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;"><i class="fa-solid fa-calendar-xmark" style="font-size: 0.72rem; color: #94a3b8; margin-right: 3px;"></i> Ended ${endStr}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } else {
+                if (historyOnlyWrap) historyOnlyWrap.style.display = 'none';
+            }
+        }
+
+        // Internal Helper Function to populate Active Voucher Banner UI
+        function populateActiveVoucherUI(v) {
+            let colorConfig = v.voucherColorConfig;
+            if (typeof colorConfig === 'string') {
+                try { colorConfig = JSON.parse(colorConfig); } catch (e) { colorConfig = null; }
+            }
+
+            function compileSegments(segments, defaultText) {
+                if (!segments || !Array.isArray(segments) || segments.length === 0) {
+                    return escapeHtmlText(defaultText || '');
+                }
+                return segments.map(seg => {
+                    const txt = escapeHtmlText(seg.text || '');
+                    if (seg.gradient) {
+                        return `<span style="background: ${seg.gradient}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; display: inline-block;">${txt}</span>`;
+                    } else if (seg.color) {
+                        return `<span style="color: ${seg.color};">${txt}</span>`;
+                    }
+                    return txt;
+                }).join(' ');
+            }
+
+            // Update voucherTitle
+            const elTitle = document.getElementById('dynVoucherTitle');
+            if (elTitle && (v.voucherTittle || v.title)) {
+                const rawTitle = v.voucherTittle || v.title;
+                if (colorConfig && colorConfig.voucherTitle && colorConfig.voucherTitle.length > 0) {
+                    elTitle.innerHTML = compileSegments(colorConfig.voucherTitle, rawTitle);
+                } else {
+                    elTitle.textContent = rawTitle;
+                }
+            }
+
+            // Update voucherDescription
+            const elDesc = document.getElementById('dynVoucherDescription');
+            if (elDesc && (v.voucherDescription || v.description)) {
+                const rawDesc = v.voucherDescription || v.description;
+                if (colorConfig && colorConfig.voucherDescription && colorConfig.voucherDescription.length > 0) {
+                    elDesc.innerHTML = compileSegments(colorConfig.voucherDescription, rawDesc);
+                } else {
+                    elDesc.textContent = rawDesc;
+                }
+            }
+
+            // Update voucherName
+            const elName = document.getElementById('dynVoucherName');
+            if (v.voucherName) {
+                activeVoucherNameText = v.voucherName;
+                if (elName) {
+                    if (colorConfig && colorConfig.voucherName && colorConfig.voucherName.length > 0) {
+                        elName.innerHTML = compileSegments(colorConfig.voucherName, v.voucherName);
+                    } else {
+                        elName.textContent = v.voucherName;
+                    }
+                }
+            }
+
+            if (v.voucherEndDate) {
+                const d = new Date(v.voucherEndDate);
+                if (!isNaN(d.getTime())) {
+                    activeVoucherEndDateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    activeVoucherRawEndDateIso = d.toISOString();
+                } else {
+                    activeVoucherEndDateStr = "";
+                    activeVoucherRawEndDateIso = "";
+                }
+            } else {
+                activeVoucherEndDateStr = "";
+                activeVoucherRawEndDateIso = "";
+            }
+
+            // Update voucherValue
+            const elValue = document.getElementById('dynVoucherValue');
+            const valText = v.voucherValue !== undefined ? String(v.voucherValue).trim() : 'RM50';
+            activeVoucherValText = valText;
+
+            if (elValue) {
+                const hasOffAlready = valText.toLowerCase().includes('off');
+
+                if (colorConfig && colorConfig.voucherValue && colorConfig.voucherValue.length > 0) {
+                    const segs = colorConfig.voucherValue;
+                    const lastSeg = segs[segs.length - 1];
+
+                    let offStyle = '';
+                    if (lastSeg && lastSeg.gradient) {
+                        offStyle = `style="background: ${lastSeg.gradient}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; display: inline-block;"`;
+                    } else if (lastSeg && lastSeg.color) {
+                        offStyle = `style="color: ${lastSeg.color};"`;
+                    }
+
+                    const offHtml = hasOffAlready ? '' : ` <span class="ticket-off-tag" ${offStyle}>OFF</span>`;
+                    elValue.innerHTML = compileSegments(segs, valText) + offHtml;
+                } else {
+                    if (hasOffAlready) {
+                        elValue.textContent = valText;
+                    } else {
+                        elValue.innerHTML = `${escapeHtmlText(valText)} <span class="ticket-off-tag">OFF</span>`;
+                    }
+                }
+            }
+
+            // Update Step 1 & Step 3 descriptions with active voucherValue
+            const step1 = document.getElementById('voucherStep1Desc');
+            if (step1) {
+                step1.textContent = `Fill in your Name & Phone number below to generate your personalized ${valText} PDF voucher and code.`;
+            }
+
+            const step3 = document.getElementById('voucherStep3Desc');
+            if (step3) {
+                step3.textContent = `Our Bayu Seafood staff will verify your voucher code so you can enjoy ${valText} off your total dining bill!`;
+            }
+
+            // Update Section Background (voucherBackground / voucherColorConfig.voucherBackground)
+            const sectionEl = document.getElementById('voucher-campaign') || document.getElementById('campaign');
+            if (sectionEl) {
+                let bgApplied = false;
+
+                if (v.voucherBackground) {
+                    let imgUrl = v.voucherBackground;
+                    if (typeof v.voucherBackground === 'string') {
+                        if (window.PocketBase && v.id && !v.id.startsWith('vouch_')) {
+                            const pb = new window.PocketBase('https://pocketbase2.venturerushtech.com');
+                            imgUrl = pb.getFileUrl(v, v.voucherBackground);
+                        }
+                        sectionEl.style.backgroundImage = `url('${imgUrl}')`;
+                        sectionEl.style.backgroundSize = 'cover';
+                        sectionEl.style.backgroundPosition = 'center center';
+                        sectionEl.style.backgroundRepeat = 'no-repeat';
+                        bgApplied = true;
+                    }
+                }
+
+                if (!bgApplied && colorConfig && colorConfig.voucherBackground) {
+                    const bgConf = colorConfig.voucherBackground;
+                    if (bgConf.type === 'gradient' && bgConf.gradient) {
+                        sectionEl.style.background = bgConf.gradient;
+                    } else if (bgConf.color) {
+                        sectionEl.style.background = bgConf.color;
+                    }
+                }
+            }
+
+            // Helper function to find element within active voucher campaign wrap
+            function getCampaignEl(selector) {
+                return document.querySelector('#activeVoucherCampaignWrap ' + selector) || document.querySelector('#voucher-campaign ' + selector) || document.querySelector('#campaign ' + selector);
+            }
+            function getCampaignEls(selector) {
+                const list0 = Array.from(document.querySelectorAll('#activeVoucherCampaignWrap ' + selector));
+                if (list0.length > 0) return list0;
+                const list1 = Array.from(document.querySelectorAll('#voucher-campaign ' + selector));
+                const list2 = Array.from(document.querySelectorAll('#campaign ' + selector));
+                return list1.length > 0 ? list1 : list2;
+            }
+
+            // Update Ticket Header Background (voucherColorConfig.voucherTicket)
+            if (colorConfig && colorConfig.voucherTicket) {
+                const tConf = colorConfig.voucherTicket;
+                const ticketHeader = getCampaignEl('.ticket-header');
+                if (ticketHeader) {
+                    if (tConf.type === 'gradient' && tConf.gradient) {
+                        ticketHeader.style.background = tConf.gradient;
+                    } else if (tConf.color) {
+                        ticketHeader.style.background = tConf.color;
+                    }
+                }
+            }
+
+            // Update Start Date & End Date
+            const expiryNotice = document.getElementById('voucherExpiryNotice');
+            if (expiryNotice && (v.voucherStartDate || v.voucherEndDate)) {
+                const startFormatted = v.voucherStartDate ? new Date(v.voucherStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A';
+                const endFormatted = v.voucherEndDate ? new Date(v.voucherEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A';
+                expiryNotice.innerHTML = `<i class="fa-solid fa-clock-rotate-left gold-text"></i> <span>Note: Voucher valid from <strong>${startFormatted}</strong> to <strong>${endFormatted}</strong>.</span>`;
+            }
+
+            // Lock Claim Check & Form Field Blur/Disable Handling
+            const isLocked = v.lockClaim === true || v.lockClaim === 'true';
+            const lockNoticeEl = document.getElementById('voucherLockClaimNotice');
+            const lockReasonTextEl = document.getElementById('voucherLockClaimReasonText');
+            const inputName = document.getElementById('voucherName');
+            const inputPhone = document.getElementById('voucherPhone');
+            const btnClaim = document.getElementById('btnClaimVoucher');
+
+            if (isLocked) {
+                const reasonText = v.lockClaimReason || 'Campaign Update in Progress...';
+                if (lockReasonTextEl) lockReasonTextEl.textContent = reasonText;
+                if (lockNoticeEl) lockNoticeEl.style.display = 'block';
+
+                if (inputName) {
+                    inputName.disabled = true;
+                    inputName.style.filter = 'blur(3px)';
+                    inputName.style.opacity = '0.5';
+                    inputName.style.cursor = 'not-allowed';
+                }
+                if (inputPhone) {
+                    inputPhone.disabled = true;
+                    inputPhone.style.filter = 'blur(3px)';
+                    inputPhone.style.opacity = '0.5';
+                    inputPhone.style.cursor = 'not-allowed';
+                }
+                if (btnClaim) {
+                    btnClaim.disabled = true;
+                    btnClaim.style.filter = 'blur(3px)';
+                    btnClaim.style.opacity = '0.5';
+                    btnClaim.style.cursor = 'not-allowed';
+                }
+            } else {
+                if (lockNoticeEl) lockNoticeEl.style.display = 'none';
+
+                if (inputName) {
+                    inputName.disabled = false;
+                    inputName.style.filter = 'none';
+                    inputName.style.opacity = '1';
+                    inputName.style.cursor = 'text';
+                }
+                if (inputPhone) {
+                    inputPhone.disabled = false;
+                    inputPhone.style.filter = 'none';
+                    inputPhone.style.opacity = '1';
+                    inputPhone.style.cursor = 'text';
+                }
+                if (btnClaim) {
+                    btnClaim.disabled = false;
+                    btnClaim.style.filter = 'none';
+                    btnClaim.style.opacity = '1';
+                    btnClaim.style.cursor = 'pointer';
+                }
+            }
+
+            // Update Voucher Theme Accent Color / Gradient (voucherColorConfig.voucherTheme)
+            if (colorConfig && colorConfig.voucherTheme) {
+                const theme = colorConfig.voucherTheme;
+                const themeColor = theme.color || '#d4af37';
+                const themeGradient = (theme.type === 'gradient' && theme.gradient) ? theme.gradient : null;
+
+                function applyThemeText(el) {
+                    if (!el) return;
+                    if (themeGradient) {
+                        el.style.background = themeGradient;
+                        el.style.webkitBackgroundClip = 'text';
+                        el.style.webkitTextFillColor = 'transparent';
+                        el.style.backgroundClip = 'text';
+                        el.style.display = 'inline-block';
+                    } else {
+                        el.style.background = 'none';
+                        el.style.webkitTextFillColor = 'initial';
+                        el.style.color = themeColor;
+                        el.style.setProperty('color', themeColor, 'important');
+                    }
+                }
+
+                function applyThemeBackground(el) {
+                    if (!el) return;
+                    if (themeGradient) {
+                        el.style.background = themeGradient;
+                    } else {
+                        el.style.background = themeColor;
+                    }
+                    el.style.color = '#ffffff';
+                }
+
+                function applyThemeBorder(el, borderWidth = '2px') {
+                    if (!el) return;
+                    if (themeGradient) {
+                        el.style.borderStyle = 'solid';
+                        el.style.borderWidth = borderWidth;
+                        el.style.borderColor = 'transparent';
+                        el.style.backgroundImage = `linear-gradient(#ffffff, #ffffff), ${themeGradient}`;
+                        el.style.backgroundOrigin = 'border-box';
+                        el.style.backgroundClip = 'padding-box, border-box';
+                    } else {
+                        el.style.borderStyle = 'solid';
+                        el.style.borderWidth = borderWidth;
+                        el.style.borderColor = themeColor;
+                        el.style.backgroundImage = 'none';
+                        el.style.backgroundClip = 'border-box';
+                    }
+                }
+
+                const subTitle = getCampaignEl('.section-subtitle');
+                applyThemeText(subTitle);
+                const subTitleIcon = getCampaignEl('.section-subtitle i');
+                applyThemeText(subTitleIcon);
+
+                const ticketTag = getCampaignEl('.ticket-tag');
+                applyThemeText(ticketTag);
+                const ticketTagIcon = getCampaignEl('.ticket-tag i');
+                applyThemeText(ticketTagIcon);
+
+                const stepsHeadingIcon = getCampaignEl('.voucher-steps-heading i');
+                applyThemeText(stepsHeadingIcon);
+
+                getCampaignEls('.step-badge').forEach(badge => {
+                    applyThemeBackground(badge);
+                });
+
+                const expiryIcon = getCampaignEl('.voucher-expiry-notice i');
+                applyThemeText(expiryIcon);
+
+                const btnClaim = document.getElementById('btnClaimVoucher');
+                applyThemeBackground(btnClaim);
+
+                document.querySelectorAll('#voucherClaimForm label i').forEach(icon => {
+                    applyThemeText(icon);
+                });
+
+                const ticketBody = getCampaignEl('.ticket-body');
+                applyThemeBorder(ticketBody, '2px');
+
+                const resId = document.getElementById('resVoucherId');
+                applyThemeText(resId);
+                const resExpiry = document.getElementById('resVoucherExpiry');
+                applyThemeText(resExpiry);
+
+                const btnRedownload = document.getElementById('btnRedownloadPdf');
+                if (btnRedownload) {
+                    applyThemeBorder(btnRedownload, '1px');
+                    applyThemeText(btnRedownload);
+                }
+            }
+        }
+    }
+
+    window.loadDynamicVoucherData = loadDynamicVoucherData;
+
+    loadDynamicInstagramReels();
+    loadDynamicVoucherData();
+
     initPanoramaGallery();
     initRoomVRController();
+});
+
+// Live Preview Sync Event Listener for Split Screen Mode
+window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'LIVE_VOUCHER_PREVIEW_UPDATE') {
+        const draft = event.data.voucherData;
+        if (draft && typeof loadDynamicVoucherData === 'function') {
+            loadDynamicVoucherData(draft);
+        }
+    }
 });
 
 
