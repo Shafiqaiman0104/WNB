@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MFJ GROUP | Management Dashboard &amp; Admin Portal</title>
+    <title>MFJ GROUP C&amp;CMS | Campaign &amp; Content Management System</title>
     <meta name="description"
-        content="MFJ GROUP Content Management System & Admin Portal featuring multi-device session management.">
+        content="MFJ GROUP Campaign & Content Management System & Admin Portal featuring multi-device session management.">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <!-- Google Fonts & FontAwesome -->
@@ -1004,13 +1004,25 @@
             background: rgba(254, 243, 199, 0.4) !important;
         }
 
-        /* Sub-Navigation Bar inside Bayu Seafood */
+        /* Sub-Navigation Bar inside Bayu Seafood & Staff Management */
         .bayu-subnav-bar {
             display: flex;
             gap: 10px;
             margin-bottom: 24px;
             border-bottom: 1px solid rgba(226, 232, 240, 0.9);
             padding-bottom: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            flex-wrap: nowrap;
+            touch-action: pan-x;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        .bayu-subnav-bar::-webkit-scrollbar {
+            display: none;
         }
 
         .subnav-tab-btn {
@@ -1027,6 +1039,9 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            user-select: none;
         }
 
         .subnav-tab-btn:hover {
@@ -1042,16 +1057,29 @@
             box-shadow: 0 4px 12px rgba(217, 119, 6, 0.12);
         }
 
-        /* Hamburger Toggle & Close Buttons */
-        .btn-hamburger {
-            display: none;
-        }
-
-        .btn-sidebar-close {
+        /* Mobile Top Bar Styles */
+        .mobile-top-bar {
             display: none;
         }
 
         .sidebar-backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 990;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-sidebar-close {
             display: none;
         }
 
@@ -1060,9 +1088,6 @@
         /* -------------------------------------------------------------------------- */
         @media (max-width: 900px) {
 
-            .btn-hamburger,
-            .btn-sidebar-close,
-            .sidebar-backdrop,
             .cms-header {
                 display: none !important;
             }
@@ -1074,84 +1099,152 @@
                 min-height: 100vh;
             }
 
-            .cms-main-wrapper {
+            /* Sticky Mobile Top Header Bar: (Logo) MFJ GROUP C&CMS + Hamburger Icon */
+            .mobile-top-bar {
                 display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-                min-height: 100vh !important;
-            }
-
-            /* Mobile Top Navigation Bar with Logo + Title + Navigation Pills */
-            .cms-sidebar {
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px) saturate(180%);
+                border-bottom: 1px solid rgba(226, 232, 240, 0.9);
                 position: sticky;
                 top: 0;
                 left: 0;
                 right: 0;
                 width: 100%;
-                height: auto;
-                min-height: auto;
-                transform: none !important;
                 z-index: 900;
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                overflow-x: auto !important;
-                -webkit-overflow-scrolling: touch;
-                padding: 10px 14px !important;
-                gap: 8px !important;
-                background: rgba(255, 255, 255, 0.96) !important;
-                backdrop-filter: blur(20px) saturate(180%);
-                border-right: none !important;
-                border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
                 box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
             }
 
-            /* Compact Brand Header on Mobile Top Navbar */
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .mobile-brand-logo {
+                width: 34px;
+                height: 34px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 1.5px solid var(--cms-gold);
+                box-shadow: 0 0 10px var(--cms-gold-glow);
+            }
+
+            .mobile-brand-title {
+                font-family: 'Outfit', sans-serif;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: 0.5px;
+            }
+
+            .mobile-hamburger-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                background: rgba(241, 245, 249, 0.9);
+                border: 1px solid rgba(203, 213, 225, 0.9);
+                color: #0f172a;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .mobile-hamburger-btn:active {
+                background: #e2e8f0;
+                transform: scale(0.95);
+            }
+
+            /* Off-Canvas Sidebar Drawer Overlay */
+            .cms-sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 290px !important;
+                max-width: 85vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                background: #ffffff !important;
+                z-index: 1000 !important;
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15) !important;
+                overflow-y: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                padding: 20px 16px !important;
+                border-right: 1px solid rgba(226, 232, 240, 0.9) !important;
+            }
+
+            .cms-sidebar.mobile-open {
+                transform: translateX(0) !important;
+            }
+
             .sidebar-brand-header {
                 display: flex !important;
-                flex-direction: row !important;
                 align-items: center !important;
-                gap: 8px !important;
-                margin-bottom: 0 !important;
-                padding: 0 12px 0 0 !important;
-                border-bottom: none !important;
-                border-right: 1px solid rgba(226, 232, 240, 0.8) !important;
-                flex-shrink: 0 !important;
+                justify-content: space-between !important;
+                margin-bottom: 20px !important;
+                padding-bottom: 16px !important;
+                border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
             }
 
             .sidebar-brand-logo {
-                width: 36px !important;
-                height: 36px !important;
-                margin-bottom: 0 !important;
-                border-width: 1.5px !important;
+                width: 42px !important;
+                height: 42px !important;
             }
 
             .sidebar-brand-text h2 {
-                font-size: 0.95rem !important;
-                white-space: nowrap !important;
-                margin-bottom: 0 !important;
+                font-size: 1.15rem !important;
             }
 
             .sidebar-brand-text span.brand-subtitle {
-                display: none !important;
+                display: block !important;
+                font-size: 0.75rem !important;
+            }
+
+            .btn-sidebar-close {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: rgba(241, 245, 249, 0.95);
+                border: 1px solid rgba(203, 213, 225, 0.9);
+                color: #64748b;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                z-index: 10;
+            }
+
+            .btn-sidebar-close:hover {
+                color: #dc2626;
+                background: rgba(254, 226, 226, 0.9);
+                border-color: rgba(239, 68, 68, 0.4);
             }
 
             .sidebar-menu-btn {
-                white-space: nowrap !important;
-                flex-shrink: 0 !important;
-                padding: 8px 14px !important;
-                font-size: 0.84rem !important;
-                font-weight: 600 !important;
-                border-radius: 20px !important;
+                width: 100% !important;
+                border-radius: 12px !important;
+                padding: 11px 16px !important;
+                font-size: 0.9rem !important;
+                margin-bottom: 4px !important;
             }
 
             .sidebar-logout-wrap {
-                margin-top: 0 !important;
-                padding-top: 0 !important;
-                border-top: none !important;
-                margin-left: auto !important;
-                flex-shrink: 0 !important;
+                margin-top: auto !important;
+                padding-top: 16px !important;
+                border-top: 1px solid rgba(226, 232, 240, 0.9) !important;
             }
 
             .btn-sidebar-logout-style {
@@ -1282,8 +1375,8 @@
             <div class="login-card">
                 <div class="login-brand-header">
                     <img src="mfjLogo.png" alt="MFJ GROUP Logo" class="login-logo">
-                    <h2 class="login-title">MFJ GROUP CMS</h2>
-                    <p class="login-subtitle">Content Management System</p>
+                    <h2 class="login-title">MFJ GROUP C&amp;CMS</h2>
+                    <p class="login-subtitle">Campaign &amp; Content Management System</p>
                 </div>
 
                 <!-- Alert Message Banner -->
@@ -1321,19 +1414,36 @@
         <!-- ==================================================================== -->
         <div id="dashboardView" class="dashboard-view-container" style="display: none;">
 
-            <!-- Sidebar Navigation (Full Height Top-to-Bottom on PC, Top Bar on Mobile) -->
+            <!-- Mobile Off-Canvas Sidebar Backdrop -->
+            <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+            <!-- Mobile Top Header Bar (Logo + Title + Hamburger Icon) -->
+            <div class="mobile-top-bar">
+                <div class="mobile-brand">
+                    <img src="mfjLogo.png" alt="MFJ GROUP Logo" class="mobile-brand-logo">
+                    <span class="mobile-brand-title">MFJ GROUP C&amp;CMS</span>
+                </div>
+                <button type="button" id="btnToggleMobileSidebar" class="mobile-hamburger-btn" aria-label="Toggle Sidebar Navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Sidebar Navigation (Full Height on PC, Drawer Overlay on Mobile) -->
             <aside class="cms-sidebar">
-                <!-- Sidebar Top Brand Header (Big Centered Logo on PC, Compact Brand on Mobile) -->
+                <!-- Sidebar Top Brand Header -->
                 <div class="sidebar-brand-header">
                     <img src="mfjLogo.png" alt="MFJ GROUP Logo" class="sidebar-brand-logo">
                     <div class="sidebar-brand-text">
-                        <h2>MFJ GROUP CMS</h2>
-                        <span class="brand-subtitle">Content Management System</span>
+                        <h2>MFJ GROUP C&amp;CMS</h2>
+                        <span class="brand-subtitle">Campaign &amp; Content Management System</span>
                         <div class="sidebar-welcome-text"
                             style="font-size: 0.82rem; font-weight: 700; color: #d97706; margin-top: 3px; white-space: nowrap;">
                             Welcome <span id="sidebarUserName" style="display: inline;">Staff Member</span>!!
                         </div>
                     </div>
+                    <button type="button" id="btnCloseMobileSidebar" class="btn-sidebar-close" aria-label="Close Sidebar Navigation">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
 
                 <a href="#overview" class="sidebar-menu-btn active" data-tab="tabOverview" style="display: none;">
@@ -1382,8 +1492,8 @@
                     <div class="cms-header-brand">
                         <img src="mfjLogo.png" alt="MFJ GROUP Logo" class="cms-header-logo">
                         <div class="cms-header-title-wrap">
-                            <h1>MFJ GROUP CMS</h1>
-                            <span>MFJ GROUP Content Management System</span>
+                            <h1>MFJ GROUP C&amp;CMS</h1>
+                            <span>MFJ GROUP Campaign &amp; Content Management System</span>
                         </div>
                     </div>
 
@@ -1436,14 +1546,14 @@
 
                                     <!-- Custom Date Picker Range -->
                                     <div id="overviewDashCustomDateWrap"
-                                        style="display: none; align-items: center; gap: 8px;">
+                                        style="display: none; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 6px; max-width: 100%;">
                                         <input type="date" id="overviewDashStartDate" class="cms-input-field"
-                                            style="padding: 6px 10px; font-size: 0.82rem; width: 140px;">
+                                            style="padding: 6px 10px; font-size: 0.82rem; flex: 1 1 120px; max-width: 145px; min-width: 110px;">
                                         <span style="font-size: 0.8rem; font-weight: 600; color: #64748b;">to</span>
                                         <input type="date" id="overviewDashEndDate" class="cms-input-field"
-                                            style="padding: 6px 10px; font-size: 0.82rem; width: 140px;">
+                                            style="padding: 6px 10px; font-size: 0.82rem; flex: 1 1 120px; max-width: 145px; min-width: 110px;">
                                         <button type="button" id="btnApplyOverviewDashCustomDate"
-                                            class="btn-action-gold" style="padding: 6px 12px; font-size: 0.78rem;">
+                                            class="btn-action-gold" style="padding: 7px 14px; font-size: 0.78rem; flex-shrink: 0;">
                                             <i class="fa-solid fa-filter"></i> Apply
                                         </button>
                                     </div>
@@ -1620,6 +1730,21 @@
 
                     <!-- TAB 4: BAYU SEAFOOD WEBSITE CONTENT MANAGEMENT -->
                     <section id="tabBayuSeafood" class="tab-section">
+                        <!-- Website Tab Header Title -->
+                        <div class="cms-panel"
+                            style="margin-bottom: 18px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <img src="bayu-logo.jpg" alt="BAYU SEAFOOD Logo"
+                                    style="width: 44px; height: 44px; object-fit: cover; border-radius: 50%; border: 2px solid #d97706; box-shadow: 0 0 12px rgba(217, 119, 6, 0.25);">
+                                <div>
+                                    <h1
+                                        style="font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 800; color: #0f172a; letter-spacing: 0.5px; margin: 0; line-height: 1.2;">
+                                        BAYU SEAFOOD</h1>
+                                    <span style="font-size: 0.82rem; color: #64748b; font-weight: 500;">Website Content &amp; Campaign Management</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Sub Navigation Pills -->
                         <div class="bayu-subnav-bar">
                             <button type="button" class="subnav-tab-btn active" data-subtab="subtabBayuDashboard">
@@ -1678,14 +1803,14 @@
 
                                         <!-- Custom Date Picker Range -->
                                         <div id="bayuDashCustomDateWrap"
-                                            style="display: none; align-items: center; gap: 8px;">
+                                            style="display: none; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 6px; max-width: 100%;">
                                             <input type="date" id="bayuDashStartDate" class="cms-input-field"
-                                                style="padding: 6px 10px; font-size: 0.82rem; width: 140px;">
+                                                style="padding: 6px 10px; font-size: 0.82rem; flex: 1 1 120px; max-width: 145px; min-width: 110px;">
                                             <span style="font-size: 0.8rem; font-weight: 600; color: #64748b;">to</span>
                                             <input type="date" id="bayuDashEndDate" class="cms-input-field"
-                                                style="padding: 6px 10px; font-size: 0.82rem; width: 140px;">
+                                                style="padding: 6px 10px; font-size: 0.82rem; flex: 1 1 120px; max-width: 145px; min-width: 110px;">
                                             <button type="button" id="btnApplyBayuDashCustomDate"
-                                                class="btn-action-gold" style="padding: 6px 12px; font-size: 0.78rem;">
+                                                class="btn-action-gold" style="padding: 7px 14px; font-size: 0.78rem; flex-shrink: 0;">
                                                 <i class="fa-solid fa-filter"></i> Apply
                                             </button>
                                         </div>
@@ -1995,6 +2120,21 @@
 
                     <!-- TAB 5: WNB AQUASPORT -->
                     <section id="tabAquasport" class="tab-section">
+                        <!-- Website Tab Header Title -->
+                        <div class="cms-panel"
+                            style="margin-bottom: 18px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <img src="aquaLogo.webp" alt="WNB AQUASPORT Logo"
+                                    style="width: 44px; height: 44px; object-fit: contain; border-radius: 50%; border: 2px solid #d97706; box-shadow: 0 0 12px rgba(217, 119, 6, 0.25);">
+                                <div>
+                                    <h1
+                                        style="font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 800; color: #0f172a; letter-spacing: 0.5px; margin: 0; line-height: 1.2;">
+                                        WNB AQUASPORT</h1>
+                                    <span style="font-size: 0.82rem; color: #64748b; font-weight: 500;">Website Content &amp; Campaign Management</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="cms-panel" style="padding: 70px 24px; text-align: center; border-radius: 20px;">
                             <img src="aquaLogo.webp" alt="WNB AQUASPORT Logo"
                                 style="width: 110px; height: 110px; object-fit: contain; border-radius: 22px; box-shadow: 0 10px 28px rgba(0,0,0,0.12); margin-bottom: 24px; border: 2px solid #f59e0b;">
@@ -2015,6 +2155,21 @@
 
                     <!-- TAB 6: WNB RIPPLEBAY -->
                     <section id="tabRipplebay" class="tab-section">
+                        <!-- Website Tab Header Title -->
+                        <div class="cms-panel"
+                            style="margin-bottom: 18px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <img src="rippleLogo.webp" alt="WNB RIPPLEBAY Logo"
+                                    style="width: 44px; height: 44px; object-fit: contain; border-radius: 50%; border: 2px solid #d97706; box-shadow: 0 0 12px rgba(217, 119, 6, 0.25);">
+                                <div>
+                                    <h1
+                                        style="font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 800; color: #0f172a; letter-spacing: 0.5px; margin: 0; line-height: 1.2;">
+                                        WNB RIPPLEBAY</h1>
+                                    <span style="font-size: 0.82rem; color: #64748b; font-weight: 500;">Website Content &amp; Campaign Management</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="cms-panel" style="padding: 70px 24px; text-align: center; border-radius: 20px;">
                             <img src="rippleLogo.webp" alt="WNB RIPPLEBAY Logo"
                                 style="width: 110px; height: 110px; object-fit: contain; border-radius: 22px; box-shadow: 0 10px 28px rgba(0,0,0,0.12); margin-bottom: 24px; border: 2px solid #f59e0b;">
@@ -2035,6 +2190,21 @@
 
                     <!-- TAB 7: WNB LAKESIDE -->
                     <section id="tabLakeside" class="tab-section">
+                        <!-- Website Tab Header Title -->
+                        <div class="cms-panel"
+                            style="margin-bottom: 18px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <img src="lakesideLogo.png" alt="WNB LAKESIDE Logo"
+                                    style="width: 44px; height: 44px; object-fit: contain; border-radius: 50%; border: 2px solid #d97706; box-shadow: 0 0 12px rgba(217, 119, 6, 0.25);">
+                                <div>
+                                    <h1
+                                        style="font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 800; color: #0f172a; letter-spacing: 0.5px; margin: 0; line-height: 1.2;">
+                                        WNB LAKESIDE</h1>
+                                    <span style="font-size: 0.82rem; color: #64748b; font-weight: 500;">Website Content &amp; Campaign Management</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="cms-panel" style="padding: 70px 24px; text-align: center; border-radius: 20px;">
                             <img src="lakesideLogo.png" alt="WNB LAKESIDE Logo"
                                 style="width: 110px; height: 110px; object-fit: contain; border-radius: 22px; box-shadow: 0 10px 28px rgba(0,0,0,0.12); margin-bottom: 24px; border: 2px solid #f59e0b;">
@@ -2525,8 +2695,7 @@
 
                 <div style="display: flex; gap: 12px;">
                     <div class="input-group-cms" style="flex: 2;">
-                        <label for="newVoucherValue"><i class="fa-solid fa-coins"></i> Voucher Value (e.g. RM50 or
-                            10%)</label>
+                        <label for="newVoucherValue"><i class="fa-solid fa-coins"></i> Voucher Value</label>
                         <input type="text" id="newVoucherValue" class="cms-input-field" placeholder="e.g. RM50 or 10%"
                             required>
                     </div>
@@ -2540,16 +2709,14 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 12px;">
-                    <div class="input-group-cms" style="flex: 1;">
-                        <label for="newVoucherStartDate"><i class="fa-solid fa-calendar-day"></i> Start Date</label>
-                        <input type="datetime-local" id="newVoucherStartDate" class="cms-input-field" required>
-                    </div>
+                <div class="input-group-cms">
+                    <label for="newVoucherStartDate"><i class="fa-solid fa-calendar-day"></i> Start Date</label>
+                    <input type="datetime-local" id="newVoucherStartDate" class="cms-input-field" required>
+                </div>
 
-                    <div class="input-group-cms" style="flex: 1;">
-                        <label for="newVoucherEndDate"><i class="fa-solid fa-calendar-xmark"></i> End Date</label>
-                        <input type="datetime-local" id="newVoucherEndDate" class="cms-input-field" required>
-                    </div>
+                <div class="input-group-cms">
+                    <label for="newVoucherEndDate"><i class="fa-solid fa-calendar-xmark"></i> End Date</label>
+                    <input type="datetime-local" id="newVoucherEndDate" class="cms-input-field" required>
                 </div>
 
                 <div style="display: flex; gap: 12px;">
@@ -2662,8 +2829,7 @@
 
                 <div style="display: flex; gap: 12px;">
                     <div class="input-group-cms" style="flex: 2;">
-                        <label for="editVoucherValue"><i class="fa-solid fa-coins"></i> Voucher Value (e.g. RM50 or
-                            10%)</label>
+                        <label for="editVoucherValue"><i class="fa-solid fa-coins"></i> Voucher Value</label>
                         <input type="text" id="editVoucherValue" class="cms-input-field" placeholder="e.g. RM50 or 10%"
                             required>
                     </div>
@@ -2677,16 +2843,14 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 12px;">
-                    <div class="input-group-cms" style="flex: 1;">
-                        <label for="editVoucherStartDate"><i class="fa-solid fa-calendar-day"></i> Start Date</label>
-                        <input type="datetime-local" id="editVoucherStartDate" class="cms-input-field" required>
-                    </div>
+                <div class="input-group-cms">
+                    <label for="editVoucherStartDate"><i class="fa-solid fa-calendar-day"></i> Start Date</label>
+                    <input type="datetime-local" id="editVoucherStartDate" class="cms-input-field" required>
+                </div>
 
-                    <div class="input-group-cms" style="flex: 1;">
-                        <label for="editVoucherEndDate"><i class="fa-solid fa-calendar-xmark"></i> End Date</label>
-                        <input type="datetime-local" id="editVoucherEndDate" class="cms-input-field" required>
-                    </div>
+                <div class="input-group-cms">
+                    <label for="editVoucherEndDate"><i class="fa-solid fa-calendar-xmark"></i> End Date</label>
+                    <input type="datetime-local" id="editVoucherEndDate" class="cms-input-field" required>
                 </div>
 
                 <div style="display: flex; gap: 12px;">
@@ -3544,17 +3708,34 @@
                     const userRoleName = (currentUser.role || '').trim().toLowerCase();
                     const matchedRole = (loadedRoles || []).find(r => (r.roleName || '').trim().toLowerCase() === userRoleName);
 
+                    let allowedTabs = [];
                     if (matchedRole && matchedRole.canAccess) {
-                        const allowedTabs = matchedRole.canAccess.split(',').map(s => s.trim());
-                        const isAllowed = allowedTabs.includes(targetTabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
-                        if (!isAllowed) {
-                            console.warn('Strict role access restricted for tab:', targetTabId);
+                        allowedTabs = matchedRole.canAccess.split(',').map(s => s.trim()).filter(Boolean);
+                    } else if (!loadedRoles || loadedRoles.length === 0) {
+                        allowedTabs = ['tabOverview', 'tabUsers', 'tabBayuSeafood', 'tabAquasport', 'tabRipplebay', 'tabLakeside'];
+                    }
+
+                    const isAllowed = allowedTabs.includes(targetTabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
+
+                    if (!isAllowed) {
+                        console.warn('Strict role access restricted for tab:', targetTabId);
+                        // Jump directly to the first allowed tab for this staff account
+                        const sidebarBtns = document.querySelectorAll('.sidebar-menu-btn[data-tab]');
+                        let firstAllowedTab = null;
+                        sidebarBtns.forEach(btn => {
+                            const tid = btn.getAttribute('data-tab');
+                            if (tid && (allowedTabs.includes(tid) || allowedTabs.includes('all') || allowedTabs.includes('*'))) {
+                                if (!firstAllowedTab) firstAllowedTab = tid;
+                            }
+                        });
+
+                        if (firstAllowedTab && firstAllowedTab !== targetTabId) {
+                            targetTabId = firstAllowedTab;
+                        } else if (!firstAllowedTab) {
+                            document.querySelectorAll('.sidebar-menu-btn[data-tab]').forEach(b => b.classList.remove('active'));
+                            document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
                             return;
                         }
-                    } else {
-                        // Strict Block: If role permissions are unverified or missing, block navigation immediately
-                        console.warn('Strict role check blocked navigation for unverified role:', userRoleName);
-                        return;
                     }
                 }
 
@@ -3591,13 +3772,37 @@
                 if (localRolesStr) {
                     try { loadedRoles = JSON.parse(localRolesStr); } catch (e) { }
                 }
+
+                // Determine default tab for this staff member based on role permissions
+                const userRoleName = (currentUser?.role || '').trim().toLowerCase();
+                const matchedRole = (loadedRoles || []).find(r => (r.roleName || '').trim().toLowerCase() === userRoleName);
+                let allowedTabs = matchedRole && matchedRole.canAccess ? matchedRole.canAccess.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+                if (allowedTabs.length === 0 && (!loadedRoles || loadedRoles.length === 0)) {
+                    allowedTabs = ['tabOverview', 'tabUsers', 'tabBayuSeafood', 'tabAquasport', 'tabRipplebay', 'tabLakeside'];
+                }
+
+                let initialTab = 'tabOverview';
+                if (!allowedTabs.includes('tabOverview') && !allowedTabs.includes('all') && !allowedTabs.includes('*')) {
+                    const sidebarBtns = document.querySelectorAll('.sidebar-menu-btn[data-tab]');
+                    let firstAllowed = null;
+                    sidebarBtns.forEach(btn => {
+                        const tid = btn.getAttribute('data-tab');
+                        if (tid && (allowedTabs.includes(tid) || allowedTabs.includes('all') || allowedTabs.includes('*'))) {
+                            if (!firstAllowed) firstAllowed = tid;
+                        }
+                    });
+                    if (firstAllowed) {
+                        initialTab = firstAllowed;
+                    }
+                }
+
                 applyRolePermissions();
 
                 loginView.style.display = 'none';
                 dashboardView.style.display = 'flex';
 
-                // Default view to Overview Dashboard section on login
-                switchToTab('tabOverview');
+                switchToTab(initialTab);
 
                 // Ensure currentDeviceId is set for this browser
                 if (!currentDeviceId) {
@@ -3728,6 +3933,10 @@
                 localStorage.removeItem('bayu_cms_user');
                 currentUser = null;
 
+                // Reset active tab states on logout so previous session active tab does not leak
+                document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.sidebar-menu-btn').forEach(b => b.classList.remove('active'));
+
                 dashboardView.style.display = 'none';
                 loginView.style.display = 'flex';
                 showLoginAlert('Logged out successfully.', true);
@@ -3791,6 +4000,86 @@
                     closeMobileSidebar();
                 });
             });
+
+            // Initialize Mobile Touch Swipe Gesture Support for Subnav Tabs (Left / Right Swipe)
+            function initTouchSwipeSubtabs() {
+                // 1. BAYU SEAFOOD Tab Subtabs
+                const bayuSection = document.getElementById('tabBayuSeafood');
+                if (bayuSection) {
+                    addSwipeGestureHandler(bayuSection, () => {
+                        navigateSubtab('next', '.subnav-tab-btn[data-subtab]');
+                    }, () => {
+                        navigateSubtab('prev', '.subnav-tab-btn[data-subtab]');
+                    });
+                }
+
+                // 2. Staff Management Tab Subtabs
+                const staffSection = document.getElementById('tabUsers');
+                if (staffSection) {
+                    addSwipeGestureHandler(staffSection, () => {
+                        navigateSubtab('next', '.subnav-tab-btn[data-staffsubtab]');
+                    }, () => {
+                        navigateSubtab('prev', '.subnav-tab-btn[data-staffsubtab]');
+                    });
+                }
+            }
+
+            function navigateSubtab(direction, selector) {
+                const visibleBtns = Array.from(document.querySelectorAll(selector))
+                    .filter(b => b.style.display !== 'none');
+                if (visibleBtns.length <= 1) return;
+
+                const currentIndex = visibleBtns.findIndex(b => b.classList.contains('active'));
+                if (currentIndex === -1) return;
+
+                let targetIndex = currentIndex;
+                if (direction === 'next' && currentIndex < visibleBtns.length - 1) {
+                    targetIndex = currentIndex + 1;
+                } else if (direction === 'prev' && currentIndex > 0) {
+                    targetIndex = currentIndex - 1;
+                }
+
+                if (targetIndex !== currentIndex) {
+                    const targetBtn = visibleBtns[targetIndex];
+                    targetBtn.click();
+                    targetBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }
+
+            function addSwipeGestureHandler(containerEl, onSwipeLeft, onSwipeRight) {
+                let startX = 0;
+                let startY = 0;
+                let startTime = 0;
+
+                containerEl.addEventListener('touchstart', (e) => {
+                    if (e.touches.length !== 1) return;
+                    if (e.target.closest('table, input, select, textarea, button, .cms-table, .reels-drag-handle')) return;
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                    startTime = Date.now();
+                }, { passive: true });
+
+                containerEl.addEventListener('touchend', (e) => {
+                    if (!startX || !startY) return;
+                    const touch = e.changedTouches[0];
+                    const deltaX = touch.clientX - startX;
+                    const deltaY = touch.clientY - startY;
+                    const duration = Date.now() - startTime;
+
+                    startX = 0;
+                    startY = 0;
+
+                    if (duration < 500 && Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+                        if (deltaX < 0) {
+                            onSwipeLeft();
+                        } else {
+                            onSwipeRight();
+                        }
+                    }
+                }, { passive: true });
+            }
+
+            initTouchSwipeSubtabs();
 
             // Track current loaded users array for edit modal lookup (declared at top of script scope)
 
@@ -4081,7 +4370,13 @@
                 staffSubnavBtns.forEach(btn => {
                     btn.addEventListener('click', () => {
                         const targetId = btn.getAttribute('data-staffsubtab');
-                        staffSubnavBtns.forEach(b => b.classList.toggle('active', b === btn));
+                        staffSubnavBtns.forEach(b => {
+                            const isActive = (b === btn);
+                            b.classList.toggle('active', isActive);
+                            if (isActive) {
+                                b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                            }
+                        });
                         staffSubtabs.forEach(s => {
                             if (s.id === targetId) {
                                 s.style.display = 'block';
@@ -4093,47 +4388,86 @@
                 });
             }
 
-            // Apply Role Permissions to Sidebar Nav Tabs
+            // Apply Role Permissions to Sidebar Nav Tabs & Subtabs
             function applyRolePermissions() {
-                if (!currentUser || !currentUser.role) return;
+                if (!currentUser) return;
 
-                const userRoleName = (currentUser.role || '').trim().toLowerCase();
-                const matchedRole = loadedRoles.find(r => (r.roleName || '').trim().toLowerCase() === userRoleName);
-
-                let allowedTabs = [];
-                if (matchedRole && matchedRole.canAccess) {
-                    allowedTabs = matchedRole.canAccess.split(',').map(s => s.trim()).filter(Boolean);
-                } else if (loadedRoles.length === 0) {
-                    allowedTabs = ['tabOverview', 'tabUsers', 'tabBayuSeafood'];
-                } else {
-                    allowedTabs = [];
+                if (!loadedRoles || loadedRoles.length === 0) {
+                    const localRolesStr = localStorage.getItem('mfj_role_permissions');
+                    if (localRolesStr) {
+                        try { loadedRoles = JSON.parse(localRolesStr); } catch (e) { }
+                    }
                 }
 
+                const userRoleName = (currentUser.role || '').trim().toLowerCase();
+                const matchedRole = (loadedRoles || []).find(r => (r.roleName || '').trim().toLowerCase() === userRoleName);
+                let allowedTabs = matchedRole && matchedRole.canAccess ? matchedRole.canAccess.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+                if (allowedTabs.length === 0 && (!loadedRoles || loadedRoles.length === 0)) {
+                    allowedTabs = ['tabOverview', 'tabUsers', 'tabBayuSeafood', 'tabAquasport', 'tabRipplebay', 'tabLakeside'];
+                }
+
+                // 1. Sidebar menu buttons permissions
                 const sidebarBtns = document.querySelectorAll('.sidebar-menu-btn[data-tab]');
                 let firstAllowedTab = null;
 
                 sidebarBtns.forEach(btn => {
-                    const tabId = btn.getAttribute('data-tab');
-                    if (tabId) {
-                        const isAllowed = allowedTabs.includes(tabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
+                    const targetTabId = btn.getAttribute('data-tab');
+                    if (targetTabId) {
+                        const isAllowed = allowedTabs.includes(targetTabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
                         if (isAllowed) {
                             btn.style.display = 'flex';
-                            if (!firstAllowedTab) firstAllowedTab = tabId;
+                            if (!firstAllowedTab) firstAllowedTab = targetTabId;
                         } else {
                             btn.style.display = 'none';
                         }
                     }
                 });
 
-                // Check active section visibility
+                // 2. Check active main tab section visibility & jump to first allowed tab if current active section is hidden/restricted
                 const activeSection = document.querySelector('.tab-section.active');
                 if (activeSection) {
                     const activeTabId = activeSection.id;
-                    const activeBtn = document.querySelector(`.sidebar-menu-btn[data-tab="${activeTabId}"]`);
-                    if (activeBtn && activeBtn.style.display === 'none') {
+                    const isCurrentTabAllowed = allowedTabs.includes(activeTabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
+                    if (!isCurrentTabAllowed) {
                         if (firstAllowedTab) {
                             switchToTab(firstAllowedTab);
+                            return;
                         }
+                    }
+                } else if (firstAllowedTab) {
+                    switchToTab(firstAllowedTab);
+                    return;
+                }
+
+                // 3. Subnav tab buttons permissions (Bayu Seafood subtabs)
+                const subnavBtns = document.querySelectorAll('.subnav-tab-btn[data-subtab]');
+                subnavBtns.forEach(btn => {
+                    const targetSubtabId = btn.getAttribute('data-subtab');
+                    const isAllowed = allowedTabs.includes(targetSubtabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
+                    btn.style.display = isAllowed ? 'inline-flex' : 'none';
+                });
+
+                // 4. Handle Bayu Seafood subtab visibility & section activation
+                const visibleSubnavBtns = Array.from(subnavBtns).filter(b => b.style.display !== 'none');
+                const noAccessBanner = document.getElementById('bayuNoAccessBanner');
+                const subtabSections = document.querySelectorAll('.subtab-section');
+
+                if (visibleSubnavBtns.length === 0) {
+                    if (noAccessBanner) noAccessBanner.style.display = 'block';
+                    subtabSections.forEach(sec => sec.style.display = 'none');
+                    subnavBtns.forEach(b => b.classList.remove('active'));
+                } else {
+                    if (noAccessBanner) noAccessBanner.style.display = 'none';
+
+                    let targetSubnavBtn = visibleSubnavBtns.find(b => b.classList.contains('active'));
+                    if (!targetSubnavBtn) {
+                        targetSubnavBtn = visibleSubnavBtns[0];
+                    }
+
+                    if (targetSubnavBtn) {
+                        const targetSubtabId = targetSubnavBtn.getAttribute('data-subtab');
+                        activateBayuSubtab(targetSubtabId);
                     }
                 }
             }
@@ -4241,53 +4575,7 @@
                 populateStaffRoleDropdowns();
             }
 
-            function applyRolePermissions() {
-                if (!currentUser) return;
-                const userRoleName = (currentUser.role || '').trim().toLowerCase();
-                const matchedRole = (loadedRoles || []).find(r => (r.roleName || '').trim().toLowerCase() === userRoleName);
-                const allowedTabs = matchedRole && matchedRole.canAccess ? matchedRole.canAccess.split(',').map(s => s.trim()) : [];
-
-                // 1. Sidebar menu buttons permissions
-                const sidebarBtns = document.querySelectorAll('.sidebar-menu-btn[data-tab]');
-                sidebarBtns.forEach(btn => {
-                    const targetTabId = btn.getAttribute('data-tab');
-                    const isAllowed = allowedTabs.includes(targetTabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
-                    btn.style.display = isAllowed ? 'flex' : 'none';
-                });
-
-                // 2. Subnav tab buttons permissions (Bayu Seafood subtabs)
-                const subnavBtns = document.querySelectorAll('.subnav-tab-btn[data-subtab]');
-                subnavBtns.forEach(btn => {
-                    const targetSubtabId = btn.getAttribute('data-subtab');
-                    const isAllowed = allowedTabs.includes(targetSubtabId) || allowedTabs.includes('all') || allowedTabs.includes('*');
-                    btn.style.display = isAllowed ? 'inline-flex' : 'none';
-                });
-
-                // 3. Handle Bayu Seafood subtab visibility & section activation
-                const visibleSubnavBtns = Array.from(subnavBtns).filter(b => b.style.display !== 'none');
-                const noAccessBanner = document.getElementById('bayuNoAccessBanner');
-                const subtabSections = document.querySelectorAll('.subtab-section');
-
-                if (visibleSubnavBtns.length === 0) {
-                    // Role has no subtab access under Bayu Seafood -> Show Access Restricted banner & hide all subtabs
-                    if (noAccessBanner) noAccessBanner.style.display = 'block';
-                    subtabSections.forEach(sec => sec.style.display = 'none');
-                    subnavBtns.forEach(b => b.classList.remove('active'));
-                } else {
-                    if (noAccessBanner) noAccessBanner.style.display = 'none';
-
-                    // Find active allowed subnav button or default to first allowed visible button
-                    let targetSubnavBtn = visibleSubnavBtns.find(b => b.classList.contains('active'));
-                    if (!targetSubnavBtn) {
-                        targetSubnavBtn = visibleSubnavBtns[0];
-                    }
-
-                    if (targetSubnavBtn) {
-                        const targetSubtabId = targetSubnavBtn.getAttribute('data-subtab');
-                        activateBayuSubtab(targetSubtabId);
-                    }
-                }
-            }
+            // (Note: applyRolePermissions is defined above as a unified permissions handler)
 
             // Refresh Roles Button
             const btnRefreshRoles = document.getElementById('btnRefreshRoles');
@@ -5493,6 +5781,7 @@
                 subnavBtns.forEach(b => {
                     if (b.getAttribute('data-subtab') === targetSubtab) {
                         b.classList.add('active');
+                        b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                     } else {
                         b.classList.remove('active');
                     }
