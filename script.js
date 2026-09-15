@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
             messageText += `\nPlease confirm the availability of our table. Thank you!`;
 
             const encodedText = encodeURIComponent(messageText);
-            const waNumber = '60177347030';
+            const waNumber = '60136117030';
             const waUrl = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodedText}`;
 
             window.open(waUrl, '_blank');
@@ -2289,7 +2289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setFontSize(7.5);
         doc.setTextColor(100, 116, 139);
         doc.text("Bayu Seafood Lakeside Dining • Bukit Aman, Tasik Perdana, KL", 74, 188, { align: "center" });
-        doc.text("Reservations / WhatsApp Inquiry: +60 17-734 7030", 74, 193, { align: "center" });
+        doc.text("Reservations / WhatsApp Inquiry: +60 13-611 7030", 74, 193, { align: "center" });
 
         doc.save('Bayu_Seafood_Voucher_' + voucherId + '.pdf');
 
@@ -2404,7 +2404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `📱 Phone Number: ${phone}\n` +
                     `📅 Valid Until: ${expiryDateStr}\n\n` +
                     `I am attaching my PDF voucher here for verification. Please verify my voucher code! Thank you!`;
-                const waUrl = `https://api.whatsapp.com/send?phone=60177347030&text=${encodeURIComponent(waMsg)}`;
+                const waUrl = `https://api.whatsapp.com/send?phone=60136117030&text=${encodeURIComponent(waMsg)}`;
                 btnWhatsappVoucher.setAttribute('href', waUrl);
             }
 
