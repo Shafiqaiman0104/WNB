@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const carouselTrackWrapper = document.getElementById('carouselTrackWrapper');
 
     if (carouselContainer && carouselSlides.length > 0) {
-        let currentIndex = 1; // Start with the second image (index 1: Siakap Sambal Petai) as active
+        let currentIndex = 1; // Start with the second image (index 1: Garlic Butter Boston Lobster) as active
         let isTransitioning = false;
 
         // Set initial state class on load
@@ -529,8 +529,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'crab',
             title: 'Alaskan King Crab',
             desc: "The king of crabs. Sweet, succulent, and incredibly meaty. Perfect when wok-tossed in our signature Singapore Chili Sauce or Creamy Salted Egg.",
-            img: 'lc1.png',
-            bgImg: 'https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/singaporean-style-chilli-crab/main-header.jpg',
+            img: 'image/lc1.png',
+            bgImg: 'image/liveCatchMudCrab.png',
             dropdownVal: 'Live Alaskan King Crab',
             badge: 'Chef\'s Pick'
         },
@@ -538,8 +538,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'lobster',
             title: 'Boston Lobster',
             desc: 'Cold-water North Atlantic lobsters with plump claws and rich meat. Sublime when garlic-butter baked or topped with herb cheese.',
-            img: 'lc2.png',
-            bgImg: 'https://seafooddishrecipes.com/wp-content/uploads/2025/07/garlic-butter-lobster.webp',
+            img: 'image/lc2.png',
+            bgImg: 'image/liveCatchLobster.png',
             dropdownVal: 'Live Boston Lobster',
             badge: 'Premium Selection'
         },
@@ -547,8 +547,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'prawns',
             title: 'Tiger Prawns',
             desc: 'Large-sized local prawns featuring a firm texture and natural sweetness. Best enjoyed cooked Kam Heong style or signature Dry Butter.',
-            img: 'lc3.png',
-            bgImg: 'https://static.vecteezy.com/system/resources/previews/042/370/075/large_2x/top-view-of-kam-heong-prawns-on-white-plate-delicious-asian-food-concept-photo.jpg',
+            img: 'image/lc3.png',
+            bgImg: 'image/liveCatchButterPrawn.png',
             dropdownVal: 'Live Tiger Prawns',
             badge: 'Fresh Harvest'
         }
@@ -891,6 +891,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             });
+
+            // Weekend Event Poster Lightbox Modal Click
+            const tarianPosterCard = document.getElementById('tarianPosterCard');
+            if (tarianPosterCard && certModal && certModalImg) {
+                tarianPosterCard.addEventListener('click', () => {
+                    certModalImg.src = 'image/tarianTradisional.jpeg';
+                    if (certModalTitle) certModalTitle.textContent = 'Weekend Event: Tarian Tradisional';
+                    certModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            // Group Set Poster Lightbox Modal Click
+            const btnViewGroupSetPoster = document.getElementById('btnViewGroupSetPoster');
+            if (btnViewGroupSetPoster && certModal && certModalImg) {
+                btnViewGroupSetPoster.addEventListener('click', () => {
+                    certModalImg.src = 'image/groupSet.jpeg';
+                    if (certModalTitle) certModalTitle.textContent = 'Family / Group Packages: Group Set Menu';
+                    certModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
 
             // Achievement Modal System
             const achievementBtn = document.getElementById('achievementBtn');
@@ -1304,15 +1326,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!wrapper || !track) return;
 
         const galleryData = [
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkL5B8pFaXACIElitVZeU5PvxDqopfILrH6y8Io-ZMAjXq-6FXquW6TmV3xO4mTUDj_xdhX1nq83wLRVyvZ6lyy6olqvQeKqcTLSnFIOpTEbsU6r8OSsX-1PesNdddKSTM-l_j_eUAU4ww=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm4N3JkhY6e6vzJUcq3S5Hxll5kiIQDoEEfRpfRifoRhWBv2fZZG5uL8HqYCQonFsCbRS5ulcg_XAUGxtlp_FjG7wwJODeWK_us3JxSN65yP-7Wh-Ysktnk2EX0yoXbZIakPuwq1ad29ARX=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnuGWG7dsPuiHVgSJm92p4rop1wYBOJJOh0Hv326jraVb0JegddiY6Dr_Mpw4deZcE3OnjEQwkl5lyUi4gNpYzsdBcbOz8G4Xsb8YTO4otrApUCOob2tc-dWygjNAsZNfTwRloRIQYPpPE=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlm2FB4z-GeYgihKDQ_5muCyUZR6bNqnqIA26GoQBWjegAp2DS27wvo7M8UPnag7mPv4o1YV71URjY3soOnK3UTl3heIOv6JWH-4OMr04-HzjbeRWSHiU3CJduJlkwCAt88Oo8ln0csYIoH=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnKju6v9qLbYoaGHcFIjS3N3IQvwQBxfpiaCcgzknAG0EINwopC0FTtJGXkRLH9vGwY7ScfAjhCh4MOCjuBuazymIQmM081VDN2haUaZXVyJTyu24xvHgSipY64r8Qzs__unNB9ncsNHVwX=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnoYKZ98XqGIJzWPN0DczFVZw3e_pfbmQehjMIhaCAt52AwbQWSiPGIUO0p5x9YBwu3jXBpEmtdEjQAsW_SBTb5oyMzhOqGe6gtXYSq7nx23OF-lm7dDXmtPXffx6c4bnFr5346KT7lrrPm=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn9AnMu3oAEjVMTUWSZcQz7X5tvkVM6-Av_dzqYmm5kCLNiwbXeCCe5EbcRDFbiybl4k5ZaUGEbw64-ShpC47CocSRIwlPEsaG9g_fFvIKs6tLM6QloxMbOfeJ35levRzWWL1yBLvAtTXE=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkGL3OKUXpSOQ8vd3YwxsI8Io2E_XskKZB_syrYd5QgFNIz5bj9fqguU3QyxdBkCv-7H-dHnNFa2j9Y0ZiJx_VU4X9W7ZPshUQUYT3rceBk8BBmEd-ruQqBwTGLy4AfQs-Y0Ic9yCvUCGFi=s1360-w1360-h1020-rw" },
-            { url: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWklCGaHNG4xX2Vtn4yzz1FoSzjdVEhey96UH_dDsly1U3qpm3m5L17NAqwGRXjIi_bLahQX0e3LXIBXAbNrW0OauxkdqCE3GO64RPAN4WdiTtio8VZGuE-YuwZBa5fjLrw3P14sDa9Qnw0=s1360-w1360-h1020-rw" }
+            { url: "image/g1.JPG", title: "Bayu Seafood Dining Setup" },
+            { url: "image/g2.JPG", title: "Bayu Seafood Lakeside View" },
+            { url: "image/g3.JPG", title: "Bayu Seafood Live Aquarium Tank" },
+            { url: "image/g4.JPG", title: "Bayu Seafood Master Culinary Catch" },
+            { url: "image/g5.JPG", title: "Bayu Seafood Table Ambiance" },
+            { url: "image/g6.JPG", title: "Bayu Seafood Banquet Setup" },
+            { url: "image/g7.JPG", title: "Bayu Seafood Evening Splendor" },
+            { url: "image/g8.JPG", title: "Bayu Seafood Private Gathering" },
+            { url: "image/g9.JPG", title: "Bayu Seafood Lake Ambiance" },
+            { url: "image/g10.JPG", title: "Bayu Seafood Luxury Dining" },
+            { url: "image/g11.JPG", title: "Bayu Seafood Gourmet Presentation" },
+            { url: "image/g12.JPG", title: "Bayu Seafood Interior Architecture" },
+            { url: "image/g13.JPG", title: "Bayu Seafood VIP Suite" },
+            { url: "image/g14.JPG", title: "Bayu Seafood Outdoor View" },
+            { url: "image/g15.JPG", title: "Bayu Seafood Special Occasion" },
+            { url: "image/g16.JPG", title: "Bayu Seafood Exclusive Pavilion" },
+            { url: "image/g17.JPG", title: "Bayu Seafood Fine Dining Experience" },
+            { url: "image/g18.JPG", title: "Bayu Seafood Atmosphere" },
+            { url: "image/g19.JPG", title: "Bayu Seafood Scenic Waters" },
+            { url: "image/g20.JPG", title: "Bayu Seafood Signature Celebration" }
         ];
 
         let items = [];
@@ -1572,14 +1605,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const roomData = {
             private: {
                 title: '360° VR View: Private Room',
-                img: 'panorama1.jpg',
-                layoutImg: '3dprivateroom.png',
+                img: 'image/panoramaPrivateRoom.jpg',
+                layoutImg: 'image/privateRoom1.JPG',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Private Room</strong> (Up to 18 Pax, TV screen & Mic provided).'
             },
             ballroom: {
                 title: '360° VR View: Ballroom',
-                img: 'panorama2.jpg',
-                layoutImg: '3dballroom.png',
+                img: 'image/panoramaBallRoom.jpg',
+                layoutImg: 'image/ballRoom1.JPG',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Ballroom</strong> (40–80 Pax, Stage & Split Dining).'
             },
             surau: {
@@ -1596,8 +1629,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             lounge: {
                 title: '360° VR View: Lounge',
-                img: 'panorama5.jpg',
-                layoutImg: '3dlounge.png',
+                img: 'image/panoramaLuxuryLounge.jpg',
+                layoutImg: 'image/luxuryLounge.JPG',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Lounge</strong> (Plush Seating for Pre-Dinner & Social Relaxation).'
             }
         };
@@ -1941,7 +1974,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.classList.add('active');
                     btn.innerHTML = '<i class="fa-solid fa-images"></i> View Photos';
 
-                    const imgPath = roomData[roomTarget] ? roomData[roomTarget].img : 'panorama1.jpg';
+                    const imgPath = roomData[roomTarget] ? roomData[roomTarget].img : 'image/panoramaPrivateRoom.jpg';
 
                     if (!cardVrInstances[roomTarget]) {
                         cardVrInstances[roomTarget] = createInlineCardVR(vrContainer, imgPath);
@@ -2139,7 +2172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnClaim.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating PDF Voucher...';
         }
 
-        const logoUrl = 'bayu-logo.jpg';
+        const logoUrl = 'image/bayu-logo.jpg';
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(voucherId)}&size=150x150`;
 
         const [logoBase64, qrBase64] = await Promise.all([
@@ -2181,8 +2214,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         doc.setTextColor(180, 83, 9); // Gold Accent
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.5);
-        doc.text("PREMIUM HALAL LAKESIDE DINING & EVENTS", headerTextLeft, 27, { align: "center" });
+        doc.setFontSize(8);
+        doc.text("PREMIUM HALAL LIVE SEAFOOD, CHINESE CUISINE & EVENTS", headerTextLeft, 27, { align: "center" });
 
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.5);
@@ -2279,7 +2312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setFont('helvetica', 'normal');
         doc.text(`1. Fill details & generate your unique ${activeVoucherValText} PDF Voucher.`, 16, 153);
         doc.text("2. WhatsApp this PDF voucher or Voucher Code to Bayu Seafood staff.", 16, 161);
-        doc.text(`3. Our staff will verify your code to deduct ${activeVoucherValText} off your total bill.`, 16, 169);
+        doc.text(`3. Our staff will verify your code to deduct ${activeVoucherValText} off.`, 16, 169);
 
         // 6. Footer
         doc.setDrawColor(226, 232, 240);
@@ -2994,7 +3027,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const step3 = document.getElementById('voucherStep3Desc');
             if (step3) {
-                step3.textContent = `Our Bayu Seafood staff will verify your voucher code so you can enjoy ${valText} off your total dining bill!`;
+                step3.textContent = `Our Bayu Seafood staff will verify your voucher code so you can enjoy ${valText} off!`;
             }
 
             // Update Section Background (voucherBackground / voucherColorConfig.voucherBackground)
