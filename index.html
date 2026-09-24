@@ -270,6 +270,38 @@
             </div>
         </section>
 
+        <!-- Special Voucher Promo Banner Section (70% Image | 30% Claim Voucher) -->
+        <section class="voucher-promo-banner-section" id="voucher-banner" style="display: none;">
+            <div class="container">
+                <div class="voucher-promo-card-wrap scroll-reveal scroll-reveal-left">
+                    <div class="voucher-promo-card">
+                        <!-- Left: 70% Voucher Image -->
+                        <div class="voucher-promo-img-col">
+                            <a href="#campaign" class="voucher-promo-img-link" title="Click to claim voucher">
+                                <img src="" alt="Bayu Seafood Voucher Banner" class="voucher-promo-img" id="dynPromoBannerImg" loading="lazy">
+                            </a>
+                        </div>
+
+                        <!-- Right: 30% Claim Voucher Content -->
+                        <div class="voucher-promo-content-col">
+                            <span class="voucher-promo-badge">
+                                <i class="fa-solid fa-gift"></i> Exclusive Reward
+                            </span>
+                            <h3 class="voucher-promo-title">Claim Voucher Now!!</h3>
+                            <p class="voucher-promo-desc">
+                                Enjoy special campaign reward at Bayu Seafood. Click below to claim your voucher. Terms &amp; Conditions apply.
+                            </p>
+                            <a href="#campaign" class="btn btn-primary voucher-promo-btn" id="btnBannerClaimDiscount">
+                                <i class="fa-solid fa-ticket"></i>
+                                <span>Claim Voucher Now</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Live Aquariums Section -->
         <section class="section section-darker" id="aquariums">
             <div class="container">
@@ -1314,6 +1346,17 @@
                             exclusive RM50 instant discount on your total bill at Bayu Seafood. Fill in your details
                             below to instantly generate and download your official personalized PDF voucher.</p>
 
+                        <!-- Terms & Conditions Container (Fetched from PocketBase voucherTerms & styled with voucherColorConfig) -->
+                        <div id="dynVoucherTermsWrap" class="voucher-terms-wrap" style="display: none;">
+                            <div class="voucher-terms-title">
+                                <i class="fa-solid fa-file-contract"></i>
+                                <span>Terms &amp; Conditions</span>
+                            </div>
+                            <ul id="dynVoucherTermsList" class="voucher-terms-list">
+                                <!-- Populated dynamically from PocketBase voucherTerms -->
+                            </ul>
+                        </div>
+
                         <!-- Step-by-Step Usage Guide -->
                         <div class="voucher-steps-wrap">
                             <h4 class="voucher-steps-heading"><i class="fa-solid fa-list-check gold-text"></i> How To
@@ -1769,7 +1812,7 @@
             <div class="panorama-wrapper scroll-reveal" id="panoramaWrapper">
                 <!-- The image scrolling strip -->
                 <div class="panorama-track" id="panoramaTrack">
-                    <!-- Images injected by JS -->
+                    <!-- Images dynamically loaded from PocketBase (WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE) arranged by positionNumber -->
                 </div>
 
                 <!-- TOP ARCH: Overlaps the top of the images -->
