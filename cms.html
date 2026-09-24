@@ -1767,6 +1767,9 @@
                             <button type="button" class="subnav-tab-btn" data-subtab="subtabVoucherClaims">
                                 <i class="fa-solid fa-clipboard-check gold-text"></i> Voucher Claim
                             </button>
+                            <button type="button" class="subnav-tab-btn" data-subtab="subtabGalleryManagement">
+                                <i class="fa-solid fa-images gold-text"></i> Gallery Management
+                            </button>
                         </div>
 
                         <!-- No Permission Banner (Shown when role has no subtab access) -->
@@ -2124,6 +2127,74 @@
                             </div>
                         </div>
 
+                        <!-- SUBTAB 4: GALLERY MANAGEMENT (PocketBase: WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE) -->
+                        <div id="subtabGalleryManagement" class="subtab-section" style="display: none;">
+                            <!-- Stat Summary Card -->
+                            <div class="stats-cards-grid" style="margin-bottom: 20px;">
+                                <div class="stat-card">
+                                    <div class="stat-info-wrap">
+                                        <h3>Total Gallery Images</h3>
+                                        <div class="stat-number" id="statGalleryTotalCount">0</div>
+                                        <div class="stat-subtext"><i class="fa-solid fa-images"></i> Active Website Gallery Visuals</div>
+                                    </div>
+                                    <div class="stat-icon-box"><i class="fa-solid fa-images"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Gallery Panel -->
+                            <div class="cms-panel">
+                                <div class="panel-header" style="flex-wrap: wrap; gap: 12px;">
+                                    <div class="panel-title">
+                                        <i class="fa-solid fa-images gold-text"></i> Gallery Management Database
+                                        <span style="font-size: 0.78rem; color: #64748b; font-weight: 500; margin-left: 6px;"><i
+                                                class="fa-solid fa-up-down-left-right"></i> Drag rows to re-order
+                                            positions</span>
+                                    </div>
+                                    <div class="panel-actions" style="display: flex; gap: 8px; align-items: center;">
+                                        <button type="button" id="btnRefreshGallery" class="btn-action-outline">
+                                            <i class="fa-solid fa-rotate-right"></i> Refresh
+                                        </button>
+                                        <button type="button" id="btnOpenAddGalleryModal" class="btn-action-gold">
+                                            <i class="fa-solid fa-plus"></i> Add Gallery Image
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="galleryReorderToast" class="login-alert-msg success"
+                                    style="display: none; margin-bottom: 16px; padding: 10px 14px; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-circle-check"></i> <span>Gallery image positions updated &amp; saved to
+                                        database!</span>
+                                </div>
+
+                                <div style="margin-bottom: 16px; position: relative;">
+                                    <i class="fa-solid fa-magnifying-glass"
+                                        style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.88rem; pointer-events: none;"></i>
+                                    <input type="text" id="searchGallery" class="cms-input-field"
+                                        placeholder="Search by position or filename..."
+                                        style="width: 100%; padding: 10px 14px 10px 38px; font-size: 0.88rem; border-radius: 12px;">
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="cms-table" id="galleryDragTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 44px; text-align: center;"><i
+                                                        class="fa-solid fa-up-down-left-right"
+                                                        title="Drag to reorder"></i></th>
+                                                <th style="width: 120px;">POSITION</th>
+                                                <th>IMAGE</th>
+                                                <th style="width: 200px;">CREATED AT</th>
+                                                <th style="width: 160px; text-align: center;">ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="galleryDbTableBody">
+                                            <!-- Loaded dynamically from WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
                     </section>
 
                     <!-- TAB 5: WNB AQUASPORT -->
@@ -2420,6 +2491,12 @@
                                         </label>
                                     </div>
                                 </div>
+                                <label
+                                    style="font-size: 0.84rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #334155;">
+                                    <input type="checkbox" class="add-role-access-cb" value="subtabGalleryManagement"
+                                        checked style="width: 16px; height: 16px; accent-color: var(--cms-gold);">
+                                    <i class="fa-solid fa-images gold-text"></i> Gallery Management
+                                </label>
                             </div>
                         </div>
                         <label
@@ -2542,6 +2619,13 @@
                                         </label>
                                     </div>
                                 </div>
+                                <label
+                                    style="font-size: 0.84rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #334155;">
+                                    <input type="checkbox" id="editCbSubtabGalleryManagement" class="edit-role-access-cb"
+                                        value="subtabGalleryManagement"
+                                        style="width: 16px; height: 16px; accent-color: var(--cms-gold);">
+                                    <i class="fa-solid fa-images gold-text"></i> Gallery Management
+                                </label>
                             </div>
                         </div>
                         <label
@@ -2701,6 +2785,26 @@
                         placeholder="e.g. Applicable for live lobster and crab orders above RM200." required></textarea>
                 </div>
 
+                <div class="input-group-cms">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                        <label style="margin-bottom: 0;"><i class="fa-solid fa-file-contract"></i> Voucher T&amp;C</label>
+                        <button type="button" class="btn-action-gold" style="padding: 3px 8px; font-size: 0.75rem; border-radius: 6px;" onclick="addVoucherTermRow('add')">
+                            <i class="fa-solid fa-plus"></i> Add T&amp;C
+                        </button>
+                    </div>
+                    <div id="addVoucherTermsContainer" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="voucher-term-row" style="display: flex; gap: 8px; align-items: center;">
+                            <input type="text" class="cms-input-field voucher-term-input" placeholder="e.g. Valid for dine-in only" style="flex: 1;" oninput="handleVoucherTermInputChange('add')">
+                            <button type="button" title="Add field below" class="btn-action-gold btn-add-term" style="width: 36px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem;" onclick="insertVoucherTermRowBelow(this, 'add')">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                            <button type="button" title="Delete field" class="btn-action-outline btn-remove-term" style="width: 36px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem; color: #dc2626; border-color: rgba(220,38,38,0.3);" onclick="removeVoucherTermRow(this, 'add')">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div style="display: flex; gap: 12px;">
                     <div class="input-group-cms" style="flex: 2;">
                         <label for="newVoucherValue"><i class="fa-solid fa-coins"></i> Voucher Value</label>
@@ -2751,6 +2855,11 @@
                 <div class="input-group-cms">
                     <label for="newVoucherBackground"><i class="fa-solid fa-image"></i> Voucher Background Image</label>
                     <input type="file" id="newVoucherBackground" class="cms-input-field" accept="image/*">
+                </div>
+
+                <div class="input-group-cms">
+                    <label for="newVoucherBanner"><i class="fa-solid fa-panorama"></i> Voucher Banner Image</label>
+                    <input type="file" id="newVoucherBanner" class="cms-input-field" accept="image/*">
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -2835,6 +2944,26 @@
                         style="height: 70px; resize: vertical;" required></textarea>
                 </div>
 
+                <div class="input-group-cms">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                        <label style="margin-bottom: 0;"><i class="fa-solid fa-file-contract"></i> Voucher T&amp;C</label>
+                        <button type="button" class="btn-action-gold" style="padding: 3px 8px; font-size: 0.75rem; border-radius: 6px;" onclick="addVoucherTermRow('edit')">
+                            <i class="fa-solid fa-plus"></i> Add T&amp;C
+                        </button>
+                    </div>
+                    <div id="editVoucherTermsContainer" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="voucher-term-row" style="display: flex; gap: 8px; align-items: center;">
+                            <input type="text" class="cms-input-field voucher-term-input" placeholder="e.g. Valid for dine-in only" style="flex: 1;" oninput="handleVoucherTermInputChange('edit')">
+                            <button type="button" title="Add field below" class="btn-action-gold btn-add-term" style="width: 36px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem;" onclick="insertVoucherTermRowBelow(this, 'edit')">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                            <button type="button" title="Delete field" class="btn-action-outline btn-remove-term" style="width: 36px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem; color: #dc2626; border-color: rgba(220,38,38,0.3);" onclick="removeVoucherTermRow(this, 'edit')">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div style="display: flex; gap: 12px;">
                     <div class="input-group-cms" style="flex: 2;">
                         <label for="editVoucherValue"><i class="fa-solid fa-coins"></i> Voucher Value</label>
@@ -2916,6 +3045,39 @@
                     <input type="file" id="editVoucherBackground" class="cms-input-field" accept="image/*">
                 </div>
 
+                <div class="input-group-cms">
+                    <label for="editVoucherBanner"><i class="fa-solid fa-panorama"></i> Voucher Banner Image</label>
+
+                    <!-- Existing Attached Banner Image Wrap -->
+                    <div id="editVoucherCurrentBannerWrap"
+                        style="display: none; margin-bottom: 8px; padding: 10px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img id="editVoucherCurrentBannerImg" src="" alt="Current Banner"
+                                style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1;">
+                            <div>
+                                <div style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Attached Banner Image</div>
+                                <div id="editVoucherCurrentBannerName"
+                                    style="font-size: 0.72rem; color: #64748b; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    filename.png</div>
+                            </div>
+                        </div>
+                        <button type="button" id="btnRemoveEditVoucherBanner" onclick="toggleRemoveEditVoucherBanner()"
+                            style="font-size: 0.75rem; padding: 5px 10px; border-radius: 8px; background: #ef4444; color: #ffffff; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-trash-can"></i> Remove Image
+                        </button>
+                    </div>
+
+                    <!-- Removal Notice Badge -->
+                    <div id="editVoucherBannerRemovedBadge"
+                        style="display: none; margin-bottom: 8px; padding: 8px 12px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; font-size: 0.75rem; color: #991b1b; align-items: center; justify-content: space-between;">
+                        <span><i class="fa-solid fa-triangle-exclamation"></i> Banner image will be removed upon saving.</span>
+                        <button type="button" onclick="toggleRemoveEditVoucherBanner()"
+                            style="font-size: 0.72rem; padding: 2px 8px; background: #ffffff; border: 1px solid #fca5a5; border-radius: 6px; color: #991b1b; cursor: pointer; font-weight: 700;">Undo</button>
+                    </div>
+
+                    <input type="file" id="editVoucherBanner" class="cms-input-field" accept="image/*">
+                </div>
+
                 <!-- ========================================================== -->
                 <!-- TEXT COLOR CUSTOMIZATION SECTION                            -->
                 <!-- ========================================================== -->
@@ -2946,6 +3108,10 @@
                         <button type="button" class="color-tab-btn" data-target="voucherDescription"
                             style="flex: 1; padding: 7px 8px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s;">
                             <i class="fa-solid fa-align-left" style="color: #d97706;"></i> Description
+                        </button>
+                        <button type="button" class="color-tab-btn" data-target="voucherTerms"
+                            style="flex: 1; padding: 7px 8px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s;">
+                            <i class="fa-solid fa-file-contract" style="color: #d97706;"></i> T&amp;C
                         </button>
                         <button type="button" class="color-tab-btn" data-target="voucherValue"
                             style="flex: 1; padding: 7px 8px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s;">
@@ -2990,6 +3156,12 @@
 
                     <div id="colorPanel_voucherDescription" class="color-target-panel" style="display: none;">
                         <div class="interactive-text-box" id="interactiveBox_voucherDescription"
+                            style="padding: 12px; background: #1e293b; border-radius: 10px; color: #ffffff; min-height: 48px; font-size: 0.9rem; line-height: 1.6; border: 1px solid #334155; user-select: text; cursor: text;">
+                        </div>
+                    </div>
+
+                    <div id="colorPanel_voucherTerms" class="color-target-panel" style="display: none;">
+                        <div class="interactive-text-box" id="interactiveBox_voucherTerms"
                             style="padding: 12px; background: #1e293b; border-radius: 10px; color: #ffffff; min-height: 48px; font-size: 0.9rem; line-height: 1.6; border: 1px solid #334155; user-select: text; cursor: text;">
                         </div>
                     </div>
@@ -3488,6 +3660,85 @@
     </div>
 
     <!-- ==================================================================== -->
+    <!-- MODAL: ADD GALLERY IMAGE (WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE)  -->
+    <!-- ==================================================================== -->
+    <div id="addGalleryModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 520px;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-images gold-text"></i> Add Gallery Image</h3>
+                <button type="button" class="btn-modal-close" data-close-modal="addGalleryModal">&times;</button>
+            </div>
+            <form id="addGalleryForm" class="login-form">
+                <div class="input-group-cms">
+                    <label for="newGalleryPosition"><i class="fa-solid fa-arrow-down-1-9"></i> Position Number</label>
+                    <input type="number" step="any" id="newGalleryPosition" class="cms-input-field"
+                        placeholder="e.g. 1 or 123.456" required>
+                </div>
+
+                <div class="input-group-cms">
+                    <label for="newGalleryImage"><i class="fa-solid fa-image"></i> Gallery Image</label>
+                    <input type="file" id="newGalleryImage" class="cms-input-field" accept="image/*" required>
+                    <div style="margin-top: 6px; font-size: 0.78rem; color: #d97706; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-circle-info"></i> Recommend image 9:16 (vertical image)
+                    </div>
+                    <div id="newGalleryPreviewWrap" style="display: none; margin-top: 10px; text-align: center;">
+                        <img id="newGalleryPreviewImg" src="" alt="Selected Preview"
+                            style="max-height: 180px; max-width: 100%; border-radius: 10px; border: 1px solid #cbd5e1; object-fit: cover;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-modal-cancel" data-close-modal="addGalleryModal">Cancel</button>
+                    <button type="submit" id="btnAddGallerySubmit" class="btn-cms-submit" style="margin-top: 0;">
+                        <i class="fa-solid fa-plus"></i> Upload &amp; Add Image
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL: EDIT GALLERY IMAGE (WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE) -->
+    <!-- ==================================================================== -->
+    <div id="editGalleryModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 520px;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-pen-to-square gold-text"></i> Edit Gallery Image</h3>
+                <button type="button" class="btn-modal-close" data-close-modal="editGalleryModal">&times;</button>
+            </div>
+            <form id="editGalleryForm" class="login-form">
+                <input type="hidden" id="editGalleryId">
+
+                <div class="input-group-cms">
+                    <label for="editGalleryPosition"><i class="fa-solid fa-arrow-down-1-9"></i> Position Number</label>
+                    <input type="number" step="any" id="editGalleryPosition" class="cms-input-field"
+                        placeholder="e.g. 1 or 123.456" required>
+                </div>
+
+                <div class="input-group-cms">
+                    <label><i class="fa-solid fa-image"></i> Current Image</label>
+                    <div id="editGalleryCurrentImgWrap" style="margin-bottom: 10px; text-align: center;">
+                        <img id="editGalleryCurrentImg" src="" alt="Current Gallery Image"
+                            style="max-height: 160px; max-width: 100%; border-radius: 10px; border: 1px solid #cbd5e1; object-fit: cover;">
+                    </div>
+                    <label for="editGalleryImage"><i class="fa-solid fa-upload"></i> Replace Image (Optional)</label>
+                    <input type="file" id="editGalleryImage" class="cms-input-field" accept="image/*">
+                    <div style="margin-top: 6px; font-size: 0.78rem; color: #d97706; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-circle-info"></i> Recommend image 9:16 (vertical image)
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-modal-cancel" data-close-modal="editGalleryModal">Cancel</button>
+                    <button type="submit" id="btnEditGallerySubmit" class="btn-cms-submit" style="margin-top: 0;">
+                        <i class="fa-solid fa-floppy-disk"></i> Update Gallery Image
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================================================================== -->
     <!-- JAVASCRIPT LOGIC & POCKETBASE INTEGRATION                            -->
     <!-- ==================================================================== -->
     <script>
@@ -3511,6 +3762,7 @@
             let loadedDbVouchers = [];
             let loadedRoles = [];
             let loadedVoucherClaims = [];
+            let loadedGalleryImages = [];
             let currentOverviewDashFilter = 'all';
             let overviewCampaignChartInstance = null;
             let currentBayuDashFilter = 'all';
@@ -3520,6 +3772,7 @@
             const REELS_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_INSTAGRAM_DATABASE';
             const VOUCHERS_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_DATABASE';
             const VOUCHER_CLAIMS_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_CLAIMS_DATABASE';
+            const GALLERY_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE';
 
             // DOM Elements
             const loginView = document.getElementById('loginView');
@@ -4514,13 +4767,13 @@
                         {
                             id: 'role_superadmin',
                             roleName: 'Super Admin',
-                            canAccess: 'tabOverview,tabUsers,tabBayuSeafood,subtabBayuDashboard,subtabInstagramReels,subtabVouchers,subtabVoucherClaims,claimActionEdit,claimActionDelete,tabAquasport,tabRipplebay,tabLakeside',
+                            canAccess: 'tabOverview,tabUsers,tabBayuSeafood,subtabBayuDashboard,subtabInstagramReels,subtabVouchers,subtabVoucherClaims,subtabGalleryManagement,claimActionEdit,claimActionDelete,tabAquasport,tabRipplebay,tabLakeside',
                             created: new Date().toISOString()
                         },
                         {
                             id: 'role_manager',
                             roleName: 'Manager',
-                            canAccess: 'tabOverview,tabUsers,tabBayuSeafood,subtabBayuDashboard,subtabInstagramReels,subtabVouchers,subtabVoucherClaims,claimActionEdit,claimActionDelete,tabAquasport,tabRipplebay,tabLakeside',
+                            canAccess: 'tabOverview,tabUsers,tabBayuSeafood,subtabBayuDashboard,subtabInstagramReels,subtabVouchers,subtabVoucherClaims,subtabGalleryManagement,claimActionEdit,claimActionDelete,tabAquasport,tabRipplebay,tabLakeside',
                             created: new Date().toISOString()
                         },
                         {
@@ -4532,6 +4785,14 @@
                     ];
                     localStorage.setItem('mfj_role_permissions', JSON.stringify(roles));
                 }
+
+                // Ensure admin/manager roles have subtabGalleryManagement access if upgrading from cached state
+                roles.forEach(r => {
+                    const rName = (r.roleName || '').toLowerCase();
+                    if ((rName.includes('admin') || rName.includes('manager')) && r.canAccess && !r.canAccess.includes('subtabGalleryManagement')) {
+                        r.canAccess += ',subtabGalleryManagement';
+                    }
+                });
 
                 loadedRoles = roles;
 
@@ -4548,6 +4809,7 @@
                         'subtabInstagramReels': '<span class="status-badge active" style="background: rgba(225,29,72,0.12); color: #e11d48;"><i class="fa-brands fa-instagram"></i> Instagram Reels</span>',
                         'subtabVouchers': '<span class="status-badge active" style="background: rgba(217,119,6,0.12); color: #b45309;"><i class="fa-solid fa-ticket"></i> Campaign Mgmt</span>',
                         'subtabVoucherClaims': '<span class="status-badge active" style="background: rgba(37,99,235,0.12); color: #2563eb;"><i class="fa-solid fa-clipboard-check"></i> Voucher Claims</span>',
+                        'subtabGalleryManagement': '<span class="status-badge active" style="background: rgba(16,185,129,0.12); color: #059669;"><i class="fa-solid fa-images"></i> Gallery Mgmt</span>',
                         'claimActionEdit': '<span class="status-badge active" style="background: rgba(34,197,94,0.12); color: #16a34a;"><i class="fa-solid fa-pen-to-square"></i> Claim: Can Edit</span>',
                         'claimActionDelete': '<span class="status-badge active" style="background: rgba(225,29,72,0.12); color: #e11d48;"><i class="fa-solid fa-trash-can"></i> Claim: Can Delete</span>',
                         'tabAquasport': '<span class="status-badge active" style="background: rgba(217,119,6,0.12); color: #b45309;"><i class="fa-solid fa-globe"></i> WNB Aquasport</span>',
@@ -5811,6 +6073,8 @@
                     renderVouchersDbTable();
                 } else if (targetSubtab === 'subtabInstagramReels') {
                     renderInstagramReelsTable();
+                } else if (targetSubtab === 'subtabGalleryManagement') {
+                    renderGalleryTable();
                 }
             }
 
@@ -5923,12 +6187,13 @@
                     }
 
                     let bgImgHtml = '<div style="width:50px; height:36px; background:#f1f5f9; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fa-solid fa-ticket"></i></div>';
-                    if (v.voucherBackground) {
-                        let imgUrl = v.voucherBackground;
+                    const displayImgField = v.voucherBanner || v.voucherBackground;
+                    if (displayImgField) {
+                        let imgUrl = displayImgField;
                         if (pb && v.id && !v.id.startsWith('vouch_')) {
-                            imgUrl = pb.getFileUrl(v, v.voucherBackground);
+                            imgUrl = pb.getFileUrl(v, displayImgField);
                         }
-                        bgImgHtml = `<img src="${escapeHtml(imgUrl)}" alt="Voucher BG" style="width:50px; height:36px; object-fit:cover; border-radius:6px; border:1px solid #cbd5e1;">`;
+                        bgImgHtml = `<img src="${escapeHtml(imgUrl)}" alt="Voucher Media" style="width:50px; height:36px; object-fit:cover; border-radius:6px; border:1px solid #cbd5e1;">`;
                     }
 
                     html += `
@@ -6057,6 +6322,10 @@
                 // Ensure add voucher modal is open
                 const addModal = document.getElementById('addVoucherModal');
                 if (addModal) addModal.classList.add('active');
+
+                if (typeof renderVoucherTermsInputs === 'function') {
+                    renderVoucherTermsInputs('add', v.voucherTerms || '');
+                }
             };
 
             // ====================================================================
@@ -6667,6 +6936,122 @@
                 }
             };
 
+            // Voucher Terms & Conditions Dynamic Fields Logic
+            function createVoucherTermRowElement(mode, value = '') {
+                const row = document.createElement('div');
+                row.className = 'voucher-term-row';
+                row.style.cssText = 'display: flex; gap: 8px; align-items: center;';
+                row.innerHTML = `
+                    <input type="text" class="cms-input-field voucher-term-input" placeholder="e.g. Valid for dine-in only" value="${escapeHtml(value)}" style="flex: 1;" oninput="handleVoucherTermInputChange('${mode}')">
+                    <button type="button" title="Add field below" class="btn-action-gold btn-add-term" style="width: 36px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem;" onclick="insertVoucherTermRowBelow(this, '${mode}')">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <button type="button" title="Delete field" class="btn-action-outline btn-remove-term" style="width: 36px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem; color: #dc2626; border-color: rgba(220,38,38,0.3);" onclick="removeVoucherTermRow(this, '${mode}')">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>
+                `;
+                return row;
+            }
+
+            window.renderVoucherTermsInputs = function (mode, termsData) {
+                const container = document.getElementById(mode === 'add' ? 'addVoucherTermsContainer' : 'editVoucherTermsContainer');
+                if (!container) return;
+                container.innerHTML = '';
+
+                let termsList = [];
+                if (Array.isArray(termsData)) {
+                    termsList = termsData.map(s => String(s).trim()).filter(Boolean);
+                } else if (typeof termsData === 'string' && termsData.trim()) {
+                    termsList = termsData.split(',').map(s => s.trim()).filter(Boolean);
+                }
+
+                if (termsList.length === 0) {
+                    container.appendChild(createVoucherTermRowElement(mode, ''));
+                } else {
+                    termsList.forEach(term => {
+                        container.appendChild(createVoucherTermRowElement(mode, term));
+                    });
+                }
+            };
+
+            window.addVoucherTermRow = function (mode) {
+                const container = document.getElementById(mode === 'add' ? 'addVoucherTermsContainer' : 'editVoucherTermsContainer');
+                if (!container) return;
+                const newRow = createVoucherTermRowElement(mode, '');
+                container.appendChild(newRow);
+                const input = newRow.querySelector('input');
+                if (input) input.focus();
+                handleVoucherTermInputChange(mode);
+            };
+
+            window.insertVoucherTermRowBelow = function (btn, mode) {
+                const currentRow = btn.closest('.voucher-term-row');
+                if (!currentRow) return;
+                const newRow = createVoucherTermRowElement(mode, '');
+                currentRow.parentNode.insertBefore(newRow, currentRow.nextSibling);
+                const input = newRow.querySelector('input');
+                if (input) input.focus();
+                handleVoucherTermInputChange(mode);
+            };
+
+            window.removeVoucherTermRow = function (btn, mode) {
+                const container = document.getElementById(mode === 'add' ? 'addVoucherTermsContainer' : 'editVoucherTermsContainer');
+                const currentRow = btn.closest('.voucher-term-row');
+                if (!container || !currentRow) return;
+
+                const allRows = container.querySelectorAll('.voucher-term-row');
+                if (allRows.length <= 1) {
+                    const input = currentRow.querySelector('input');
+                    if (input) input.value = '';
+                } else {
+                    currentRow.remove();
+                }
+                handleVoucherTermInputChange(mode);
+            };
+
+            window.getVoucherTermsString = function (mode) {
+                const container = document.getElementById(mode === 'add' ? 'addVoucherTermsContainer' : 'editVoucherTermsContainer');
+                if (!container) return '';
+                const inputs = container.querySelectorAll('.voucher-term-input');
+                const terms = [];
+                inputs.forEach(input => {
+                    const val = input.value.trim();
+                    if (val) {
+                        terms.push(val);
+                    }
+                });
+                return terms.join(',');
+            };
+
+            window.getVoucherTermsPlainText = function (mode) {
+                const container = document.getElementById(mode === 'add' ? 'addVoucherTermsContainer' : 'editVoucherTermsContainer');
+                if (!container) return '';
+                const inputs = container.querySelectorAll('.voucher-term-input');
+                const terms = [];
+                inputs.forEach(input => {
+                    const val = input.value.trim();
+                    if (val) {
+                        terms.push(val);
+                    }
+                });
+                return terms.join(' ');
+            };
+
+            window.handleVoucherTermInputChange = function (mode) {
+                if (mode === 'edit') {
+                    const termsText = getVoucherTermsPlainText('edit');
+                    if (typeof editVoucherColorState !== 'undefined' && editVoucherColorState) {
+                        editVoucherColorState.voucherTerms = syncSegmentsForField('voucherTerms', termsText, editVoucherColorState.voucherTerms);
+                    }
+                    if (typeof renderInteractiveBoxForField === 'function') {
+                        renderInteractiveBoxForField('voucherTerms');
+                    }
+                    if (typeof updateLiveVoucherPreview === 'function') {
+                        updateLiveVoucherPreview();
+                    }
+                }
+            };
+
             // Open Add Voucher Modal
             const btnOpenAddVoucherModal = document.getElementById('btnOpenAddVoucherModal');
             if (btnOpenAddVoucherModal) {
@@ -6674,6 +7059,7 @@
                     const lockClaimSelect = document.getElementById('newVoucherLockClaim');
                     if (lockClaimSelect) lockClaimSelect.value = 'false';
                     toggleLockClaimReasonGroup('add');
+                    renderVoucherTermsInputs('add', '');
                     const modal = document.getElementById('addVoucherModal');
                     if (modal) modal.classList.add('active');
                 });
@@ -6754,6 +7140,7 @@
                     const name = document.getElementById('newVoucherName').value.trim();
                     const title = document.getElementById('newVoucherTitle').value.trim();
                     const desc = document.getElementById('newVoucherDescription').value.trim();
+                    const termsStr = getVoucherTermsString('add');
                     const valueStr = document.getElementById('newVoucherValue').value.trim();
                     const statusBool = document.getElementById('newVoucherStatus').value === 'true';
                     const startDate = document.getElementById('newVoucherStartDate').value;
@@ -6761,6 +7148,7 @@
                     const lockClaimBool = document.getElementById('newVoucherLockClaim').value === 'true';
                     const lockClaimReasonStr = getLockClaimReasonValue('add');
                     const bgInput = document.getElementById('newVoucherBackground');
+                    const bannerInput = document.getElementById('newVoucherBanner');
 
                     if (!name || !title || !desc || !valueStr || !startDate || !endDate) return;
 
@@ -6776,6 +7164,7 @@
                         formData.append('voucherName', name);
                         formData.append('voucherTittle', title);
                         formData.append('voucherDescription', desc);
+                        formData.append('voucherTerms', termsStr);
                         formData.append('voucherValue', valueStr);
                         formData.append('voucherStatus', statusBool);
                         formData.append('voucherStartDate', new Date(startDate).toISOString());
@@ -6787,6 +7176,9 @@
 
                         if (bgInput && bgInput.files[0]) {
                             formData.append('voucherBackground', bgInput.files[0]);
+                        }
+                        if (bannerInput && bannerInput.files[0]) {
+                            formData.append('voucherBanner', bannerInput.files[0]);
                         }
 
                         let createdRecord = null;
@@ -6804,12 +7196,15 @@
                                 voucherName: name,
                                 voucherTittle: title,
                                 voucherDescription: desc,
+                                voucherTerms: termsStr,
                                 voucherValue: valueStr,
                                 voucherStatus: statusBool,
                                 voucherStartDate: new Date(startDate).toISOString(),
                                 voucherEndDate: new Date(endDate).toISOString(),
                                 lockClaim: lockClaimBool,
                                 lockClaimReason: lockClaimReasonStr,
+                                voucherBackground: (bgInput && bgInput.files[0]) ? bgInput.files[0].name : '',
+                                voucherBanner: (bannerInput && bannerInput.files[0]) ? bannerInput.files[0].name : '',
                                 createBy: creatorName,
                                 createAt: createAtIso,
                                 created: createAtIso
@@ -6825,6 +7220,7 @@
                         const modal = document.getElementById('addVoucherModal');
                         if (modal) modal.classList.remove('active');
                         addVoucherForm.reset();
+                        renderVoucherTermsInputs('add', '');
 
                         await renderVouchersDbTable();
                     } catch (err) {
@@ -6843,6 +7239,7 @@
                 voucherTitle: [],
                 voucherName: [],
                 voucherDescription: [],
+                voucherTerms: [],
                 voucherValue: [],
                 voucherBackground: {
                     type: 'gradient',
@@ -6920,6 +7317,7 @@
                 renderInteractiveBoxForField('voucherTitle');
                 renderInteractiveBoxForField('voucherName');
                 renderInteractiveBoxForField('voucherDescription');
+                renderInteractiveBoxForField('voucherTerms');
                 renderInteractiveBoxForField('voucherValue');
             }
 
@@ -7207,6 +7605,7 @@
                     voucherName: nameText,
                     voucherTittle: titleText,
                     voucherDescription: descText,
+                    voucherTerms: typeof getVoucherTermsString === 'function' ? getVoucherTermsString('edit') : '',
                     voucherValue: valText,
                     voucherStartDate: document.getElementById('editVoucherStartDate')?.value || '',
                     voucherEndDate: document.getElementById('editVoucherEndDate')?.value || '',
@@ -7281,6 +7680,7 @@
             });
 
             let editVoucherBgWillRemove = false;
+            let editVoucherBannerWillRemove = false;
 
             window.toggleRemoveEditVoucherBg = function () {
                 editVoucherBgWillRemove = !editVoucherBgWillRemove;
@@ -7288,6 +7688,20 @@
                 const badge = document.getElementById('editVoucherBgRemovedBadge');
 
                 if (editVoucherBgWillRemove) {
+                    if (wrap) wrap.style.display = 'none';
+                    if (badge) badge.style.display = 'flex';
+                } else {
+                    if (wrap) wrap.style.display = 'flex';
+                    if (badge) badge.style.display = 'none';
+                }
+            };
+
+            window.toggleRemoveEditVoucherBanner = function () {
+                editVoucherBannerWillRemove = !editVoucherBannerWillRemove;
+                const wrap = document.getElementById('editVoucherCurrentBannerWrap');
+                const badge = document.getElementById('editVoucherBannerRemovedBadge');
+
+                if (editVoucherBannerWillRemove) {
                     if (wrap) wrap.style.display = 'none';
                     if (badge) badge.style.display = 'flex';
                 } else {
@@ -7307,6 +7721,17 @@
                 });
             }
 
+            const editBannerInput = document.getElementById('editVoucherBanner');
+            if (editBannerInput) {
+                editBannerInput.addEventListener('change', () => {
+                    if (editBannerInput.files[0]) {
+                        editVoucherBannerWillRemove = false;
+                        const badge = document.getElementById('editVoucherBannerRemovedBadge');
+                        if (badge) badge.style.display = 'none';
+                    }
+                });
+            }
+
             function formatDateForInput(dateVal) {
                 if (!dateVal) return '';
                 const d = new Date(dateVal);
@@ -7321,8 +7746,11 @@
                 if (!v) return;
 
                 editVoucherBgWillRemove = false;
+                editVoucherBannerWillRemove = false;
                 const bgInput = document.getElementById('editVoucherBackground');
                 if (bgInput) bgInput.value = '';
+                const bannerInput = document.getElementById('editVoucherBanner');
+                if (bannerInput) bannerInput.value = '';
 
                 const wrap = document.getElementById('editVoucherCurrentBgWrap');
                 const badge = document.getElementById('editVoucherBgRemovedBadge');
@@ -7343,12 +7771,35 @@
                     if (wrap) wrap.style.display = 'none';
                 }
 
+                const bannerWrap = document.getElementById('editVoucherCurrentBannerWrap');
+                const bannerBadge = document.getElementById('editVoucherBannerRemovedBadge');
+                const bannerImg = document.getElementById('editVoucherCurrentBannerImg');
+                const bannerName = document.getElementById('editVoucherCurrentBannerName');
+
+                if (bannerBadge) bannerBadge.style.display = 'none';
+
+                if (v.voucherBanner && typeof v.voucherBanner === 'string') {
+                    let bannerUrl = v.voucherBanner;
+                    if (pb && !id.startsWith('vouch_loc_') && !id.startsWith('vouch_sample_')) {
+                        bannerUrl = pb.getFileUrl(v, v.voucherBanner);
+                    }
+                    if (bannerImg) bannerImg.src = bannerUrl;
+                    if (bannerName) bannerName.textContent = v.voucherBanner;
+                    if (bannerWrap) bannerWrap.style.display = 'flex';
+                } else {
+                    if (bannerWrap) bannerWrap.style.display = 'none';
+                }
+
                 document.getElementById('editVoucherId').value = v.id;
                 document.getElementById('editVoucherName').value = v.voucherName || '';
                 document.getElementById('editVoucherTitle').value = v.voucherTittle || v.title || '';
                 document.getElementById('editVoucherDescription').value = v.voucherDescription || v.description || '';
                 document.getElementById('editVoucherValue').value = v.voucherValue !== undefined ? String(v.voucherValue) : '';
                 document.getElementById('editVoucherStatus').value = (v.voucherStatus === true || v.voucherStatus === 'true' || v.voucherStatus === undefined) ? 'true' : 'false';
+
+                if (typeof renderVoucherTermsInputs === 'function') {
+                    renderVoucherTermsInputs('edit', v.voucherTerms || '');
+                }
 
                 const lockClaimSelect = document.getElementById('editVoucherLockClaim');
                 if (lockClaimSelect) lockClaimSelect.value = (v.lockClaim === true || v.lockClaim === 'true') ? 'true' : 'false';
@@ -7391,12 +7842,14 @@
                 const titleText = v.voucherTittle || v.title || '';
                 const nameText = v.voucherName || '';
                 const descText = v.voucherDescription || v.description || '';
+                const termsText = typeof getVoucherTermsPlainText === 'function' ? getVoucherTermsPlainText('edit') : '';
                 const valText = v.voucherValue !== undefined ? String(v.voucherValue) : '';
 
                 editVoucherColorState = {
                     voucherTitle: syncSegmentsForField('voucherTitle', titleText, colorConfig ? colorConfig.voucherTitle : null),
                     voucherName: syncSegmentsForField('voucherName', nameText, colorConfig ? colorConfig.voucherName : null),
                     voucherDescription: syncSegmentsForField('voucherDescription', descText, colorConfig ? colorConfig.voucherDescription : null),
+                    voucherTerms: syncSegmentsForField('voucherTerms', termsText, colorConfig ? colorConfig.voucherTerms : null),
                     voucherValue: syncSegmentsForField('voucherValue', valText, colorConfig ? colorConfig.voucherValue : null),
                     voucherBackground: (colorConfig && colorConfig.voucherBackground) ? colorConfig.voucherBackground : {
                         type: 'gradient',
@@ -7435,6 +7888,7 @@
                     const name = document.getElementById('editVoucherName').value.trim();
                     const title = document.getElementById('editVoucherTitle').value.trim();
                     const desc = document.getElementById('editVoucherDescription').value.trim();
+                    const termsStr = typeof getVoucherTermsString === 'function' ? getVoucherTermsString('edit') : '';
                     const valueStr = document.getElementById('editVoucherValue').value.trim();
                     const statusBool = document.getElementById('editVoucherStatus').value === 'true';
                     const startDate = document.getElementById('editVoucherStartDate').value;
@@ -7442,6 +7896,7 @@
                     const lockClaimBool = document.getElementById('editVoucherLockClaim').value === 'true';
                     const lockClaimReasonStr = getLockClaimReasonValue('edit');
                     const bgInput = document.getElementById('editVoucherBackground');
+                    const bannerInput = document.getElementById('editVoucherBanner');
 
                     if (!id || !name || !title || !desc || !valueStr || !startDate || !endDate) return;
 
@@ -7454,6 +7909,7 @@
                         formData.append('voucherName', name);
                         formData.append('voucherTittle', title);
                         formData.append('voucherDescription', desc);
+                        formData.append('voucherTerms', termsStr);
                         formData.append('voucherValue', valueStr);
                         formData.append('voucherStatus', statusBool);
                         formData.append('voucherStartDate', new Date(startDate).toISOString());
@@ -7466,6 +7922,12 @@
                             formData.append('voucherBackground', bgInput.files[0]);
                         } else if (editVoucherBgWillRemove) {
                             formData.append('voucherBackground', '');
+                        }
+
+                        if (bannerInput && bannerInput.files[0]) {
+                            formData.append('voucherBanner', bannerInput.files[0]);
+                        } else if (editVoucherBannerWillRemove) {
+                            formData.append('voucherBanner', '');
                         }
 
                         if (pb && !id.startsWith('vouch_loc_') && !id.startsWith('vouch_sample_')) {
@@ -7484,6 +7946,7 @@
                             vouchers[idx].voucherName = name;
                             vouchers[idx].voucherTittle = title;
                             vouchers[idx].voucherDescription = desc;
+                            vouchers[idx].voucherTerms = termsStr;
                             vouchers[idx].voucherValue = valueStr;
                             vouchers[idx].voucherStatus = statusBool;
                             vouchers[idx].voucherStartDate = new Date(startDate).toISOString();
@@ -7496,6 +7959,12 @@
                                 vouchers[idx].voucherBackground = bgInput.files[0].name;
                             } else if (editVoucherBgWillRemove) {
                                 vouchers[idx].voucherBackground = '';
+                            }
+
+                            if (bannerInput && bannerInput.files[0]) {
+                                vouchers[idx].voucherBanner = bannerInput.files[0].name;
+                            } else if (editVoucherBannerWillRemove) {
+                                vouchers[idx].voucherBanner = '';
                             }
                         }
                         localStorage.setItem('mfj_bayuseafood_db_vouchers', JSON.stringify(vouchers));
@@ -7553,6 +8022,531 @@
                     await renderVouchersDbTable();
                 } catch (err) {
                     alert('Error deleting voucher: ' + err.message);
+                }
+            };
+
+            // ====================================================================
+            // BAYU SEAFOOD GALLERY MANAGEMENT (PocketBase: WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE)
+            // ====================================================================
+
+            function getGalleryImageUrl(item) {
+                if (!item) return 'image/placeholder.png';
+                if (item.galleryImage) {
+                    if (typeof item.galleryImage === 'string') {
+                        if (item.galleryImage.startsWith('http') || item.galleryImage.startsWith('data:')) {
+                            return item.galleryImage;
+                        }
+                    }
+                    if (pb && pb.getFileUrl) {
+                        try {
+                            return pb.getFileUrl(item, item.galleryImage);
+                        } catch (err) { }
+                    }
+                    if (pb && pb.files && pb.files.getUrl) {
+                        try {
+                            return pb.files.getUrl(item, item.galleryImage);
+                        } catch (err) { }
+                    }
+                    return `${POCKETBASE_URL}/api/files/${item.collectionId || item.collectionName || GALLERY_COLLECTION}/${item.id}/${item.galleryImage}`;
+                }
+                return 'image/placeholder.png';
+            }
+
+            async function renderGalleryTable(searchQuery = '') {
+                const galleryDbTableBody = document.getElementById('galleryDbTableBody');
+                const statGalleryTotalCount = document.getElementById('statGalleryTotalCount');
+                if (!galleryDbTableBody) return;
+
+                galleryDbTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 28px 0;"><i class="fa-solid fa-spinner fa-spin gold-text" style="font-size: 1.3rem;"></i><span style="display: block; margin-top: 8px; color: #64748b;">Loading Gallery Images from PocketBase Database...</span></td></tr>';
+
+                let galleryItems = [];
+
+                if (pb) {
+                    try {
+                        const list = await pb.collection(GALLERY_COLLECTION).getFullList({
+                            sort: 'positionNumber',
+                            requestKey: null
+                        });
+                        if (list && list.length > 0) {
+                            galleryItems = list;
+                        }
+                    } catch (e) {
+                        if (!e.isAbort) {
+                            console.warn('PocketBase Gallery fetch notice:', e);
+                        }
+                    }
+                }
+
+                if (galleryItems.length === 0) {
+                    const localGalleryStr = localStorage.getItem('mfj_bayuseafood_gallery');
+                    if (localGalleryStr) {
+                        try { galleryItems = JSON.parse(localGalleryStr); } catch (e) { }
+                    }
+                }
+
+                // Default initial sample data if empty
+                if (galleryItems.length === 0) {
+                    galleryItems = [
+                        {
+                            id: 'gal_sample_1',
+                            positionNumber: 1,
+                            galleryImage: 'image/banner1.webp',
+                            created: new Date().toISOString()
+                        },
+                        {
+                            id: 'gal_sample_2',
+                            positionNumber: 2,
+                            galleryImage: 'image/banner2.webp',
+                            created: new Date().toISOString()
+                        }
+                    ];
+                    localStorage.setItem('mfj_bayuseafood_gallery', JSON.stringify(galleryItems));
+                }
+
+                galleryItems.sort((a, b) => Number(a.positionNumber || 0) - Number(b.positionNumber || 0));
+                loadedGalleryImages = galleryItems;
+
+                if (statGalleryTotalCount) {
+                    statGalleryTotalCount.textContent = galleryItems.length;
+                }
+
+                const query = (searchQuery || '').trim().toLowerCase();
+                const filteredItems = query ? galleryItems.filter(item => {
+                    const posStr = String(item.positionNumber || '');
+                    const imgName = typeof item.galleryImage === 'string' ? item.galleryImage.toLowerCase() : '';
+                    return posStr.includes(query) || imgName.includes(query);
+                }) : galleryItems;
+
+                if (filteredItems.length === 0) {
+                    galleryDbTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px 10px; color: #64748b;">
+                                <i class="fa-solid fa-images" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
+                                No gallery images found ${query ? `matching "${escapeHtml(query)}"` : ''}.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                filteredItems.forEach(item => {
+                    const dateStr = item.created ? (new Date(item.created).toLocaleDateString('en-GB') + ' ' + new Date(item.created).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : 'N/A';
+                    const imgUrl = getGalleryImageUrl(item);
+                    const fileName = typeof item.galleryImage === 'string' ? item.galleryImage.split('/').pop() : `Image #${item.positionNumber}`;
+
+                    html += `
+                        <tr draggable="true" data-id="${item.id}" class="draggable-row">
+                            <td style="text-align: center;">
+                                <i class="fa-solid fa-grip-vertical" style="color: #94a3b8; font-size: 1.1rem; cursor: grab;" title="Drag to re-order position"></i>
+                            </td>
+                            <td>
+                                <span class="badge-role" style="background: rgba(217,119,6,0.15); color: #d97706; font-weight: 800; padding: 5px 12px; border-radius: 12px; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-hashtag" style="font-size: 0.75rem;"></i>${item.positionNumber}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 14px;">
+                                    <a href="${imgUrl}" target="_blank" title="Click to view full image" style="flex-shrink: 0;">
+                                        <img src="${imgUrl}" alt="Gallery Position ${item.positionNumber}"
+                                            style="width: 80px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.2s;"
+                                            onmouseover="this.style.transform='scale(1.05)'"
+                                            onmouseout="this.style.transform='scale(1)'">
+                                    </a>
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 0.88rem; color: #0f172a; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            ${escapeHtml(fileName)}
+                                        </div>
+                                        <a href="${imgUrl}" target="_blank" style="font-size: 0.78rem; color: #d97706; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; font-weight: 600;">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Image
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #64748b; font-size: 0.84rem; white-space: nowrap;">
+                                <i class="fa-regular fa-clock" style="margin-right: 5px; color: #94a3b8;"></i>${dateStr}
+                            </td>
+                            <td style="text-align: center;">
+                                <div style="display: flex; gap: 8px; justify-content: center;">
+                                    <button type="button" class="btn-action-gold" style="padding: 5px 12px; font-size: 0.8rem;" onclick="openEditGalleryModal('${item.id}')">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn-action-outline" style="padding: 5px 12px; font-size: 0.8rem; color: #dc2626; border-color: rgba(220, 38, 38, 0.3);" onclick="deleteGalleryRecord('${item.id}')">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                galleryDbTableBody.innerHTML = html;
+                initGalleryDragAndDrop();
+            }
+
+            // Bind Drag & Drop Handlers to Gallery Table Rows
+            function initGalleryDragAndDrop() {
+                const galleryDbTableBody = document.getElementById('galleryDbTableBody');
+                if (!galleryDbTableBody) return;
+
+                const rows = galleryDbTableBody.querySelectorAll('.draggable-row');
+                let draggedRow = null;
+
+                rows.forEach(row => {
+                    row.addEventListener('dragstart', (e) => {
+                        draggedRow = row;
+                        row.classList.add('dragging');
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/plain', row.getAttribute('data-id'));
+                    });
+
+                    row.addEventListener('dragend', () => {
+                        if (draggedRow) draggedRow.classList.remove('dragging');
+                        rows.forEach(r => r.classList.remove('drag-over'));
+                        draggedRow = null;
+                    });
+
+                    row.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                        if (row !== draggedRow) {
+                            row.classList.add('drag-over');
+                        }
+                    });
+
+                    row.addEventListener('dragleave', () => {
+                        row.classList.remove('drag-over');
+                    });
+
+                    row.addEventListener('drop', async (e) => {
+                        e.preventDefault();
+                        row.classList.remove('drag-over');
+
+                        if (!draggedRow || draggedRow === row) return;
+
+                        const allRows = Array.from(galleryDbTableBody.children);
+                        const draggedIdx = allRows.indexOf(draggedRow);
+                        const targetIdx = allRows.indexOf(row);
+
+                        if (draggedIdx < targetIdx) {
+                            galleryDbTableBody.insertBefore(draggedRow, row.nextSibling);
+                        } else {
+                            galleryDbTableBody.insertBefore(draggedRow, row);
+                        }
+
+                        await updateGalleryPositionsAfterDrag();
+                    });
+                });
+            }
+
+            // Auto-update positionNumber on drop and sync to PocketBase
+            async function updateGalleryPositionsAfterDrag() {
+                const galleryDbTableBody = document.getElementById('galleryDbTableBody');
+                if (!galleryDbTableBody) return;
+
+                const rows = Array.from(galleryDbTableBody.querySelectorAll('.draggable-row'));
+
+                let updatedGallery = [];
+                let positionCounter = 1;
+
+                for (const row of rows) {
+                    const galleryId = row.getAttribute('data-id');
+                    const existingItem = loadedGalleryImages.find(g => g.id === galleryId);
+
+                    if (existingItem) {
+                        const newPos = positionCounter++;
+                        existingItem.positionNumber = newPos;
+                        updatedGallery.push(existingItem);
+
+                        // Auto-update PocketBase database
+                        if (pb && !galleryId.startsWith('gal_loc_') && !galleryId.startsWith('gal_sample_')) {
+                            try {
+                                await pb.collection(GALLERY_COLLECTION).update(galleryId, {
+                                    positionNumber: newPos
+                                });
+                            } catch (err) {
+                                console.warn('PocketBase gallery auto-position update notice:', err);
+                            }
+                        }
+                    }
+                }
+
+                loadedGalleryImages = updatedGallery;
+                localStorage.setItem('mfj_bayuseafood_gallery', JSON.stringify(loadedGalleryImages));
+
+                // Refresh table to show updated Pos # badges
+                renderGalleryTable();
+
+                const toast = document.getElementById('galleryReorderToast');
+                if (toast) {
+                    toast.style.display = 'flex';
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                    }, 3000);
+                }
+            }
+
+            // Gallery Search input listener
+            const searchGalleryInput = document.getElementById('searchGallery');
+            if (searchGalleryInput) {
+                searchGalleryInput.addEventListener('input', (e) => {
+                    renderGalleryTable(e.target.value);
+                });
+            }
+
+            // Gallery Refresh Button listener
+            const btnRefreshGallery = document.getElementById('btnRefreshGallery');
+            if (btnRefreshGallery) {
+                btnRefreshGallery.addEventListener('click', () => {
+                    if (searchGalleryInput) searchGalleryInput.value = '';
+                    renderGalleryTable();
+                });
+            }
+
+            // Open Add Gallery Modal Button listener
+            const btnOpenAddGalleryModal = document.getElementById('btnOpenAddGalleryModal');
+            if (btnOpenAddGalleryModal) {
+                btnOpenAddGalleryModal.addEventListener('click', () => {
+                    const addForm = document.getElementById('addGalleryForm');
+                    if (addForm) addForm.reset();
+                    const previewWrap = document.getElementById('newGalleryPreviewWrap');
+                    if (previewWrap) previewWrap.style.display = 'none';
+
+                    // Pre-suggest next position number
+                    const nextPos = (loadedGalleryImages && loadedGalleryImages.length > 0)
+                        ? (Math.max(...loadedGalleryImages.map(i => Number(i.positionNumber) || 0)) + 1)
+                        : 1;
+                    const posInput = document.getElementById('newGalleryPosition');
+                    if (posInput) posInput.value = nextPos;
+
+                    const modal = document.getElementById('addGalleryModal');
+                    if (modal) modal.classList.add('active');
+                });
+            }
+
+            // Add Image file input preview
+            const newGalleryImageInput = document.getElementById('newGalleryImage');
+            const newGalleryPreviewWrap = document.getElementById('newGalleryPreviewWrap');
+            const newGalleryPreviewImg = document.getElementById('newGalleryPreviewImg');
+            if (newGalleryImageInput) {
+                newGalleryImageInput.addEventListener('change', (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            if (newGalleryPreviewImg) newGalleryPreviewImg.src = evt.target.result;
+                            if (newGalleryPreviewWrap) newGalleryPreviewWrap.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (newGalleryPreviewWrap) {
+                        newGalleryPreviewWrap.style.display = 'none';
+                    }
+                });
+            }
+
+            // Edit Image file input preview
+            const editGalleryImageInput = document.getElementById('editGalleryImage');
+            if (editGalleryImageInput) {
+                editGalleryImageInput.addEventListener('change', (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            const currentImg = document.getElementById('editGalleryCurrentImg');
+                            if (currentImg) currentImg.src = evt.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Add Gallery Item Form Handler (PocketBase Create)
+            const addGalleryForm = document.getElementById('addGalleryForm');
+            if (addGalleryForm) {
+                addGalleryForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const posVal = parseFloat(document.getElementById('newGalleryPosition').value);
+                    const fileInput = document.getElementById('newGalleryImage');
+                    const file = fileInput && fileInput.files && fileInput.files[0];
+
+                    if (isNaN(posVal)) {
+                        alert('Please enter a valid position number.');
+                        return;
+                    }
+                    if (!file) {
+                        alert('Please select an image file to upload.');
+                        return;
+                    }
+
+                    const btnSubmit = document.getElementById('btnAddGallerySubmit');
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
+                    try {
+                        const formData = new FormData();
+                        formData.append('positionNumber', posVal);
+                        formData.append('galleryImage', file);
+
+                        let createdRecord = null;
+                        if (pb) {
+                            try {
+                                createdRecord = await pb.collection(GALLERY_COLLECTION).create(formData);
+                            } catch (pbErr) {
+                                console.warn('PocketBase create gallery record notice:', pbErr);
+                            }
+                        }
+
+                        // Local fallback if PB offline
+                        if (!createdRecord) {
+                            const reader = new FileReader();
+                            const base64Data = await new Promise((resolve) => {
+                                reader.onload = () => resolve(reader.result);
+                                reader.readAsDataURL(file);
+                            });
+
+                            createdRecord = {
+                                id: 'gal_loc_' + Date.now(),
+                                positionNumber: posVal,
+                                galleryImage: base64Data,
+                                created: new Date().toISOString()
+                            };
+                        }
+
+                        let gallery = [];
+                        const localStr = localStorage.getItem('mfj_bayuseafood_gallery');
+                        if (localStr) try { gallery = JSON.parse(localStr); } catch (err) { }
+                        gallery.push(createdRecord);
+                        localStorage.setItem('mfj_bayuseafood_gallery', JSON.stringify(gallery));
+
+                        const modal = document.getElementById('addGalleryModal');
+                        if (modal) modal.classList.remove('active');
+                        addGalleryForm.reset();
+
+                        await renderGalleryTable();
+                    } catch (err) {
+                        alert('Error uploading gallery image: ' + err.message);
+                    } finally {
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerHTML = '<i class="fa-solid fa-plus"></i> Upload &amp; Add Image';
+                    }
+                });
+            }
+
+            // Open Edit Gallery Modal
+            window.openEditGalleryModal = function (galleryId) {
+                const item = loadedGalleryImages.find(g => g.id === galleryId);
+                if (!item) return;
+
+                document.getElementById('editGalleryId').value = item.id;
+                document.getElementById('editGalleryPosition').value = item.positionNumber;
+
+                const currentImg = document.getElementById('editGalleryCurrentImg');
+                if (currentImg) {
+                    currentImg.src = getGalleryImageUrl(item);
+                }
+
+                const fileInput = document.getElementById('editGalleryImage');
+                if (fileInput) fileInput.value = '';
+
+                const modal = document.getElementById('editGalleryModal');
+                if (modal) modal.classList.add('active');
+            };
+
+            // Edit Gallery Form Handler (PocketBase Update)
+            const editGalleryForm = document.getElementById('editGalleryForm');
+            if (editGalleryForm) {
+                editGalleryForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const id = document.getElementById('editGalleryId').value;
+                    const posVal = parseFloat(document.getElementById('editGalleryPosition').value);
+                    const fileInput = document.getElementById('editGalleryImage');
+                    const file = fileInput && fileInput.files && fileInput.files[0];
+
+                    if (!id || isNaN(posVal)) return;
+
+                    const btnSubmit = document.getElementById('btnEditGallerySubmit');
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+
+                    try {
+                        let updatedRecord = null;
+                        const formData = new FormData();
+                        formData.append('positionNumber', posVal);
+                        if (file) {
+                            formData.append('galleryImage', file);
+                        }
+
+                        if (pb && !id.startsWith('gal_loc_') && !id.startsWith('gal_sample_')) {
+                            try {
+                                if (file) {
+                                    updatedRecord = await pb.collection(GALLERY_COLLECTION).update(id, formData);
+                                } else {
+                                    updatedRecord = await pb.collection(GALLERY_COLLECTION).update(id, { positionNumber: posVal });
+                                }
+                            } catch (pbErr) {
+                                console.warn('PocketBase update gallery record notice:', pbErr);
+                            }
+                        }
+
+                        let gallery = [];
+                        const localStr = localStorage.getItem('mfj_bayuseafood_gallery');
+                        if (localStr) try { gallery = JSON.parse(localStr); } catch (err) { }
+                        const idx = gallery.findIndex(g => g.id === id);
+
+                        if (idx !== -1) {
+                            gallery[idx].positionNumber = posVal;
+                            if (file) {
+                                const reader = new FileReader();
+                                const base64Data = await new Promise((resolve) => {
+                                    reader.onload = () => resolve(reader.result);
+                                    reader.readAsDataURL(file);
+                                });
+                                gallery[idx].galleryImage = base64Data;
+                            } else if (updatedRecord && updatedRecord.galleryImage) {
+                                gallery[idx].galleryImage = updatedRecord.galleryImage;
+                            }
+                        } else if (updatedRecord) {
+                            gallery.push(updatedRecord);
+                        }
+                        localStorage.setItem('mfj_bayuseafood_gallery', JSON.stringify(gallery));
+
+                        const modal = document.getElementById('editGalleryModal');
+                        if (modal) modal.classList.remove('active');
+
+                        await renderGalleryTable();
+                    } catch (err) {
+                        alert('Error updating gallery item: ' + err.message);
+                    } finally {
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Gallery Image';
+                    }
+                });
+            }
+
+            // Delete Gallery Record (PocketBase Delete)
+            window.deleteGalleryRecord = async function (galleryId) {
+                if (!confirm('Are you sure you want to delete this gallery image from the Bayu Seafood website?')) return;
+
+                try {
+                    if (pb && !galleryId.startsWith('gal_loc_') && !galleryId.startsWith('gal_sample_')) {
+                        try {
+                            await pb.collection(GALLERY_COLLECTION).delete(galleryId);
+                        } catch (pbErr) {
+                            console.warn('PocketBase delete gallery record notice:', pbErr);
+                        }
+                    }
+
+                    let gallery = [];
+                    const localStr = localStorage.getItem('mfj_bayuseafood_gallery');
+                    if (localStr) try { gallery = JSON.parse(localStr); } catch (err) { }
+                    gallery = gallery.filter(g => g.id !== galleryId);
+                    localStorage.setItem('mfj_bayuseafood_gallery', JSON.stringify(gallery));
+
+                    await renderGalleryTable();
+                } catch (err) {
+                    alert('Error deleting gallery image: ' + err.message);
                 }
             };
 
