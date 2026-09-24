@@ -1325,7 +1325,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!wrapper || !track) return;
 
-        const galleryData = [
+        const POCKETBASE_URL = 'https://pocketbase2.venturerushtech.com';
+        const GALLERY_COLLECTION = 'WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE';
+
+        // Default Fallback gallery items
+        const defaultGalleryData = [
             { url: "image/g1.JPG", title: "Bayu Seafood Dining Setup" },
             { url: "image/g2.JPG", title: "Bayu Seafood Lakeside View" },
             { url: "image/g3.JPG", title: "Bayu Seafood Live Aquarium Tank" },
@@ -1348,10 +1352,58 @@ document.addEventListener('DOMContentLoaded', () => {
             { url: "image/g20.JPG", title: "Bayu Seafood Signature Celebration" }
         ];
 
+        let galleryData = [...defaultGalleryData];
+
+        function getRecordImageUrl(item, pbInstance) {
+            if (!item) return '';
+            if (item.galleryImage) {
+                if (typeof item.galleryImage === 'string') {
+                    if (item.galleryImage.startsWith('http') || item.galleryImage.startsWith('data:')) {
+                        return item.galleryImage;
+                    }
+                }
+                if (pbInstance && pbInstance.getFileUrl) {
+                    try {
+                        return pbInstance.getFileUrl(item, item.galleryImage);
+                    } catch (e) { }
+                }
+                if (pbInstance && pbInstance.files && pbInstance.files.getUrl) {
+                    try {
+                        return pbInstance.files.getUrl(item, item.galleryImage);
+                    } catch (e) { }
+                }
+                return `${POCKETBASE_URL}/api/files/${item.collectionId || item.collectionName || GALLERY_COLLECTION}/${item.id}/${item.galleryImage}`;
+            }
+            return item.url || '';
+        }
+
+        // Pre-populate immediately from localStorage cache if available for instant display
+        const cachedGalleryStr = localStorage.getItem('mfj_bayuseafood_gallery');
+        if (cachedGalleryStr) {
+            try {
+                const cachedList = JSON.parse(cachedGalleryStr);
+                if (Array.isArray(cachedList) && cachedList.length > 0) {
+                    cachedList.sort((a, b) => Number(a.positionNumber || 0) - Number(b.positionNumber || 0));
+                    let pbInstance = null;
+                    if (window.PocketBase) {
+                        try { pbInstance = new window.PocketBase(POCKETBASE_URL); } catch (e) { }
+                    }
+                    const mappedCached = cachedList.map((item, idx) => ({
+                        url: getRecordImageUrl(item, pbInstance),
+                        title: `Bayu Seafood Gallery #${item.positionNumber || (idx + 1)}`
+                    })).filter(i => Boolean(i.url));
+                    if (mappedCached.length > 0) {
+                        galleryData = mappedCached;
+                    }
+                }
+            } catch (e) { }
+        }
+
         let items = [];
         let itemWidths = [];
         let totalWidth = 0;
         let singleSetWidth = 0;
+        let singleSetItemCount = galleryData.length;
         let currentTranslateX = 0;
         let targetTranslateX = 0;
 
@@ -1370,8 +1422,23 @@ document.addEventListener('DOMContentLoaded', () => {
             totalWidth = 0;
             singleSetWidth = 0;
 
-            for (let l = 0; l < loops; l++) {
+            if (!galleryData || galleryData.length === 0) return;
+
+            // Ensure a single set contains enough items to span smoothly across the curved arch (at least 8 items)
+            let displayList = [];
+            let repeatCount = 1;
+            if (galleryData.length < 8) {
+                repeatCount = Math.ceil(8 / galleryData.length);
+            }
+            for (let r = 0; r < repeatCount; r++) {
                 galleryData.forEach((item, dataIdx) => {
+                    displayList.push({ item, dataIdx });
+                });
+            }
+            singleSetItemCount = displayList.length;
+
+            for (let l = 0; l < loops; l++) {
+                displayList.forEach(({ item, dataIdx }) => {
                     const div = document.createElement('div');
                     div.className = 'panorama-item';
                     div.dataset.index = dataIdx;
@@ -1404,7 +1471,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const fullWidth = width + margin;
                     itemWidths.push(fullWidth);
                     totalWidth += fullWidth;
-                    if (i < galleryData.length) {
+                    if (i < singleSetItemCount) {
                         singleSetWidth += fullWidth;
                     }
                 });
@@ -1427,7 +1494,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     img.addEventListener('load', () => {
                         loadedCount++;
-                        if (loadedCount >= Math.min(6, galleryData.length)) {
+                        if (loadedCount >= Math.min(6, singleSetItemCount)) {
                             updateMeasurements();
                         }
                     });
@@ -1562,9 +1629,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 singleSetWidth = 0;
                 items.forEach((item, i) => {
                     const width = item.offsetWidth || 300;
-                    itemWidths.push(width);
-                    totalWidth += width;
-                    if (i < galleryData.length) singleSetWidth += width;
+                    const margin = 30;
+                    const fullWidth = width + margin;
+                    itemWidths.push(fullWidth);
+                    totalWidth += fullWidth;
+                    if (i < singleSetItemCount) singleSetWidth += fullWidth;
                 });
                 currentTranslateX = -singleSetWidth;
                 targetTranslateX = currentTranslateX;
@@ -1572,8 +1641,72 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 200);
         });
 
+        async function fetchPocketBaseGallery() {
+            let fetchedRecords = [];
+
+            // 1. Fetch from PocketBase Database (WNBMFJGROUP_BAYUSEAFOOD_GALLERY_DATABASE)
+            if (window.PocketBase) {
+                try {
+                    const pb = new window.PocketBase(POCKETBASE_URL);
+                    const list = await pb.collection(GALLERY_COLLECTION).getFullList({
+                        sort: 'positionNumber',
+                        requestKey: null
+                    });
+                    if (list && list.length > 0) {
+                        fetchedRecords = list;
+                    }
+                } catch (err) {
+                    console.warn('PocketBase visual gallery fetch notice:', err);
+                }
+            }
+
+            // 2. Fallback to localStorage if offline / empty
+            if (fetchedRecords.length === 0) {
+                const localStr = localStorage.getItem('mfj_bayuseafood_gallery');
+                if (localStr) {
+                    try {
+                        const parsed = JSON.parse(localStr);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            fetchedRecords = parsed;
+                        }
+                    } catch (e) { }
+                }
+            }
+
+            // 3. If records exist, sort strictly by positionNumber ascending and update galleryData
+            if (fetchedRecords.length > 0) {
+                fetchedRecords.sort((a, b) => Number(a.positionNumber || 0) - Number(b.positionNumber || 0));
+
+                let pbInstance = null;
+                if (window.PocketBase) {
+                    try { pbInstance = new window.PocketBase(POCKETBASE_URL); } catch (e) { }
+                }
+
+                const mapped = fetchedRecords.map((item, idx) => ({
+                    url: getRecordImageUrl(item, pbInstance),
+                    title: item.title || `Bayu Seafood Gallery #${item.positionNumber || (idx + 1)}`
+                })).filter(i => Boolean(i.url));
+
+                if (mapped.length > 0) {
+                    galleryData = mapped;
+                    buildGallery();
+                    if (isModalActive) {
+                        updateModalContent();
+                    }
+                }
+            }
+        }
+
         buildGallery();
         animate();
+        fetchPocketBaseGallery();
+
+        // Listen for storage events (e.g. when CMS updates the gallery in another tab or window)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'mfj_bayuseafood_gallery') {
+                fetchPocketBaseGallery();
+            }
+        });
     }
 
     // ==========================================================================
@@ -2133,6 +2266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentVoucherData = null;
     let activeVoucherValText = "RM50";
     let activeVoucherNameText = "EXCLUSIVE CAMPAIGN DINING VOUCHER";
+    let activeVoucherTerms = "";
     let activeVoucherEndDateStr = "";
     let activeVoucherRawEndDateIso = "";
 
@@ -2158,7 +2292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr, customVoucherName) {
+    async function generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr, customVoucherName, customVoucherTerms) {
         if (!window.jspdf || !window.jspdf.jsPDF) {
             alert('PDF Generator is initializing, please try again in a moment.');
             return;
@@ -2298,31 +2432,76 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text("SCAN QR TO VERIFY", 114, 125, { align: "center" });
         }
 
-        // 5. How to Redeem Section Header
+        // 5. Terms & Conditions Section (Above HOW TO REDEEM - only if voucherTerms got data)
+        const termsToUse = customVoucherTerms !== undefined ? customVoucherTerms : activeVoucherTerms;
+        let termsList = [];
+        if (typeof termsToUse === 'string' && termsToUse.trim()) {
+            termsList = termsToUse.split(',').map(s => s.trim()).filter(Boolean);
+        } else if (Array.isArray(termsToUse)) {
+            termsList = termsToUse.map(s => String(s).trim()).filter(Boolean);
+        }
+
+        const hasTerms = termsList.length > 0;
+        let curY = hasTerms ? 135 : 142;
+
+        if (hasTerms) {
+            doc.setTextColor(180, 83, 9);
+            doc.setFontSize(9.5);
+            doc.setFont('helvetica', 'bold');
+            doc.text("TERMS & CONDITIONS", 16, curY);
+            curY += 3;
+            doc.setDrawColor(212, 175, 55);
+            doc.setLineWidth(0.4);
+            doc.line(16, curY, 132, curY);
+            curY += 4.5;
+
+            // Follow current text color in PDF: rgb(51, 65, 85)
+            doc.setTextColor(51, 65, 85);
+            doc.setFontSize(7.5);
+            doc.setFont('helvetica', 'normal');
+
+            termsList.forEach(term => {
+                const lines = doc.splitTextToSize(`•  ${term}`, 116);
+                lines.forEach(line => {
+                    doc.text(line, 16, curY);
+                    curY += 3.8;
+                });
+            });
+
+            curY += 2;
+        }
+
+        // 6. How to Redeem Section Header
         doc.setTextColor(180, 83, 9);
-        doc.setFontSize(10);
+        doc.setFontSize(hasTerms ? 9.5 : 10);
         doc.setFont('helvetica', 'bold');
-        doc.text("HOW TO REDEEM YOUR VOUCHER", 16, 142);
+        doc.text("HOW TO REDEEM YOUR VOUCHER", 16, curY);
+        curY += 3;
         doc.setDrawColor(212, 175, 55);
-        doc.line(16, 145, 132, 145);
+        doc.setLineWidth(0.4);
+        doc.line(16, curY, 132, curY);
+        curY += (hasTerms ? 5 : 7);
 
         // Exactly 3 Steps Requested by User
         doc.setTextColor(51, 65, 85);
-        doc.setFontSize(8.5);
+        doc.setFontSize(hasTerms ? 8 : 8.5);
         doc.setFont('helvetica', 'normal');
-        doc.text(`1. Fill details & generate your unique ${activeVoucherValText} PDF Voucher.`, 16, 153);
-        doc.text("2. WhatsApp this PDF voucher or Voucher Code to Bayu Seafood staff.", 16, 161);
-        doc.text(`3. Our staff will verify your code to deduct ${activeVoucherValText} off.`, 16, 169);
+        doc.text(`1. Fill details & generate your unique ${activeVoucherValText} PDF Voucher.`, 16, curY);
+        curY += (hasTerms ? 5 : 7);
+        doc.text("2. WhatsApp this PDF voucher or Voucher Code to Bayu Seafood staff.", 16, curY);
+        curY += (hasTerms ? 5 : 7);
+        doc.text(`3. Our staff will verify your code to deduct ${activeVoucherValText} off.`, 16, curY);
 
-        // 6. Footer
+        // 7. Footer
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.4);
-        doc.line(16, 182, 132, 182);
+        const footerLineY = Math.max(curY + 5, 184);
+        doc.line(16, footerLineY, 132, footerLineY);
 
         doc.setFontSize(7.5);
         doc.setTextColor(100, 116, 139);
-        doc.text("Bayu Seafood Lakeside Dining • Bukit Aman, Tasik Perdana, KL", 74, 188, { align: "center" });
-        doc.text("Reservations / WhatsApp Inquiry: +60 13-611 7030", 74, 193, { align: "center" });
+        doc.text("Bayu Seafood Lakeside Dining • Bukit Aman, Tasik Perdana, KL", 74, footerLineY + 5, { align: "center" });
+        doc.text("Reservations / WhatsApp Inquiry: +60 13-611 7030", 74, footerLineY + 10, { align: "center" });
 
         doc.save('Bayu_Seafood_Voucher_' + voucherId + '.pdf');
 
@@ -2410,7 +2589,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 voucherId,
                 issueDateStr,
                 expiryDateStr,
-                voucherName: activeVoucherNameText
+                voucherName: activeVoucherNameText,
+                voucherTerms: activeVoucherTerms
             };
 
             try {
@@ -2422,7 +2602,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) { }
 
             // Generate PDF with QR Code & Logo
-            await generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr, activeVoucherNameText);
+            await generateVoucherPdf(name, phone, voucherId, issueDateStr, expiryDateStr, activeVoucherNameText, activeVoucherTerms);
 
             // Update UI success state
             document.getElementById('resVoucherId').textContent = voucherId;
@@ -2457,7 +2637,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentVoucherData.voucherId,
                     currentVoucherData.issueDateStr,
                     currentVoucherData.expiryDateStr,
-                    currentVoucherData.voucherName
+                    currentVoucherData.voucherName,
+                    currentVoucherData.voucherTerms
                 );
             }
         });
@@ -2610,14 +2791,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* ==========================================================================
-       Bayu Seafood - Dynamic Voucher Campaign Data from PocketBase Database
-       Collection: WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_DATABASE
-       ========================================================================== */
+    /* =============================        Bayu Seafood - Dynamic Voucher Campaign Data from PocketBase Database
+        Collection: WNBMFJGROUP_BAYUSEAFOOD_VOUCHER_DATABASE
+        ========================================================================== */
     let countdownIntervalId = null;
     let fetchTimeoutId = null;
 
-    async function loadDynamicVoucherData() {
+    function updatePromoBanner(v) {
+        const promoBannerSection = document.getElementById('voucher-banner');
+        const promoBannerImg = document.getElementById('dynPromoBannerImg');
+
+        if (!promoBannerSection) return;
+
+        const bannerFile = v ? (v.voucherBanner || v.banner) : null;
+
+        if (bannerFile && typeof bannerFile === 'string' && bannerFile.trim().length > 0) {
+            let bannerUrl = bannerFile.trim();
+            if (window.PocketBase && !bannerUrl.startsWith('http://') && !bannerUrl.startsWith('https://') && !bannerUrl.startsWith('data:') && !bannerUrl.startsWith('blob:') && v.id && !v.id.startsWith('vouch_loc_') && !v.id.startsWith('vouch_sample_')) {
+                try {
+                    const pb = new window.PocketBase('https://pocketbase2.venturerushtech.com');
+                    bannerUrl = pb.getFileUrl(v, bannerFile);
+                } catch (err) {
+                    console.warn('PocketBase getFileUrl error for voucherBanner:', err);
+                }
+            }
+            if (promoBannerImg) {
+                promoBannerImg.src = bannerUrl;
+                promoBannerImg.alt = v.voucherName ? `${v.voucherName} Banner` : 'Bayu Seafood Voucher Banner';
+            }
+            promoBannerSection.style.display = 'block';
+
+            const cardWrap = promoBannerSection.querySelector('.voucher-promo-card-wrap');
+            if (cardWrap && typeof scrollRevealObserver !== 'undefined') {
+                scrollRevealObserver.observe(cardWrap);
+            }
+        } else {
+            promoBannerSection.style.display = 'none';
+            if (promoBannerImg) {
+                promoBannerImg.src = '';
+            }
+        }
+    }
+
+    async function loadDynamicVoucherData(draftVoucher = null) {
         if (countdownIntervalId) {
             clearInterval(countdownIntervalId);
             countdownIntervalId = null;
@@ -2655,6 +2871,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set 30-second error timeout timer
         fetchTimeoutId = setTimeout(() => {
             hasTimedOut = true;
+            updatePromoBanner(null);
             if (loadingWrap) loadingWrap.style.display = 'none';
             if (activeWrap) activeWrap.style.display = 'none';
             if (noActiveWrap) noActiveWrap.style.display = 'none';
@@ -2664,7 +2881,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 30000);
 
         // 1. Fetch from PocketBase Database
-        if (window.PocketBase) {
+        if (draftVoucher) {
+            allVouchers = [draftVoucher];
+        } else if (window.PocketBase) {
             try {
                 const pb = new window.PocketBase('https://pocketbase2.venturerushtech.com');
                 const list = await pb.collection(VOUCHERS_COLLECTION).getFullList({
@@ -2757,10 +2976,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const v = activeVouchers[0];
             populateActiveVoucherUI(v);
+            updatePromoBanner(v);
             return;
         }
 
         // NO active campaign is live!
+        updatePromoBanner(null);
         if (activeWrap) activeWrap.style.display = 'none';
 
         // RULE 2 & 5: If got upcoming campaign (voucherStartDate > now & voucherStatus = true)
@@ -2959,6 +3180,69 @@ document.addEventListener('DOMContentLoaded', () => {
                     elDesc.innerHTML = compileSegments(colorConfig.voucherDescription, rawDesc);
                 } else {
                     elDesc.textContent = rawDesc;
+                }
+            }
+
+            // Update voucherTerms (Terms & Conditions)
+            const elTermsWrap = document.getElementById('dynVoucherTermsWrap');
+            const elTermsList = document.getElementById('dynVoucherTermsList');
+            const rawTermsData = v.voucherTerms;
+            activeVoucherTerms = rawTermsData || '';
+
+            if (elTermsWrap) {
+                let termsArray = [];
+                if (typeof rawTermsData === 'string' && rawTermsData.trim().length > 0) {
+                    termsArray = rawTermsData.split(',').map(t => t.trim()).filter(Boolean);
+                } else if (Array.isArray(rawTermsData)) {
+                    termsArray = rawTermsData.map(t => String(t).trim()).filter(Boolean);
+                }
+
+                if (termsArray.length === 0) {
+                    elTermsWrap.style.display = 'none';
+                    if (elTermsList) elTermsList.innerHTML = '';
+                } else {
+                    elTermsWrap.style.display = 'block';
+
+                    if (elTermsList) {
+                        const termsSegments = (colorConfig && Array.isArray(colorConfig.voucherTerms) && colorConfig.voucherTerms.length > 0)
+                            ? colorConfig.voucherTerms
+                            : null;
+
+                        let globalWordIdx = 0;
+                        let termsHtml = '';
+
+                        termsArray.forEach(termText => {
+                            const words = termText.split(/\s+/).filter(Boolean);
+                            let renderedTermText = '';
+
+                            if (termsSegments) {
+                                renderedTermText = words.map(w => {
+                                    const seg = termsSegments[globalWordIdx];
+                                    globalWordIdx++;
+                                    const safeW = escapeHtmlText(w);
+                                    if (seg && seg.text === w) {
+                                        if (seg.gradient) {
+                                            return `<span style="background: ${seg.gradient}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; display: inline-block;">${safeW}</span>`;
+                                        } else if (seg.color) {
+                                            return `<span style="color: ${seg.color};">${safeW}</span>`;
+                                        }
+                                    }
+                                    return safeW;
+                                }).join(' ');
+                            } else {
+                                renderedTermText = escapeHtmlText(termText);
+                            }
+
+                            termsHtml += `
+                                <li class="voucher-terms-item">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>${renderedTermText}</span>
+                                </li>
+                            `;
+                        });
+
+                        elTermsList.innerHTML = termsHtml;
+                    }
                 }
             }
 
@@ -3210,6 +3494,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const stepsHeadingIcon = getCampaignEl('.voucher-steps-heading i');
                 applyThemeText(stepsHeadingIcon);
 
+                const termsTitle = getCampaignEl('.voucher-terms-title');
+                applyThemeText(termsTitle);
+                const termsTitleIcon = getCampaignEl('.voucher-terms-title i');
+                applyThemeText(termsTitleIcon);
+
+                getCampaignEls('.voucher-terms-item i').forEach(icon => {
+                    applyThemeText(icon);
+                });
+
+                const termsWrapEl = getCampaignEl('.voucher-terms-wrap');
+                if (termsWrapEl) {
+                    termsWrapEl.style.borderLeftColor = themeColor;
+                }
+
                 getCampaignEls('.step-badge').forEach(badge => {
                     applyThemeBackground(badge);
                 });
@@ -3237,6 +3535,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyThemeBorder(btnRedownload, '1px');
                     applyThemeText(btnRedownload);
                 }
+
+                updatePromoBanner(v);
             }
         }
     }
