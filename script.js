@@ -529,8 +529,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'crab',
             title: 'Alaskan King Crab',
             desc: "The king of crabs. Sweet, succulent, and incredibly meaty. Perfect when wok-tossed in our signature Singapore Chili Sauce or Creamy Salted Egg.",
-            img: 'image/lc1.png',
-            bgImg: 'image/liveCatchMudCrab.png',
+            img: 'image/lc1.webp',
+            bgImg: 'image/liveCatchMudCrab.webp',
             dropdownVal: 'Live Alaskan King Crab',
             badge: 'Chef\'s Pick'
         },
@@ -538,8 +538,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'lobster',
             title: 'Boston Lobster',
             desc: 'Cold-water North Atlantic lobsters with plump claws and rich meat. Sublime when garlic-butter baked or topped with herb cheese.',
-            img: 'image/lc2.png',
-            bgImg: 'image/liveCatchLobster.png',
+            img: 'image/lc2.webp',
+            bgImg: 'image/liveCatchLobster.webp',
             dropdownVal: 'Live Boston Lobster',
             badge: 'Premium Selection'
         },
@@ -547,8 +547,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'prawns',
             title: 'Tiger Prawns',
             desc: 'Large-sized local prawns featuring a firm texture and natural sweetness. Best enjoyed cooked Kam Heong style or signature Dry Butter.',
-            img: 'image/lc3.png',
-            bgImg: 'image/liveCatchButterPrawn.png',
+            img: 'image/lc3.webp',
+            bgImg: 'image/liveCatchButterPrawn.webp',
             dropdownVal: 'Live Tiger Prawns',
             badge: 'Fresh Harvest'
         }
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tarianPosterCard = document.getElementById('tarianPosterCard');
             if (tarianPosterCard && certModal && certModalImg) {
                 tarianPosterCard.addEventListener('click', () => {
-                    certModalImg.src = 'image/tarianTradisional.jpeg';
+                    certModalImg.src = 'image/tarianTradisional.webp';
                     if (certModalTitle) certModalTitle.textContent = 'Weekend Event: Tarian Tradisional';
                     certModal.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -907,7 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const btnViewGroupSetPoster = document.getElementById('btnViewGroupSetPoster');
             if (btnViewGroupSetPoster && certModal && certModalImg) {
                 btnViewGroupSetPoster.addEventListener('click', () => {
-                    certModalImg.src = 'image/groupSet.jpeg';
+                    certModalImg.src = 'image/groupSet.webp';
                     if (certModalTitle) certModalTitle.textContent = 'Family / Group Packages: Group Set Menu';
                     certModal.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -1000,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const sinVal = Math.sin(angle);
 
                     // In front (sinVal > 0): larger, z-index 20 (in front of chef)
-                    // Behind (sinVal <= 0): z-index 2 (occluded behind chef.png)
+                    // Behind (sinVal <= 0): z-index 2 (occluded behind chef.webp)
                     const scale = isMobile ? (0.7 + 0.3 * (sinVal + 1) / 2) : (0.75 + 0.35 * (sinVal + 1) / 2);
                     const opacity = sinVal > 0 ? 1 : 0.85;
                     const zIndex = sinVal > 0 ? 20 : 2;
@@ -1019,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Standalone Interactive PDF Menu Flipbook on Wood Table (table.png)
+    // Standalone Interactive PDF Menu Flipbook on Wood Table (table.webp)
     // ==========================================================================
     async function initStandaloneMenuFlipbook() {
         const flipContainer = document.getElementById('menuFlipbook');
@@ -1140,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableStage.classList.add('in-view');
             }
 
-            // Dynamically scale flipbook and table action buttons as table.png resizes on mobile
+            // Dynamically scale flipbook and table action buttons as table.webp resizes on mobile
             function updateFlipbookScale() {
                 const stage = document.querySelector('.table-stage');
                 const overlay = document.querySelector('.flipbook-overlay');
@@ -1330,26 +1330,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Default Fallback gallery items
         const defaultGalleryData = [
-            { url: "image/g1.JPG", title: "Bayu Seafood Dining Setup" },
-            { url: "image/g2.JPG", title: "Bayu Seafood Lakeside View" },
-            { url: "image/g3.JPG", title: "Bayu Seafood Live Aquarium Tank" },
-            { url: "image/g4.JPG", title: "Bayu Seafood Master Culinary Catch" },
-            { url: "image/g5.JPG", title: "Bayu Seafood Table Ambiance" },
-            { url: "image/g6.JPG", title: "Bayu Seafood Banquet Setup" },
-            { url: "image/g7.JPG", title: "Bayu Seafood Evening Splendor" },
-            { url: "image/g8.JPG", title: "Bayu Seafood Private Gathering" },
-            { url: "image/g9.JPG", title: "Bayu Seafood Lake Ambiance" },
-            { url: "image/g10.JPG", title: "Bayu Seafood Luxury Dining" },
-            { url: "image/g11.JPG", title: "Bayu Seafood Gourmet Presentation" },
-            { url: "image/g12.JPG", title: "Bayu Seafood Interior Architecture" },
-            { url: "image/g13.JPG", title: "Bayu Seafood VIP Suite" },
-            { url: "image/g14.JPG", title: "Bayu Seafood Outdoor View" },
-            { url: "image/g15.JPG", title: "Bayu Seafood Special Occasion" },
-            { url: "image/g16.JPG", title: "Bayu Seafood Exclusive Pavilion" },
-            { url: "image/g17.JPG", title: "Bayu Seafood Fine Dining Experience" },
-            { url: "image/g18.JPG", title: "Bayu Seafood Atmosphere" },
-            { url: "image/g19.JPG", title: "Bayu Seafood Scenic Waters" },
-            { url: "image/g20.JPG", title: "Bayu Seafood Signature Celebration" }
+            { url: "image/g1.webp", title: "Bayu Seafood Dining Setup" },
+            { url: "image/g2.webp", title: "Bayu Seafood Lakeside View" },
+            { url: "image/g3.webp", title: "Bayu Seafood Live Aquarium Tank" },
+            { url: "image/g4.webp", title: "Bayu Seafood Master Culinary Catch" },
+            { url: "image/g5.webp", title: "Bayu Seafood Table Ambiance" },
+            { url: "image/g6.webp", title: "Bayu Seafood Banquet Setup" },
+            { url: "image/g7.webp", title: "Bayu Seafood Evening Splendor" },
+            { url: "image/g8.webp", title: "Bayu Seafood Private Gathering" },
+            { url: "image/g9.webp", title: "Bayu Seafood Lake Ambiance" },
+            { url: "image/g10.webp", title: "Bayu Seafood Luxury Dining" },
+            { url: "image/g11.webp", title: "Bayu Seafood Gourmet Presentation" },
+            { url: "image/g12.webp", title: "Bayu Seafood Interior Architecture" },
+            { url: "image/g13.webp", title: "Bayu Seafood VIP Suite" },
+            { url: "image/g14.webp", title: "Bayu Seafood Outdoor View" },
+            { url: "image/g15.webp", title: "Bayu Seafood Special Occasion" },
+            { url: "image/g16.webp", title: "Bayu Seafood Exclusive Pavilion" },
+            { url: "image/g17.webp", title: "Bayu Seafood Fine Dining Experience" },
+            { url: "image/g18.webp", title: "Bayu Seafood Atmosphere" },
+            { url: "image/g19.webp", title: "Bayu Seafood Scenic Waters" },
+            { url: "image/g20.webp", title: "Bayu Seafood Signature Celebration" }
         ];
 
         let galleryData = [...defaultGalleryData];
@@ -1738,14 +1738,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const roomData = {
             private: {
                 title: '360° VR View: Private Room',
-                img: 'image/panoramaPrivateRoom.jpg',
-                layoutImg: 'image/privateRoom1.JPG',
+                img: 'image/panoramaPrivateRoom.webp',
+                layoutImg: 'image/privateRoom1.webp',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Private Room</strong> (Up to 18 Pax, TV screen & Mic provided).'
             },
             ballroom: {
                 title: '360° VR View: Ballroom',
-                img: 'image/panoramaBallRoom.jpg',
-                layoutImg: 'image/ballRoom1.JPG',
+                img: 'image/panoramaBallRoom.webp',
+                layoutImg: 'image/ballRoom1.webp',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Ballroom</strong> (40–80 Pax, Stage & Split Dining).'
             },
             surau: {
@@ -1762,8 +1762,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             lounge: {
                 title: '360° VR View: Lounge',
-                img: 'image/panoramaLuxuryLounge.jpg',
-                layoutImg: 'image/luxuryLounge.JPG',
+                img: 'image/panoramaLuxuryLounge.webp',
+                layoutImg: 'image/luxuryLounge.webp',
                 desc: 'Currently viewing 3D spherical VR panorama for <strong>Lounge</strong> (Plush Seating for Pre-Dinner & Social Relaxation).'
             }
         };
@@ -2107,7 +2107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.classList.add('active');
                     btn.innerHTML = '<i class="fa-solid fa-images"></i> View Photos';
 
-                    const imgPath = roomData[roomTarget] ? roomData[roomTarget].img : 'image/panoramaPrivateRoom.jpg';
+                    const imgPath = roomData[roomTarget] ? roomData[roomTarget].img : 'image/panoramaPrivateRoom.webp';
 
                     if (!cardVrInstances[roomTarget]) {
                         cardVrInstances[roomTarget] = createInlineCardVR(vrContainer, imgPath);
